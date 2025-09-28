@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Manwha, ManwhaStatus } from "$lib/types";
   import StatusBadge from "./StatusBadge.svelte";
+  import { generateChapterUrl } from "$lib/utils/urlUtils.ts";
 
   interface Props {
     manwha: Manwha;
@@ -88,7 +89,7 @@
         <span class="info-label">Chapter:</span>
         {#if manwha.link}
           <a
-            href={manwha.link}
+            href={generateChapterUrl(manwha.link, manwha.currentChapter)}
             target="_blank"
             rel="noopener noreferrer"
             class="chapter-link"

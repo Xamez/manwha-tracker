@@ -159,13 +159,18 @@
       </div>
 
       <div class="form-group">
-        <label for="link" class="form-label">Link</label>
+        <label for="link" class="form-label">
+          Base Link
+          <span class="text-xs text-gray-400 font-normal block mt-1">
+            Enter the base URL (chapters will be automatically appended)
+          </span>
+        </label>
         <input
           id="link"
           type="url"
           bind:value={link}
           class="form-input"
-          placeholder="https://example.com/manwha"
+          placeholder="https://demonicscans.org/manga/your-manga-title"
           disabled={loading}
         />
       </div>
@@ -228,7 +233,8 @@
         </div>
       </div>
 
-      {#if status === "completed" || status === "abandoned" || status === "ended"}
+      {#if         status === "completed" || status === "abandoned" ||
+          status === "ended"}
         <div class="form-group">
           <label for="endDate" class="form-label">End Date</label>
           <input

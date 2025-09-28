@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
   import StatusBadge from "./StatusBadge.svelte";
   import type { Manwha } from "$lib/types.ts";
+  import { generateChapterUrl } from "$lib/utils/urlUtils.ts";
 
   interface Props {
     manwhas: Manwha[];
@@ -272,7 +273,7 @@
           <td class="chapter-cell">
             {#if manwha.link}
               <a
-                href={manwha.link}
+                href={generateChapterUrl(manwha.link, manwha.currentChapter)}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="chapter-link"

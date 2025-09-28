@@ -15,7 +15,9 @@
 </svelte:head>
 
 <div class="container">
+  <div class="header-section">
   <h1 class="page-title">Dashboard</h1>
+  </div>
 
   <div class="stats-grid">
     <StatsCard
@@ -134,146 +136,88 @@
 </div>
 
 <style>
+  @reference "tailwindcss";
+
   .container {
-    max-width: 1200px;
-    margin: 0 auto;
+    @apply max-w-[70%] mx-auto;
   }
 
   .stats-grid {
-    display: grid;
+    @apply grid gap-6 mb-8;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
   }
 
   .activity-card {
-    background-color: var(--color-card-bg);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--color-gray-light);
+    @apply bg-gray-800 rounded-xl p-6 mb-6 border border-gray-600;
   }
 
   .section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--color-text-primary);
+    @apply text-xl font-semibold mb-4 text-gray-100;
   }
 
   .empty-state {
-    color: var(--color-dark-secondary);
+    @apply text-gray-400;
   }
 
   .link-primary {
-    color: var(--color-purple-dark);
-    text-decoration: underline;
-  }
-
-  .link-primary:hover {
-    color: var(--color-purple-light);
+    @apply text-purple-400 underline hover:text-purple-300;
   }
 
   .activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    @apply flex flex-col gap-4;
   }
 
   .activity-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    background-color: var(--color-bg-primary);
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-gray-light);
+    @apply flex items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-600;
   }
 
   .activity-info {
-    flex: 1;
+    @apply flex-1;
   }
 
   .activity-title {
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: 0.25rem;
+    @apply font-semibold text-gray-100 mb-1;
   }
 
   .activity-details {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.25rem;
+    @apply text-sm text-gray-300 mb-1;
   }
 
   .activity-date {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    opacity: 0.8;
+    @apply text-xs text-gray-400 opacity-80;
   }
 
   .activity-action {
-    color: var(--color-purple-dark);
-    font-size: 0.875rem;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background-color 0.2s;
+    @apply text-purple-400 text-sm no-underline px-4 py-2 rounded-md transition-colors hover:bg-purple-500 hover:text-white;
   }
 
-  .activity-action:hover {
-    background-color: var(--color-purple-light);
-    color: white;
-  }
-
-  /* Quick Actions */
   .quick-action-purple {
-    display: block;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s;
-    color: white;
-    text-decoration: none;
-    background: linear-gradient(
-      135deg,
-      var(--color-purple-dark) 0%,
-      #5a4a7a 100%
-    );
+    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white no-underline;
+    background: linear-gradient(135deg, var(--color-purple-dark) 0%, #5a4a7a 100%);
   }
 
   .quick-action-blue {
-    display: block;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s;
-    color: white;
-    text-decoration: none;
+    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white no-underline;
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   }
 
   .quick-action-purple:hover,
   .quick-action-blue:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    @apply shadow-2xl;
   }
 
   .quick-action-purple h3,
   .quick-action-blue h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin: 0;
+    @apply text-lg font-semibold m-0;
   }
 
   .quick-action-purple p,
   .quick-action-blue p {
-    opacity: 0.9;
-    margin: 0;
+    @apply opacity-90 m-0;
   }
 
   .actions-grid {
-    display: grid;
+    @apply grid gap-6;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
   }
 </style>

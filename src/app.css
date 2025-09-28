@@ -14,8 +14,12 @@
   --color-border: #374151;
 }
 
+.header-section {
+  @apply flex items-center justify-between mb-8;
+}
+
 .page-title {
-  @apply text-3xl font-bold text-gray-50 mb-2;
+  @apply text-3xl font-bold text-gray-50;
 }
 
 .page-subtitle {

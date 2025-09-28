@@ -189,9 +189,9 @@
 
   .btn-primary {
     @apply w-full py-3 px-6 rounded-lg font-medium transition-all duration-200
-      focus:outline-none text-white
-      bg-indigo-600 hover:bg-purple-500 disabled:opacity-50
-      disabled:cursor-not-allowed flex items-center gap-2 justify-center;
+      focus:outline-none text-white bg-indigo-600 hover:bg-purple-500
+      disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2
+      justify-center;
   }
 
   .error-message {
