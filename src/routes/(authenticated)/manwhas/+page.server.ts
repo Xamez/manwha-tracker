@@ -3,7 +3,9 @@ import { redirect } from "@sveltejs/kit";
 import { authenticateUser } from "$lib/middleware.ts";
 import { getManwhasCollection } from "$lib/database.ts";
 
-export const load: ServerLoad = async ({ request }: { request: Request }) => {
+export const load: ServerLoad = async (
+  { request, url }: { request: Request; url: URL },
+) => {
   const cookieHeader = request.headers.get("cookie");
   const user = authenticateUser(cookieHeader || undefined);
 
@@ -13,9 +15,16 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
 
   try {
     const manwhasCollection = await getManwhasCollection();
+
+    const sortBy = url.searchParams.get("sortBy") || "updatedAt";
+    const sortOrder = url.searchParams.get("sortOrder") || "desc";
+
+    const sortObj: Record<string, 1 | -1> = {};
+    sortObj[sortBy] = sortOrder === "asc" ? 1 : -1;
+
     const manwhas = await manwhasCollection
       .find({ userId: user.userId })
-      .sort({ updatedAt: -1 })
+      .sort(sortObj)
       .toArray();
 
     const stats = {
@@ -34,6 +43,8 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
         _id: manwha._id?.toString(),
       })),
       stats,
+      sortBy,
+      sortOrder,
     };
   } catch (error) {
     console.error("Error fetching manwhas:", error);
@@ -48,6 +59,8 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
         abandoned: 0,
         ended: 0,
       },
+      sortBy: "updatedAt",
+      sortOrder: "desc",
     };
   }
 };

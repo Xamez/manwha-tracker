@@ -1,15 +1,46 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
+  import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import ManwhaCard from "$lib/components/ManwhaCard.svelte";
+  import ManwhaTable from "$lib/components/ManwhaTable.svelte";
   import StatsMini from "$lib/components/StatsMini.svelte";
   import { getManwhaStatusColor } from "$lib/types.ts";
+  import type {
+    AuthenticatedUser,
+    Manwha,
+    ManwhaStats,
+  } from "$lib/types.ts";
+
+  interface PageData {
+    user: AuthenticatedUser;
+    manwhas: Manwha[];
+    stats: ManwhaStats;
+    sortBy: string;
+    sortOrder: string;
+  }
 
   interface Props {
     data: PageData;
   }
 
   let { data }: Props = $props();
+  let viewMode: "cards" | "table" = $state("cards");
+
+  onMount(() => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const savedViewMode = localStorage.getItem("manwha-view-mode");
+      if (savedViewMode === "cards" || savedViewMode === "table") {
+        viewMode = savedViewMode;
+      }
+    }
+  });
+
+  function setViewMode(mode: "cards" | "table") {
+    viewMode = mode;
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem("manwha-view-mode", mode);
+    }
+  }
 
   function getStatColor(status: string) {
     const colorClasses = getManwhaStatusColor(status as any);
@@ -50,7 +81,53 @@
 
 <div class="container">
   <div class="header-section">
-    <h1 class="page-title">My Manwhas</h1>
+    <div class="header-left">
+      <h1 class="page-title">My Manwhas</h1>
+      <div class="view-toggle">
+        <button
+          class="toggle-btn"
+          class:active={viewMode === "cards"}
+          onclick={() => setViewMode("cards")}
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+            >
+            </path>
+          </svg>
+          Cards
+        </button>
+        <button
+          class="toggle-btn"
+          class:active={viewMode === "table"}
+          onclick={() => setViewMode("table")}
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M3 6h18M3 14h18M3 18h18"
+            >
+            </path>
+          </svg>
+          Table
+        </button>
+      </div>
+    </div>
     <a href="/manwhas/add" class="btn-primary">
       <svg
         class="w-4 h-4"
@@ -126,72 +203,79 @@
       </div>
     </div>
   {:else}
-    <div class="manwhas-grid">
-      {#each data.manwhas as manwha}
-        <ManwhaCard
-          {manwha}
-          onedit={handleEdit}
-          ondelete={handleDelete}
-        />
-      {/each}
-    </div>
+    {#if viewMode === "cards"}
+      <div class="manwhas-grid">
+        {#each data.manwhas as manwha}
+          <ManwhaCard
+            {manwha}
+            onedit={handleEdit}
+            ondelete={handleDelete}
+          />
+        {/each}
+      </div>
+    {:else}
+      <ManwhaTable
+        manwhas={data.manwhas}
+        sortBy={data.sortBy}
+        sortOrder={data.sortOrder}
+        onedit={handleEdit}
+        ondelete={handleDelete}
+      />
+    {/if}
   {/if}
 </div>
 
 <style>
+  @reference "tailwindcss";
+
   .container {
-    max-width: 70%;
-    margin: 0 auto;
+    @apply max-w-5xl mx-auto;
   }
 
   .header-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
+    @apply flex items-center justify-between mb-8;
+  }
+
+  .header-left {
+    @apply flex items-center gap-6;
+  }
+
+  .view-toggle {
+    @apply flex bg-gray-800 rounded-lg border border-gray-600 overflow-hidden;
+  }
+
+  .toggle-btn {
+    @apply flex items-center gap-2 px-3 py-2 bg-transparent border-none
+      text-gray-400 text-sm cursor-pointer transition-all duration-200;
+  }
+
+  .toggle-btn:hover {
+    @apply bg-gray-600;
+  }
+
+  .toggle-btn.active {
+    @apply bg-indigo-600 text-white;
   }
 
   .btn-primary {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    color: white;
-    text-decoration: none;
-    transition: all 0.2s;
-    background-color: var(--color-purple-dark);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-dark-secondary);
-    transform: translateY(-1px);
+    @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-white
+      no-underline transition-all duration-200 bg-indigo-600 hover:bg-indigo-700
+      hover:-translate-y-0.5;
   }
 
   .manwhas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6;
   }
 
   .empty-state {
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--color-card-bg);
-    border-radius: 0.75rem;
-    border: 1px solid var(--color-gray-light);
+    @apply text-center p-12 bg-gray-800 rounded-xl border border-gray-600;
   }
 
   .empty-state h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-dark-primary);
-    margin-bottom: 0.5rem;
+    @apply text-lg font-semibold text-gray-300 mb-2;
   }
 
   .empty-state p {
-    color: var(--color-dark-secondary);
-    margin-bottom: 1.5rem;
+    @apply text-gray-400 mb-6;
   }
 </style>

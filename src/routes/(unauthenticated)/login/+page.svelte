@@ -145,7 +145,7 @@
     </form>
 
     <div class="mt-6 text-center">
-      <span class="text-gray-600">Don't have an account?</span>
+      <span class="text-gray-400">Don't have an account?</span>
       <a href="/register" class="ml-2 link-primary">
         Sign up
       </a>
@@ -166,12 +166,12 @@
   }
 
   .auth-card {
-    @apply w-full max-w-md p-8 rounded-lg shadow-xl bg-white;
+    @apply w-full max-w-md p-8 rounded-lg shadow-xl bg-gray-800 border
+      border-gray-600;
   }
 
   .auth-title {
-    @apply text-3xl font-bold text-center mb-8;
-    color: var(--color-dark-primary);
+    @apply text-3xl font-bold text-center mb-8 text-gray-50;
   }
 
   .form-group {
@@ -179,46 +179,33 @@
   }
 
   .form-label {
-    @apply block text-sm font-medium mb-2;
-    color: var(--color-dark-secondary);
+    @apply block text-sm font-medium mb-2 text-gray-50;
   }
 
   .form-input {
-    @apply w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2
-      transition-all bg-white;
-    border-color: var(--color-gray-light);
-  }
-
-  .form-input:focus {
-    border-color: var(--color-purple-dark);
-    box-shadow: 0 0 0 3px rgba(75, 57, 111, 0.1);
+    @apply w-full px-4 py-3 rounded-lg border border-gray-600 bg-slate-800
+      text-gray-50 placeholder-gray-300 focus:outline-none focus:ring-2
+      focus:border-indigo-600 focus:ring-indigo-600/20 transition-all;
   }
 
   .btn-primary {
     @apply w-full py-3 px-6 rounded-lg font-medium transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-offset-2 text-white flex
-      items-center gap-2 justify-center;
-    background-color: var(--color-purple-dark);
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-dark-secondary);
-  }
-
-  .btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed;
+      focus:outline-none focus:ring-2 focus:ring-offset-2 text-white
+      bg-indigo-600 hover:bg-purple-500 disabled:opacity-50
+      disabled:cursor-not-allowed flex items-center gap-2 justify-center;
   }
 
   .error-message {
-    @apply text-red-500 text-sm mt-2;
+    @apply text-red-400 text-sm mt-2 p-3 rounded-lg bg-red-500/10 border
+      border-red-500/30;
   }
 
   .success-message {
-    @apply text-green-500 text-sm mt-2;
+    @apply text-green-400 text-sm mt-2 p-3 rounded-lg bg-green-500/10 border
+      border-green-500/30;
   }
 
   .link-primary {
-    @apply font-medium hover:underline transition-colors;
-    color: var(--color-purple-dark);
+    @apply font-medium hover:underline transition-colors text-indigo-400;
   }
 </style>

@@ -62,7 +62,6 @@ export const PUT: RequestHandler = async ({ request, params }) => {
       endDate,
     } = body;
 
-    // Validate input
     if (!title?.trim()) {
       return json({ error: "Title is required" }, { status: 400 });
     }
@@ -89,7 +88,6 @@ export const PUT: RequestHandler = async ({ request, params }) => {
 
     const manwhasCollection = await getManwhasCollection();
 
-    // Check if manwha exists and belongs to user
     const existingManwha = await manwhasCollection.findOne({
       _id: ObjectId.createFromHexString(params.id),
       userId: user.userId,
@@ -99,7 +97,6 @@ export const PUT: RequestHandler = async ({ request, params }) => {
       return json({ error: "Manwha not found" }, { status: 404 });
     }
 
-    // Update manwha
     const updateData = {
       title: title.trim(),
       description: description?.trim() || undefined,

@@ -29,7 +29,6 @@
     { value: "ended", label: "Ended" },
   ];
 
-  // Effect to auto-set end date when status changes to completed states
   $effect(() => {
     if (
       (status === "completed" || status === "abandoned" ||

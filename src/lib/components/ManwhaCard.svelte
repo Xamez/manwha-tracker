@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Manwha, ManwhaStatus } from "$lib/types";
+  import StatusBadge from "./StatusBadge.svelte";
 
   interface Props {
     manwha: Manwha;
@@ -28,23 +29,6 @@
       return new Date(dateString).toLocaleDateString();
     } catch {
       return "Invalid date";
-    }
-  }
-
-  function getStatusColor(status: ManwhaStatus) {
-    switch (status) {
-      case "completed":
-        return "bg-green-600";
-      case "reading":
-        return "bg-blue-600";
-      case "to-continue":
-        return "bg-orange-600";
-      case "abandoned":
-        return "bg-red-600";
-      case "ended":
-        return "bg-gray-600";
-      default:
-        return "bg-gray-600";
     }
   }
 </script>
@@ -102,13 +86,37 @@
     <div class="manwha-info">
       <div class="info-item">
         <span class="info-label">Chapter:</span>
-        <span class="info-value">{manwha.currentChapter}</span>
+        {#if manwha.link}
+          <a
+            href={manwha.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="chapter-link"
+            title="Read Chapter {manwha.currentChapter}"
+          >
+            {manwha.currentChapter}
+            <svg
+              class="w-3 h-3 ml-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              >
+              </path>
+            </svg>
+          </a>
+        {:else}
+          <span class="info-value">{manwha.currentChapter}</span>
+        {/if}
       </div>
       <div class="info-item">
         <span class="info-label">Status:</span>
-        <span class="status-badge {getStatusColor(manwha.status)}">
-          {manwha.status.toUpperCase()}
-        </span>
+        <StatusBadge status={manwha.status} />
       </div>
       {#if manwha.rating}
         <div class="info-item">
@@ -118,12 +126,12 @@
       {/if}
     </div>
 
-    {#if manwha.lastReadAt}
-      <p class="last-read">Last read: {formatDate(manwha.lastReadAt)}</p>
-    {/if}
-
     {#if manwha.note}
       <p class="manwha-notes">{manwha.note}</p>
+    {/if}
+
+    {#if manwha.lastReadAt}
+      <p class="last-read">Last read: {formatDate(manwha.lastReadAt)}</p>
     {/if}
   </div>
 </div>
@@ -132,9 +140,8 @@
   @reference "tailwindcss";
 
   .manwha-card {
-    @apply p-6 rounded-lg shadow-sm border transition-all hover:shadow-md;
-    background-color: var(--color-card-bg);
-    border-color: var(--color-gray-light);
+    @apply p-6 rounded-lg shadow-sm border border-gray-600 bg-gray-800
+      transition-all hover:shadow-md hover:border-gray-500;
   }
 
   .manwha-header {
@@ -142,11 +149,7 @@
   }
 
   .manwha-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    flex: 1;
-    margin-right: 1rem;
-    color: var(--color-text-primary);
+    @apply text-xl font-semibold flex-1 mr-4 text-gray-200;
   }
 
   .manwha-actions {
@@ -154,64 +157,52 @@
   }
 
   .action-btn {
-    @apply p-2 rounded-lg transition-all hover:scale-105 focus:outline-none;
+    @apply p-2 rounded-lg transition-all hover:scale-105 focus:outline-none
+      cursor-pointer;
   }
 
   .edit-btn {
-    @apply bg-blue-100 text-blue-600 hover:bg-blue-200;
+    @apply bg-blue-900/20 text-blue-400 hover:bg-blue-900/30;
   }
 
   .delete-btn {
-    @apply bg-red-100 text-red-600 hover:bg-red-200;
+    @apply bg-red-900/20 text-red-400 hover:bg-red-900/30;
   }
 
   .manwha-details {
     @apply space-y-3;
   }
 
-  .manwha-author {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-  }
-
   .manwha-info {
-    @apply grid grid-cols-2 gap-4 text-sm;
+    @apply flex flex-wrap gap-4 text-sm;
   }
 
   .info-item {
-    @apply flex justify-between;
+    @apply flex items-center gap-2;
   }
 
   .info-label {
-    font-weight: 500;
-    color: var(--color-text-secondary);
+    @apply font-medium text-gray-400;
   }
 
   .info-value {
-    font-weight: 600;
-    color: var(--color-text-primary);
+    @apply font-semibold text-gray-200;
+  }
+
+  .chapter-link {
+    @apply inline-flex items-center font-semibold text-indigo-400
+      hover:text-indigo-300 transition-colors duration-200 no-underline;
+  }
+
+  .chapter-link:hover {
+    @apply underline;
   }
 
   .last-read {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    @apply text-xs text-gray-400;
   }
 
   .manwha-notes {
-    font-size: 0.875rem;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    background-color: var(--color-dark-secondary);
-    color: var(--color-text-secondary);
-  }
-
-  .status-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    color: white;
-    letter-spacing: 0.05em;
+    @apply text-sm p-3 rounded-lg bg-gray-700 text-gray-300;
   }
 </style>

@@ -56,7 +56,6 @@ export const POST: RequestHandler = async (
 
     const usersCollection = await getUsersCollection();
 
-    // Check if user already exists
     const existingUser = await usersCollection.findOne({
       $or: [{ email }, { username }],
     });
@@ -69,10 +68,8 @@ export const POST: RequestHandler = async (
       }, { status: 409 });
     }
 
-    // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create user
     const now = new Date();
     const newUser = {
       username,
@@ -88,14 +85,12 @@ export const POST: RequestHandler = async (
       return json({ error: "Failed to create user" }, { status: 500 });
     }
 
-    // Generate JWT token
     const token = generateToken({
       userId: result.insertedId.toString(),
       username,
       email,
     });
 
-    // Set cookie and return success
     const response = json({
       message: "User registered successfully",
       user: { username, email },

@@ -26,7 +26,7 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-      <h1 class="brand-text">Manwha Tracker</h1>
+      <a href="/dashboard" class="brand-text">Manwha Tracker</a>
     </div>
 
     <div class="navbar-menu">
