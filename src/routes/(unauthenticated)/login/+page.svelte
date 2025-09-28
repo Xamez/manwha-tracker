@@ -2,28 +2,15 @@
   import { goto } from "$app/navigation";
   import { browser } from "$app/environment";
 
-  let username = "";
-  let email = "";
-  let password = "";
-  let confirmPassword = "";
-  let loading = false;
-  let errorMessage = "";
-  let successMessage = "";
+  let email = $state("");
+  let password = $state("");
+  let loading = $state(false);
+  let errorMessage = $state("");
+  let successMessage = $state("");
 
-  async function handleRegister() {
-    // Validation
-    if (!username || !email || !password || !confirmPassword) {
+  async function handleLogin() {
+    if (!email || !password) {
       errorMessage = "Please fill in all fields";
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      errorMessage = "Passwords do not match";
-      return;
-    }
-
-    if (password.length < 8) {
-      errorMessage = "Password must be at least 8 characters long";
       return;
     }
 
@@ -32,28 +19,28 @@
     successMessage = "";
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        successMessage = "Account created successfully! Redirecting...";
+        successMessage = "Login successful! Redirecting...";
         setTimeout(() => {
           if (browser) {
             goto("/dashboard");
           }
         }, 1000);
       } else {
-        errorMessage = data.error || "Registration failed";
+        errorMessage = data.error || "Login failed";
       }
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Login error:", error);
       errorMessage = "Network error occurred";
     } finally {
       loading = false;
@@ -62,41 +49,32 @@
 
   function handleKeyPress(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      handleRegister();
+      handleLogin();
     }
   }
 </script>
 
 <svelte:head>
-  <title>Register - Manwha Tracker</title>
+  <title>Login - Manwha Tracker</title>
 </svelte:head>
 
 <div class="auth-container">
   <div class="auth-card">
-    <h1 class="auth-title">Create Account</h1>
+    <h1 class="auth-title">Welcome Back</h1>
 
-    <form on:submit|preventDefault={handleRegister}>
-      <div class="form-group">
-        <label for="username" class="form-label">Username</label>
-        <input
-          id="username"
-          type="text"
-          bind:value={username}
-          on:keypress={handleKeyPress}
-          class="form-input"
-          placeholder="Choose a username"
-          required
-          disabled={loading}
-        />
-      </div>
-
+    <form
+      onsubmit={(e) => {
+        e.preventDefault();
+        handleLogin();
+      }}
+    >
       <div class="form-group">
         <label for="email" class="form-label">Email</label>
         <input
           id="email"
           type="email"
           bind:value={email}
-          on:keypress={handleKeyPress}
+          onkeypress={handleKeyPress}
           class="form-input"
           placeholder="Enter your email"
           required
@@ -110,25 +88,9 @@
           id="password"
           type="password"
           bind:value={password}
-          on:keypress={handleKeyPress}
+          onkeypress={handleKeyPress}
           class="form-input"
-          placeholder="Create a password"
-          required
-          disabled={loading}
-        />
-        <small class="text-gray-500 text-xs"
-        >Must be at least 8 characters long</small>
-      </div>
-
-      <div class="form-group">
-        <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          bind:value={confirmPassword}
-          on:keypress={handleKeyPress}
-          class="form-input"
-          placeholder="Confirm your password"
+          placeholder="Enter your password"
           required
           disabled={loading}
         />
@@ -145,23 +107,47 @@
       <button type="submit" class="btn-primary" disabled={loading}>
         {#if loading}
           <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            >
+            </circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            >
+            </path>
           </svg>
-          <span>Creating Account...</span>
+          <span>Signing in...</span>
         {:else}
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            >
+            </path>
           </svg>
-          <span>Create Account</span>
+          <span>Sign In</span>
         {/if}
       </button>
     </form>
 
     <div class="mt-6 text-center">
-      <span class="text-gray-600">Already have an account?</span>
-      <a href="/login" class="ml-2 link-primary">
-        Sign in
+      <span class="text-gray-600">Don't have an account?</span>
+      <a href="/register" class="ml-2 link-primary">
+        Sign up
       </a>
     </div>
   </div>
@@ -210,7 +196,8 @@
 
   .btn-primary {
     @apply w-full py-3 px-6 rounded-lg font-medium transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-offset-2 text-white flex items-center gap-2 justify-center;
+      focus:outline-none focus:ring-2 focus:ring-offset-2 text-white flex
+      items-center gap-2 justify-center;
     background-color: var(--color-purple-dark);
   }
 

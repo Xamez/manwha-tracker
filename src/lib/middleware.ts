@@ -23,7 +23,9 @@ export function authenticateUser(
   };
 }
 
-export function authenticateRequest(request: Request): AuthenticatedUser | null {
+export function authenticateRequest(
+  request: Request,
+): AuthenticatedUser | null {
   const cookieHeader = request.headers.get("cookie");
   return authenticateUser(cookieHeader || undefined);
 }

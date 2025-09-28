@@ -1,44 +1,50 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import type { Manwha, ManwhaStatus } from "$lib/types";
 
-  export let manwha: {
-    _id: string;
-    title: string;
-    author: string;
-    currentChapter: number;
-    status: string;
-    rating?: number;
-    notes?: string;
-    lastRead?: string;
-  };
+  interface Props {
+    manwha: Manwha;
+    onedit?: ((id: string) => void) | undefined;
+    ondelete?: ((id: string) => void) | undefined;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { manwha, onedit = undefined, ondelete = undefined }: Props =
+    $props();
 
   function handleEdit() {
-    dispatch('edit', manwha._id);
-  }
-
-  function handleDelete() {
-    dispatch('delete', manwha._id);
-  }
-
-  function formatDate(dateString?: string) {
-    if (!dateString) return 'Never';
-    try {
-      return new Date(dateString).toLocaleDateString();
-    } catch {
-      return 'Invalid date';
+    if (manwha._id) {
+      onedit?.(manwha._id);
     }
   }
 
-  function getStatusColor(status: string) {
-    switch (status.toLowerCase()) {
-      case 'completed': return 'bg-green-600';
-      case 'reading': return 'bg-blue-600';
-      case 'to-continue': return 'bg-orange-600';
-      case 'abandoned': return 'bg-red-600';
-      case 'ended': return 'bg-gray-600';
-      default: return 'bg-gray-600';
+  function handleDelete() {
+    if (manwha._id) {
+      ondelete?.(manwha._id);
+    }
+  }
+
+  function formatDate(dateString?: Date) {
+    if (!dateString) return "Never";
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch {
+      return "Invalid date";
+    }
+  }
+
+  function getStatusColor(status: ManwhaStatus) {
+    switch (status) {
+      case "completed":
+        return "bg-green-600";
+      case "reading":
+        return "bg-blue-600";
+      case "to-continue":
+        return "bg-orange-600";
+      case "abandoned":
+        return "bg-red-600";
+      case "ended":
+        return "bg-gray-600";
+      default:
+        return "bg-gray-600";
     }
   }
 </script>
@@ -47,21 +53,52 @@
   <div class="manwha-header">
     <h3 class="manwha-title">{manwha.title}</h3>
     <div class="manwha-actions">
-      <button on:click={handleEdit} class="action-btn edit-btn" title="Edit">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+      <button
+        onclick={handleEdit}
+        class="action-btn edit-btn"
+        title="Edit"
+        aria-label="Edit manwha"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+          >
+          </path>
         </svg>
       </button>
-      <button on:click={handleDelete} class="action-btn delete-btn" title="Delete">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      <button
+        onclick={handleDelete}
+        class="action-btn delete-btn"
+        title="Delete"
+        aria-label="Delete manwha"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          >
+          </path>
         </svg>
       </button>
     </div>
   </div>
 
   <div class="manwha-details">
-    <p class="manwha-author">{manwha.author}</p>
     <div class="manwha-info">
       <div class="info-item">
         <span class="info-label">Chapter:</span>
@@ -80,13 +117,13 @@
         </div>
       {/if}
     </div>
-    
-    {#if manwha.lastRead}
-      <p class="last-read">Last read: {formatDate(manwha.lastRead)}</p>
+
+    {#if manwha.lastReadAt}
+      <p class="last-read">Last read: {formatDate(manwha.lastReadAt)}</p>
     {/if}
-    
-    {#if manwha.notes}
-      <p class="manwha-notes">{manwha.notes}</p>
+
+    {#if manwha.note}
+      <p class="manwha-notes">{manwha.note}</p>
     {/if}
   </div>
 </div>

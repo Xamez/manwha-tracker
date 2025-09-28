@@ -1,6 +1,6 @@
 import type { ServerLoad } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { authenticateUser } from "../$lib/middleware.ts";
+import { authenticateUser } from "$lib/middleware.ts";
 
 export const load: ServerLoad = ({ request }: { request: Request }) => {
   const cookieHeader = request.headers.get("cookie");

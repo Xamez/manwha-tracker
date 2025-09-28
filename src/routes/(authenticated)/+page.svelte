@@ -5,16 +5,14 @@
 
   onMount(async () => {
     if (browser) {
-      // Check if user is already authenticated by trying to access dashboard
       try {
         const response = await fetch("/dashboard");
-        if (response.redirected && response.url.includes("/login")) {
+        if (response.redirected && response.url.includes("login")) {
           goto("/login");
         } else {
           goto("/dashboard");
         }
       } catch (error) {
-        // If there's an error, redirect to login
         goto("/login");
       }
     }

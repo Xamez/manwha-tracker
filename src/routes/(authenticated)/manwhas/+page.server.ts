@@ -18,7 +18,6 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
       .sort({ updatedAt: -1 })
       .toArray();
 
-    // Calculate stats
     const stats = {
       total: manwhas.length,
       reading: manwhas.filter((m) => m.status === "reading").length,

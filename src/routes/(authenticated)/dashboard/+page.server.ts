@@ -15,10 +15,9 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
     const manwhas = await manwhasCollection
       .find({ userId: user.userId })
       .sort({ updatedAt: -1 })
-      .limit(5)
+      .limit(3)
       .toArray();
 
-    // Calculate stats
     const allManwhas = await manwhasCollection
       .find({ userId: user.userId })
       .toArray();
