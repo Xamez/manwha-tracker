@@ -184,21 +184,20 @@
             disabled={loading}
           />
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="status" class="form-label">Status *</label>
-        <select
-          id="status"
-          bind:value={status}
-          class="form-select"
-          required
-          disabled={loading}
-        >
-          {#each statusOptions as option}
-            <option value={option.value}>{option.label}</option>
-          {/each}
-        </select>
+        <div class="form-group">
+          <label for="status" class="form-label">Status *</label>
+          <select
+            id="status"
+            bind:value={status}
+            class="form-select"
+            required
+            disabled={loading}
+          >
+            {#each statusOptions as option}
+              <option value={option.value}>{option.label}</option>
+            {/each}
+          </select>
+        </div>
       </div>
 
       <div class="form-row">
@@ -213,36 +212,34 @@
             disabled={loading}
           />
         </div>
-
-        {#if           status === "completed" || status === "abandoned" ||
-            status === "ended"}
-          <div class="form-group">
-            <label for="endDate" class="form-label">End Date</label>
-            <input
-              id="endDate"
-              type="date"
-              bind:value={endDate}
-              class="form-input"
-              disabled={loading}
-            />
-          </div>
-        {/if}
+        <div class="form-group">
+          <label for="rating" class="form-label">Rating (0-10)</label>
+          <input
+            id="rating"
+            type="number"
+            bind:value={rating}
+            class="form-input"
+            min="0"
+            max="10"
+            step="0.1"
+            placeholder="Optional rating"
+            disabled={loading}
+          />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="rating" class="form-label">Rating (0-10)</label>
-        <input
-          id="rating"
-          type="number"
-          bind:value={rating}
-          class="form-input"
-          min="0"
-          max="10"
-          step="0.1"
-          placeholder="Optional rating"
-          disabled={loading}
-        />
-      </div>
+      {#if status === "completed" || status === "abandoned" || status === "ended"}
+        <div class="form-group">
+          <label for="endDate" class="form-label">End Date</label>
+          <input
+            id="endDate"
+            type="date"
+            bind:value={endDate}
+            class="form-input"
+            disabled={loading}
+          />
+        </div>
+      {/if}
 
       {#if errorMessage}
         <div class="error-message">{errorMessage}</div>
@@ -323,8 +320,9 @@
 </div>
 
 <style>
+  @reference "tailwindcss";
+
   .form-actions {
-    justify-content: flex-end;
-    gap: 0.75rem;
+    @apply flex justify-end gap-3;
   }
 </style>

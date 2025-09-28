@@ -224,13 +224,13 @@
 
   .form-input {
     @apply w-full px-4 py-3 rounded-lg border border-gray-600 bg-slate-800
-      text-gray-50 placeholder-gray-300 focus:outline-none focus:ring-2
-      focus:border-indigo-600 focus:ring-indigo-600/20 transition-all;
+      text-gray-50 placeholder-gray-300 focus:outline-none 
+      focus:border-indigo-600 transition-all;
   }
 
   .btn-primary {
     @apply w-full py-3 px-6 rounded-lg font-medium transition-all duration-200
-      focus:outline-none focus:ring-2 focus:ring-offset-2 text-white
+      focus:outline-none text-white
       bg-indigo-600 hover:bg-purple-500 disabled:opacity-50
       disabled:cursor-not-allowed flex items-center gap-2 justify-center;
   }
