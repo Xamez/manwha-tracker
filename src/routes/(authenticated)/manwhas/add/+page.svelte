@@ -73,10 +73,6 @@
         endDate: endDate || undefined,
       };
 
-      // Redirect immediately with optimistic UI
-      goto("/manwhas?adding=true");
-
-      // Process in background
       const response = await fetch("/api/manwhas", {
         method: "POST",
         headers: {
@@ -87,13 +83,13 @@
 
       const responseData = await response.json();
 
-      if (!response.ok) {
-        // If it fails, redirect back with error
-        goto(
-          `/manwhas/add?error=${
-            encodeURIComponent(responseData.error || "Failed to add manwha")
-          }`,
-        );
+      if (response.ok) {
+        successMessage = "Manwha added successfully! Redirecting...";
+        setTimeout(() => {
+          goto("/manwhas");
+        }, 1000);
+      } else {
+        errorMessage = responseData.error || "Failed to add manwha";
       }
     } catch (error) {
       console.error("Add manwha error:", error);

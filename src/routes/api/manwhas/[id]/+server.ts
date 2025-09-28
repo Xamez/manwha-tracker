@@ -5,6 +5,7 @@ import { authenticateUser } from "$lib/middleware.ts";
 import type { UpdateManwhaRequest } from "$lib/types.ts";
 import { isValidManwhaStatus } from "$lib/types.ts";
 import { ObjectId } from "mongodb";
+import { getCoverImage } from "$lib/mangaScraper.ts";
 
 export const GET: RequestHandler = async ({ request, params }) => {
   try {
@@ -97,16 +98,37 @@ export const PUT: RequestHandler = async ({ request, params }) => {
       return json({ error: "Manwha not found" }, { status: 404 });
     }
 
+    let coverImage = existingManwha.coverImage;
+
+    const newLink = link?.trim();
+    const existingLink = existingManwha.link;
+
+    if (newLink && newLink !== existingLink) {
+      try {
+        console.log(`Scraping new cover image for: ${newLink}`);
+        const coverData = await getCoverImage(newLink);
+        coverImage = coverData.base64Image;
+        console.log(
+          `Cover image scraped successfully. Has image: ${coverData.hasImage}`,
+        );
+      } catch (error) {
+        console.warn(`Failed to scrape cover image for ${newLink}:`, error);
+      }
+    } else if (!newLink) {
+      coverImage = undefined;
+    }
+
     const updateData = {
       title: title.trim(),
       description: description?.trim() || undefined,
       note: note?.trim() || undefined,
-      link: link?.trim() || undefined,
+      link: newLink || undefined,
       currentChapter,
       startDate: new Date(startDate),
       endDate: endDate ? new Date(endDate) : undefined,
       status,
       rating,
+      coverImage,
       lastReadAt: new Date(),
       updatedAt: new Date(),
     };

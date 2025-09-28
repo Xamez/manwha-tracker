@@ -42,6 +42,7 @@ export interface Manwha {
   status: ManwhaStatus;
   rating?: number;
   tags?: string[];
+  coverImage?: string;
   createdAt: Date;
   updatedAt: Date;
 }

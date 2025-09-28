@@ -25,6 +25,8 @@
 
   let { data }: Props = $props();
   let viewMode: "cards" | "table" = $state("cards");
+  let manwhas = $state(data.manwhas);
+  let stats = $state(data.stats);
 
   onMount(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -58,19 +60,48 @@
 
   async function deleteManwha(manwhaId: string) {
     if (confirm("Are you sure you want to delete this manwha?")) {
-      data.manwhas = data.manwhas.filter((m) => m._id !== manwhaId);
-
       try {
         const response = await fetch(`/api/manwhas/${manwhaId}`, {
           method: "DELETE",
         });
 
-        if (!response.ok) {
-          window.location.reload();
+        if (response.ok) {
+          manwhas = manwhas.filter((m) => m._id !== manwhaId);
+          await refreshData();
+        } else {
+          const errorData = await response.json();
+          alert(
+            "Failed to delete manwha: " +
+              (errorData.error || "Unknown error"),
+          );
         }
       } catch (error) {
-        window.location.reload();
+        console.error("Delete error:", error);
+        alert("Network error occurred while deleting");
       }
+    }
+  }
+
+  async function refreshData() {
+    try {
+      const response = await fetch("/api/manwhas");
+      if (response.ok) {
+        const result = await response.json();
+        manwhas = result.manwhas;
+
+        stats = {
+          total: manwhas.length,
+          reading: manwhas.filter((m) => m.status === "reading").length,
+          completed: manwhas.filter((m) => m.status === "completed").length,
+          toContinue: manwhas.filter((m) =>
+            m.status === "to-continue"
+          ).length,
+          abandoned: manwhas.filter((m) => m.status === "abandoned").length,
+          ended: manwhas.filter((m) => m.status === "ended").length,
+        };
+      }
+    } catch (error) {
+      console.error("Error refreshing data:", error);
     }
   }
 </script>
@@ -119,12 +150,12 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M16 5H3"/>
-            <path d="M16 12H3"/>
-            <path d="M16 19H3"/>
-            <path d="M21 5h.01"/>
-            <path d="M21 12h.01"/>
-            <path d="M21 19h.01"/>
+            <path d="M16 5H3" />
+            <path d="M16 12H3" />
+            <path d="M16 19H3" />
+            <path d="M21 5h.01" />
+            <path d="M21 12h.01" />
+            <path d="M21 19h.01" />
           </svg>
           Table
         </button>
@@ -150,35 +181,35 @@
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-    <StatsMini value={data.stats.total} label="Total" />
+    <StatsMini value={stats.total} label="Total" />
     <StatsMini
-      value={data.stats.reading}
+      value={stats.reading}
       label="Reading"
       colorClass={getStatColor("reading")}
     />
     <StatsMini
-      value={data.stats.completed}
+      value={stats.completed}
       label="Completed"
       colorClass={getStatColor("completed")}
     />
     <StatsMini
-      value={data.stats.toContinue}
+      value={stats.toContinue}
       label="To Continue"
       colorClass={getStatColor("to-continue")}
     />
     <StatsMini
-      value={data.stats.abandoned}
+      value={stats.abandoned}
       label="Abandoned"
       colorClass={getStatColor("abandoned")}
     />
     <StatsMini
-      value={data.stats.ended}
+      value={stats.ended}
       label="Ended"
       colorClass={getStatColor("ended")}
     />
   </div>
 
-  {#if data.manwhas.length === 0}
+  {#if manwhas.length === 0}
     <div class="empty-state">
       <div class="text-center">
         <svg
@@ -207,7 +238,7 @@
   {:else}
     {#if viewMode === "cards"}
       <div class="manwhas-grid">
-        {#each data.manwhas as manwha}
+        {#each manwhas as manwha}
           <ManwhaCard
             {manwha}
             onedit={handleEdit}
@@ -217,7 +248,7 @@
       </div>
     {:else}
       <ManwhaTable
-        manwhas={data.manwhas}
+        {manwhas}
         sortBy={data.sortBy}
         sortOrder={data.sortOrder}
         onedit={handleEdit}

@@ -16,7 +16,7 @@
 
 <div class="container">
   <div class="header-section">
-  <h1 class="page-title">Dashboard</h1>
+    <h1 class="page-title">Dashboard</h1>
   </div>
 
   <div class="stats-grid">
@@ -168,7 +168,8 @@
   }
 
   .activity-item {
-    @apply flex items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-600;
+    @apply flex items-center justify-between p-4 bg-gray-900 rounded-lg border
+      border-gray-600;
   }
 
   .activity-info {
@@ -188,16 +189,23 @@
   }
 
   .activity-action {
-    @apply text-purple-400 text-sm no-underline px-4 py-2 rounded-md transition-colors hover:bg-purple-500 hover:text-white;
+    @apply text-purple-400 text-sm no-underline px-4 py-2 rounded-md
+      transition-colors hover:bg-purple-500 hover:text-white;
   }
 
   .quick-action-purple {
-    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white no-underline;
-    background: linear-gradient(135deg, var(--color-purple-dark) 0%, #5a4a7a 100%);
+    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white
+      no-underline;
+    background: linear-gradient(
+      135deg,
+      var(--color-purple-dark) 0%,
+      #5a4a7a 100%
+    );
   }
 
   .quick-action-blue {
-    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white no-underline;
+    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white
+      no-underline;
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   }
 

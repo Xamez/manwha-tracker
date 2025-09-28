@@ -1,9 +1,10 @@
 import type { RequestHandler } from "@sveltejs/kit";
 import { json } from "@sveltejs/kit";
-import { getManwhasCollection } from "$lib/database";
-import { authenticateUser } from "$lib/middleware";
-import type { AddManwhaRequest } from "$lib/types";
-import { isValidManwhaStatus } from "$lib/types";
+import { getManwhasCollection } from "$lib/database.ts";
+import { authenticateUser } from "$lib/middleware.ts";
+import type { AddManwhaRequest, Manwha } from "$lib/types.ts";
+import { isValidManwhaStatus } from "$lib/types.ts";
+import { getCoverImage } from "$lib/mangaScraper.ts";
 
 export const POST: RequestHandler = async (
   { request }: { request: Request },
@@ -29,7 +30,6 @@ export const POST: RequestHandler = async (
       endDate,
     } = body;
 
-    // Validate input
     if (!title?.trim()) {
       return json({ error: "Title is required" }, { status: 400 });
     }
@@ -56,9 +56,23 @@ export const POST: RequestHandler = async (
 
     const manwhasCollection = await getManwhasCollection();
 
-    // Create manwha
+    let coverImage: string | undefined;
+
+    if (link?.trim()) {
+      try {
+        console.log(`Scraping cover image for: ${link.trim()}`);
+        const coverData = await getCoverImage(link.trim());
+        coverImage = coverData.base64Image;
+        console.log(
+          `Cover image scraped successfully. Has image: ${coverData.hasImage}`,
+        );
+      } catch (error) {
+        console.warn(`Failed to scrape cover image for ${link.trim()}:`, error);
+      }
+    }
+
     const now = new Date();
-    const newManwha = {
+    const newManwha: Manwha = {
       userId: user.userId,
       title: title.trim(),
       description: description?.trim() || undefined,
@@ -70,6 +84,7 @@ export const POST: RequestHandler = async (
       endDate: endDate ? new Date(endDate) : undefined,
       status,
       rating,
+      coverImage,
       createdAt: now,
       updatedAt: now,
     };
