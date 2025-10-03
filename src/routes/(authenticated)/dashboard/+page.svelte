@@ -2,6 +2,7 @@
   import type { PageData } from "./$types";
   import StatsCard from "$lib/components/StatsCard.svelte";
   import { formatManwhaStatus } from "$lib/types.ts";
+  import { renderIcon } from "$lib/icons";
 
   interface Props {
     data: PageData;
@@ -88,21 +89,8 @@
 
   <div class="actions-grid">
     <a href="/manwhas/add" class="quick-action-purple">
-      <div style="display: flex; align-items: center">
-        <svg
-          style="width: 2rem; height: 2rem; margin-right: 1rem"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          >
-          </path>
-        </svg>
+      <div class="quick-action-content">
+        {@html renderIcon("plus", "quick-action-icon")}
         <div>
           <h3>Add New Manwha</h3>
           <p>Start tracking a new series</p>
@@ -111,21 +99,8 @@
     </a>
 
     <a href="/manwhas" class="quick-action-blue">
-      <div style="display: flex; align-items: center">
-        <svg
-          style="width: 2rem; height: 2rem; margin-right: 1rem"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          >
-          </path>
-        </svg>
+      <div class="quick-action-content">
+        {@html renderIcon("library", "quick-action-icon")}
         <div>
           <h3>View All Manwhas</h3>
           <p>Browse your collection</p>
@@ -194,7 +169,7 @@
   }
 
   .quick-action-purple {
-    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white
+    @apply block p-4 rounded-xl shadow-lg transition-shadow text-white
       no-underline;
     background: linear-gradient(
       135deg,
@@ -204,7 +179,7 @@
   }
 
   .quick-action-blue {
-    @apply block p-6 rounded-xl shadow-lg transition-shadow text-white
+    @apply block p-4 rounded-xl shadow-lg transition-shadow text-white
       no-underline;
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   }
@@ -212,6 +187,14 @@
   .quick-action-purple:hover,
   .quick-action-blue:hover {
     @apply shadow-2xl;
+  }
+
+  .quick-action-content {
+    @apply flex items-center;
+  }
+
+  :global(.quick-action-icon) {
+    @apply w-8 h-8 mr-4 text-white;
   }
 
   .quick-action-purple h3,

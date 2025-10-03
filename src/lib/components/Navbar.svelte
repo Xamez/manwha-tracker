@@ -2,6 +2,9 @@
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { browser } from "$app/environment";
+  import { renderIcon } from "$lib/icons";
+
+  let mobileMenuOpen = $state(false);
 
   async function handleLogout() {
     try {
@@ -18,6 +21,14 @@
     }
   }
 
+  function toggleMobileMenu() {
+    mobileMenuOpen = !mobileMenuOpen;
+  }
+
+  function closeMobileMenu() {
+    mobileMenuOpen = false;
+  }
+
   const currentPath = $derived($page.url.pathname);
   const isDashboard = $derived(currentPath === "/dashboard");
   const isManwhas = $derived(currentPath.startsWith("/manwhas"));
@@ -29,75 +40,110 @@
       <a href="/dashboard" class="brand-text">Manwha Tracker</a>
     </div>
 
-    <div class="navbar-menu">
-      <a href="/dashboard" class="navbar-link" class:active={isDashboard}>
+    <!-- Mobile menu button -->
+    <button
+      class="mobile-menu-button"
+      onclick={toggleMobileMenu}
+      aria-label="Toggle menu"
+    >
+      {#if mobileMenuOpen}
         <svg
-          class="w-4 h-4"
+          class="w-6 h-6"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          stroke-width="2"
         >
-          <rect width="7" height="9" x="3" y="3" rx="1" />
-          <rect width="7" height="5" x="14" y="3" rx="1" />
-          <rect width="7" height="9" x="14" y="12" rx="1" />
-          <rect width="7" height="5" x="3" y="16" rx="1" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
+      {:else}
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      {/if}
+    </button>
+
+    <!-- Desktop menu -->
+    <div class="navbar-menu desktop-menu">
+      <a href="/dashboard" class="navbar-link" class:active={isDashboard}>
+        {@html renderIcon("dashboard")}
         <span>Dashboard</span>
       </a>
       <a href="/manwhas" class="navbar-link" class:active={isManwhas}>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          >
-          </path>
-        </svg>
+        {@html renderIcon("book")}
         <span>My Manwhas</span>
       </a>
       <button onclick={handleLogout} class="navbar-link">
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-          >
-          </path>
-        </svg>
+        {@html renderIcon("logout")}
         <span>Logout</span>
       </button>
     </div>
   </div>
+
+  <!-- Mobile menu -->
+  {#if mobileMenuOpen}
+    <div class="mobile-menu">
+      <a
+        href="/dashboard"
+        class="navbar-link"
+        class:active={isDashboard}
+        onclick={closeMobileMenu}
+      >
+        {@html renderIcon("dashboard")}
+        <span>Dashboard</span>
+      </a>
+      <a
+        href="/manwhas"
+        class="navbar-link"
+        class:active={isManwhas}
+        onclick={closeMobileMenu}
+      >
+        {@html renderIcon("book")}
+        <span>My Manwhas</span>
+      </a>
+      <button
+        onclick={() => {
+          handleLogout();
+          closeMobileMenu();
+        }}
+        class="navbar-link"
+      >
+        {@html renderIcon("logout")}
+        <span>Logout</span>
+      </button>
+    </div>
+  {/if}
 </nav>
 
 <style>
+  @reference "tailwindcss";
+
   .navbar {
     background-color: var(--color-dark-primary);
     border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
   .navbar-container {
-    max-width: 70%;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    @apply flex justify-between items-center h-16 mx-auto;
+    @apply px-3 md:px-6 lg:px-8;
+    @apply max-w-full md:max-w-[90%] lg:max-w-screen-xl;
   }
 
   .navbar-brand {
@@ -105,35 +151,75 @@
   }
 
   .brand-text {
-    font-size: 1.25rem;
-    font-weight: bold;
+    @apply text-lg md:text-xl font-bold no-underline transition-colors;
     color: var(--color-text-primary);
   }
 
-  .navbar-menu {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .brand-text:hover {
+    color: var(--color-purple-light);
+  }
+
+  .mobile-menu-button {
+    @apply hidden md:hidden p-2 rounded-md cursor-pointer border-none
+      transition-colors;
+    color: var(--color-text-primary);
+    background: none;
+  }
+
+  .mobile-menu-button:hover {
+    background-color: var(--color-dark-secondary);
+  }
+
+  .mobile-menu-button svg {
+    @apply w-6 h-6;
+  }
+
+  .desktop-menu {
+    @apply hidden md:flex items-center gap-2;
+  }
+
+  .mobile-menu {
+    @apply hidden md:hidden flex-col gap-1 p-4 border-t;
+    background-color: var(--color-dark-secondary);
+    border-top-color: var(--color-border);
   }
 
   .navbar-link {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    @apply flex items-center gap-2 px-4 py-3 md:py-2.5 rounded-lg
+      cursor-pointer;
+    @apply transition-all no-underline border-none whitespace-nowrap;
+    @apply text-base md:text-sm w-full md:w-auto;
     color: var(--color-text-secondary);
-    text-decoration: none;
-    border: none;
     background: none;
-    font-size: 0.875rem;
+    font-family: inherit;
   }
 
-  .navbar-link:hover,
+  .navbar-link:hover {
+    background-color: var(--color-dark-secondary);
+    color: var(--color-text-primary);
+  }
+
   .navbar-link.active {
     background-color: var(--color-purple-dark);
     color: white;
+  }
+
+  .desktop-menu .navbar-link :global(svg) {
+    @apply w-4 h-4 flex-shrink-0;
+  }
+
+  .mobile-menu .navbar-link :global(svg) {
+    @apply w-5 h-5 flex-shrink-0;
+  }
+
+  /* Show mobile menu button on small screens */
+  @media (max-width: 768px) {
+    .mobile-menu-button {
+      @apply block;
+    }
+
+    .mobile-menu {
+      @apply flex;
+    }
   }
 </style>

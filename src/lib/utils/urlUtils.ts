@@ -31,16 +31,22 @@ export function generateChapterUrl(
   }
 
   switch (siteType) {
-    case "demonicscans":
-      return `${cleanBaseUrl}/chapter/${chapterNumber}/1`;
-    case "manhuaus":
+    case "demonicscans": {
+      const titleUrl = cleanBaseUrl.replace("/manga/", "/title/");
+      return `${titleUrl}/chapter/${chapterNumber}/1`;
+    }
+    case "manhuaus": {
       return `${cleanBaseUrl}/chapter-${chapterNumber}`;
-    case "manganato":
+    }
+    case "manganato": {
       return `${cleanBaseUrl}/chapter-${chapterNumber}`;
-    case "asuracomic":
+    }
+    case "asuracomic": {
       return `${cleanBaseUrl}/chapter-${chapterNumber}`;
-    default:
+    }
+    default: {
       return cleanBaseUrl;
+    }
   }
 }
 

@@ -5,6 +5,7 @@
   import ManwhaTable from "$lib/components/ManwhaTable.svelte";
   import StatsMini from "$lib/components/StatsMini.svelte";
   import { getManwhaStatusColor } from "$lib/types.ts";
+  import { renderIcon } from "$lib/icons";
   import type {
     AuthenticatedUser,
     Manwha,
@@ -120,20 +121,7 @@
           class:active={viewMode === "cards"}
           onclick={() => setViewMode("cards")}
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-            >
-            </path>
-          </svg>
+          {@html renderIcon("grid", "w-4 h-4")}
           Cards
         </button>
         <button
@@ -141,41 +129,13 @@
           class:active={viewMode === "table"}
           onclick={() => setViewMode("table")}
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M16 5H3" />
-            <path d="M16 12H3" />
-            <path d="M16 19H3" />
-            <path d="M21 5h.01" />
-            <path d="M21 12h.01" />
-            <path d="M21 19h.01" />
-          </svg>
+          {@html renderIcon("table", "w-4 h-4")}
           Table
         </button>
       </div>
     </div>
     <a href="/manwhas/add" class="btn-primary">
-      <svg
-        class="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 4v16m8-8H4"
-        >
-        </path>
-      </svg>
+      {@html renderIcon("cross", "w-4 h-4")}
       <span>Add New Manwha</span>
     </a>
   </div>
@@ -212,20 +172,7 @@
   {#if manwhas.length === 0}
     <div class="empty-state">
       <div class="text-center">
-        <svg
-          class="w-16 h-16 mx-auto text-gray-400 mb-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-          >
-          </path>
-        </svg>
+        {@html renderIcon("book", "w-16 h-16 mx-auto text-gray-400 mb-4")}
         <h3 class="text-xl font-semibold text-gray-300 mb-2">
           No manwhas yet
         </h3>
@@ -262,11 +209,22 @@
   @reference "tailwindcss";
 
   .container {
-    @apply max-w-[70%] mx-auto;
+    @apply max-w-[95%] sm:max-w-[90%] lg:max-w-[80%] xl:max-w-[70%] mx-auto
+      px-4;
+  }
+
+  .header-section {
+    @apply flex flex-col sm:flex-row items-start sm:items-center justify-between
+      gap-4 mb-6;
   }
 
   .header-left {
-    @apply flex items-center gap-6;
+    @apply flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6
+      w-full sm:w-auto;
+  }
+
+  .page-title {
+    @apply text-2xl sm:text-3xl font-bold;
   }
 
   .view-toggle {
@@ -287,13 +245,18 @@
   }
 
   .btn-primary {
-    @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-white
-      no-underline transition-all duration-200 bg-indigo-600 hover:bg-indigo-700
-      hover:-translate-y-0.5;
+    @apply flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+      rounded-lg font-medium text-sm sm:text-base text-white no-underline
+      transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 w-full
+      sm:w-auto whitespace-nowrap;
+  }
+
+  .btn-primary span {
+    @apply hidden sm:inline;
   }
 
   .manwhas-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6;
+    @apply grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6;
   }
 
   .empty-state {

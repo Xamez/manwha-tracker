@@ -4,6 +4,7 @@
   import StatusBadge from "./StatusBadge.svelte";
   import type { Manwha } from "$lib/types.ts";
   import { generateChapterUrl } from "$lib/utils/urlUtils.ts";
+  import { renderIcon } from "$lib/icons";
 
   interface Props {
     manwhas: Manwha[];
@@ -35,6 +36,13 @@
     return sortOrder === "asc" ? "asc" : "desc";
   }
 
+  function getSortIconHtml(column: string) {
+    const iconType = getSortIcon(column);
+    if (iconType === "asc") return renderIcon("chevronUp");
+    if (iconType === "desc") return renderIcon("chevronDown");
+    return renderIcon("chevronUpDown");
+  }
+
   function handleEdit(manwhaId: string) {
     onedit(manwhaId);
   }
@@ -51,52 +59,7 @@
         <th>
           <button class="sort-header" onclick={() => handleSort("title")}>
             <span>Name</span>
-            {#if getSortIcon("title") === "asc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                >
-                </path>
-              </svg>
-            {:else if getSortIcon("title") === "desc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                >
-                </path>
-              </svg>
-            {:else}
-              <svg
-                class="w-4 h-4 opacity-30"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-                >
-                </path>
-              </svg>
-            {/if}
+            {@html getSortIconHtml("title")}
           </button>
         </th>
         <th>
@@ -105,52 +68,7 @@
             onclick={() => handleSort("currentChapter")}
           >
             <span>Chapter</span>
-            {#if getSortIcon("currentChapter") === "asc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                >
-                </path>
-              </svg>
-            {:else if getSortIcon("currentChapter") === "desc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                >
-                </path>
-              </svg>
-            {:else}
-              <svg
-                class="w-4 h-4 opacity-30"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-                >
-                </path>
-              </svg>
-            {/if}
+            {@html getSortIconHtml("currentChapter")}
           </button>
         </th>
         <th>
@@ -159,52 +77,7 @@
             onclick={() => handleSort("status")}
           >
             <span>Status</span>
-            {#if getSortIcon("status") === "asc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                >
-                </path>
-              </svg>
-            {:else if getSortIcon("status") === "desc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                >
-                </path>
-              </svg>
-            {:else}
-              <svg
-                class="w-4 h-4 opacity-30"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-                >
-                </path>
-              </svg>
-            {/if}
+            {@html getSortIconHtml("status")}
           </button>
         </th>
         <th>
@@ -213,52 +86,7 @@
             onclick={() => handleSort("rating")}
           >
             <span>Rating</span>
-            {#if getSortIcon("rating") === "asc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                >
-                </path>
-              </svg>
-            {:else if getSortIcon("rating") === "desc"}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                >
-                </path>
-              </svg>
-            {:else}
-              <svg
-                class="w-4 h-4 opacity-30"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 9l4-4 4 4m0 6l-4 4-4-4"
-                >
-                </path>
-              </svg>
-            {/if}
+            {@html getSortIconHtml("rating")}
           </button>
         </th>
         <th>Actions</th>
@@ -280,20 +108,7 @@
                 title="Read Chapter {manwha.currentChapter}"
               >
                 {manwha.currentChapter}
-                <svg
-                  class="w-3 h-3 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  >
-                  </path>
-                </svg>
+                {@html renderIcon("externalLink")}
               </a>
             {:else}
               <span>{manwha.currentChapter}</span>
@@ -317,20 +132,7 @@
                 title="Edit"
                 aria-label="Edit manwha"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  >
-                  </path>
-                </svg>
+                {@html renderIcon("edit")}
               </button>
               <button
                 class="action-btn delete-btn"
@@ -338,20 +140,7 @@
                 title="Delete"
                 aria-label="Delete manwha"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  >
-                  </path>
-                </svg>
+                {@html renderIcon("delete")}
               </button>
             </div>
           </td>
@@ -404,12 +193,6 @@
 
   .chapter-cell {
     @apply font-medium text-gray-200;
-  }
-
-  .chapter-link {
-    @apply inline-flex items-center font-semibold text-indigo-400
-      hover:text-indigo-300 transition-colors duration-200 no-underline
-      hover:underline;
   }
 
   .rating-number {

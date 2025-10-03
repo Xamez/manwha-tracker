@@ -1,12 +1,6 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import { goto } from "$app/navigation";
-
-  interface Props {
-    data: PageData;
-  }
-
-  let { data }: Props = $props();
+  import { renderIcon } from "$lib/icons";
 
   let title = $state("");
   let description = $state("");
@@ -29,7 +23,6 @@
     { value: "ended", label: "Ended" },
   ];
 
-  // Effect to auto-set end date when status changes to completed states
   $effect(() => {
     if (
       (status === "completed" || status === "abandoned" ||
@@ -258,61 +251,15 @@
           class="btn-secondary"
           disabled={loading}
         >
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            >
-            </path>
-          </svg>
+          {@html renderIcon("close", "w-4 h-4 mr-2")}
           Cancel
         </button>
         <button type="submit" class="btn-primary" disabled={loading}>
           {#if loading}
-            <svg
-              class="w-4 h-4 mr-2 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              >
-              </circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              >
-              </path>
-            </svg>
+            {@html renderIcon("spinner", "w-4 h-4 mr-2")}
             Adding...
           {:else}
-            <svg
-              class="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              >
-              </path>
-            </svg>
+            {@html renderIcon("plus", "w-4 h-4 mr-2")}
             Add Manwha
           {/if}
         </button>
