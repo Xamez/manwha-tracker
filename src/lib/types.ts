@@ -63,6 +63,8 @@ export interface ManwhaStats {
   completed: number;
   toContinue: number;
   abandoned: number;
+  totalChaptersRead: number;
+  estimatedReadingHours: number;
 }
 
 export function isValidManwhaStatus(status: string): status is ManwhaStatus {

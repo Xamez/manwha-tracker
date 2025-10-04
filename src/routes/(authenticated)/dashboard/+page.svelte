@@ -42,12 +42,6 @@
       color="green"
     />
     <StatsCard
-      title="Completed"
-      value={data.stats.completed}
-      icon="completed"
-      color="blue"
-    />
-    <StatsCard
       title="To Continue"
       value={data.stats.toContinue}
       icon="planned"
@@ -58,6 +52,18 @@
       value={data.stats.total}
       icon="book"
       color="purple"
+    />
+    <StatsCard
+      title="Chapters Read"
+      value={data.stats.totalChaptersRead.toLocaleString()}
+      icon="book"
+      color="purple"
+    />
+    <StatsCard
+      title="Reading Time"
+      value={`${data.stats.estimatedReadingHours}h`}
+      icon="hourglass"
+      color="blue"
     />
   </div>
 

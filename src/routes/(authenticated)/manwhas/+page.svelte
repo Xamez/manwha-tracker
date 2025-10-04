@@ -132,7 +132,7 @@
     </a>
   </div>
 
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
     <StatsMini value={stats.total} label="Total" />
     <StatsMini
       value={stats.reading}
@@ -153,6 +153,16 @@
       value={stats.abandoned}
       label="Abandoned"
       colorClass={getStatColor("abandoned")}
+    />
+    <StatsMini
+      value={stats.totalChaptersRead.toLocaleString()}
+      label="Chapters Read"
+      colorClass="text-purple-400"
+    />
+    <StatsMini
+      value={`${stats.estimatedReadingHours}h`}
+      label="Reading Time"
+      colorClass="text-cyan-400"
     />
   </div>
 
