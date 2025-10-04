@@ -1,6 +1,6 @@
 import { type Collection, type Db, type Document, MongoClient } from "mongodb";
-import { SERVER_ENV } from "./env";
-import type { Manwha, User } from "./types";
+import { SERVER_ENV } from "./env.ts";
+import type { Manwha, User } from "./types.ts";
 
 class DatabaseConnection {
   private static instance: DatabaseConnection;

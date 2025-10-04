@@ -3,8 +3,9 @@
   import { page } from "$app/stores";
   import StatusBadge from "./StatusBadge.svelte";
   import type { Manwha } from "$lib/types.ts";
-  import { generateChapterUrl } from "$lib/utils/urlUtils.ts";
+
   import { renderIcon } from "$lib/icons";
+  import ChapterInfo from "./ChapterInfo.svelte";
 
   interface Props {
     manwhas: Manwha[];
@@ -12,9 +13,11 @@
     sortOrder: string;
     onedit: (id: string) => void;
     ondelete: (id: string) => void;
+    onincrement: (id: string) => void;
   }
 
-  let { manwhas, sortBy, sortOrder, onedit, ondelete }: Props = $props();
+  let { manwhas, sortBy, sortOrder, onedit, ondelete, onincrement }: Props =
+    $props();
 
   function handleSort(column: string) {
     let newOrder = "desc";
@@ -50,6 +53,14 @@
   function handleDelete(manwhaId: string) {
     ondelete(manwhaId);
   }
+
+  function handleIncrement(manwhaId: string) {
+    onincrement(manwhaId);
+  }
+
+  function handleView(manwhaId: string) {
+    goto(`/manwhas/${manwhaId}`);
+  }
 </script>
 
 <div class="table-container">
@@ -62,7 +73,7 @@
             {@html getSortIconHtml("title")}
           </button>
         </th>
-        <th>
+        <th class="hidden sm:table-cell">
           <button
             class="sort-header"
             onclick={() => handleSort("currentChapter")}
@@ -71,7 +82,7 @@
             {@html getSortIconHtml("currentChapter")}
           </button>
         </th>
-        <th>
+        <th class="hidden sm:table-cell">
           <button
             class="sort-header"
             onclick={() => handleSort("status")}
@@ -80,7 +91,7 @@
             {@html getSortIconHtml("status")}
           </button>
         </th>
-        <th>
+        <th class="hidden lg:table-cell">
           <button
             class="sort-header"
             onclick={() => handleSort("rating")}
@@ -89,43 +100,52 @@
             {@html getSortIconHtml("rating")}
           </button>
         </th>
-        <th>Actions</th>
+        <th class="hidden sm:table-cell">Actions</th>
       </tr>
     </thead>
     <tbody>
       {#each manwhas as manwha}
         <tr class="table-row">
           <td class="title-cell">
-            <span class="title">{manwha.title}</span>
+            <button class="title-link" onclick={() => handleView(manwha._id!)}>
+              {manwha.title}
+            </button>
           </td>
-          <td class="chapter-cell">
+          <td class="hidden sm:table-cell">
             {#if manwha.link}
-              <a
-                href={generateChapterUrl(manwha.link, manwha.currentChapter)}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="chapter-link"
-                title="Read Chapter {manwha.currentChapter}"
-              >
-                {manwha.currentChapter}
-                {@html renderIcon("externalLink")}
-              </a>
+              <ChapterInfo link={manwha.link} chapter={manwha.currentChapter} />
             {:else}
               <span>{manwha.currentChapter}</span>
             {/if}
           </td>
-          <td class="status-cell">
+          <td class="hidden sm:table-cell">
             <StatusBadge status={manwha.status} />
           </td>
-          <td class="rating-cell">
+          <td class="hidden lg:table-cell">
             {#if manwha.rating}
               <span class="rating-number">{manwha.rating}/10</span>
             {:else}
               <span class="no-rating">-</span>
             {/if}
           </td>
-          <td class="actions-cell">
+          <td class="hidden sm:table-cell">
             <div class="action-buttons">
+              <button
+                class="action-btn increment-btn"
+                onclick={() => handleIncrement(manwha._id!)}
+                title="Increment Chapter"
+                aria-label="Increment chapter"
+              >
+                {@html renderIcon("plus")}
+              </button>
+              <button
+                class="action-btn view-btn"
+                onclick={() => handleView(manwha._id!)}
+                title="View"
+                aria-label="View manwha"
+              >
+                {@html renderIcon("info")}
+              </button>
               <button
                 class="action-btn edit-btn"
                 onclick={() => handleEdit(manwha._id!)}
@@ -187,12 +207,9 @@
     @apply max-w-xs;
   }
 
-  .title-cell .title {
-    @apply font-semibold text-gray-200;
-  }
-
-  .chapter-cell {
-    @apply font-medium text-gray-200;
+  .title-link {
+    @apply font-semibold text-gray-200 bg-transparent border-none cursor-pointer
+      p-0 text-left transition-colors duration-200 hover:text-indigo-400;
   }
 
   .rating-number {
@@ -210,6 +227,15 @@
   .action-btn {
     @apply flex items-center justify-center w-8 h-8 rounded-md border-none
       cursor-pointer transition-all duration-200;
+  }
+
+  .increment-btn {
+    @apply bg-green-900/20 text-green-400 hover:bg-green-900/30;
+  }
+
+  .view-btn {
+    @apply bg-purple-900/20 text-purple-400 hover:bg-purple-900/30 hidden
+      md:flex;
   }
 
   .edit-btn {

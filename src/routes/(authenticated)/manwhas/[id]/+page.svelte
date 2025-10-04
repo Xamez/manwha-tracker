@@ -4,12 +4,26 @@
   import ChapterInfo from "$lib/components/ChapterInfo.svelte";
   import IconButton from "$lib/components/IconButton.svelte";
   import { renderIcon } from "$lib/icons";
+  import { invalidateAll } from "$app/navigation";
+  import { incrementManwhaChapter } from "$lib/utils/manwhaUtils.ts";
 
   interface Props {
     data: PageData;
   }
 
   let { data }: Props = $props();
+
+  async function handleIncrement() {
+    if (!data.manwha._id) return;
+
+    const success = await incrementManwhaChapter(
+      data.manwha._id,
+      data.manwha,
+    );
+    if (success) {
+      await invalidateAll();
+    }
+  }
 
   function formatDate(dateValue?: Date | string) {
     if (!dateValue) return "N/A";
@@ -42,6 +56,16 @@
   <div class="header-section">
     <h1 class="page-title">{data.manwha.title}</h1>
     <div class="header-actions">
+      <IconButton
+        icon="plus"
+        onclick={handleIncrement}
+        title="Increment Chapter"
+        ariaLabel="Increment chapter for {data.manwha.title}"
+        textColor="text-green-400"
+        bgColor="bg-green-900/20"
+        hoverBgColor="hover:bg-green-900/30"
+        size="lg"
+      />
       <IconButton
         icon="edit"
         href="/manwhas/{data.manwha._id}/edit"

@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import ManwhaCard from "$lib/components/ManwhaCard.svelte";
   import ManwhaTable from "$lib/components/ManwhaTable.svelte";
   import StatsMini from "$lib/components/StatsMini.svelte";
   import { getManwhaStatusColor } from "$lib/types.ts";
   import { renderIcon } from "$lib/icons";
+  import { incrementManwhaChapter } from "$lib/utils/manwhaUtils.ts";
   import type {
     AuthenticatedUser,
     Manwha,
@@ -59,6 +60,16 @@
     deleteManwha(manwhaId);
   }
 
+  async function handleIncrement(manwhaId: string) {
+    const manwha = manwhas.find((m) => m._id === manwhaId);
+    if (!manwha) return;
+
+    const success = await incrementManwhaChapter(manwhaId, manwha);
+    if (success) {
+      await invalidateAll();
+    }
+  }
+
   async function deleteManwha(manwhaId: string) {
     if (confirm("Are you sure you want to delete this manwha?")) {
       try {
@@ -67,8 +78,7 @@
         });
 
         if (response.ok) {
-          manwhas = manwhas.filter((m) => m._id !== manwhaId);
-          await refreshData();
+          await invalidateAll();
         } else {
           const errorData = await response.json();
           alert(
@@ -80,29 +90,6 @@
         console.error("Delete error:", error);
         alert("Network error occurred while deleting");
       }
-    }
-  }
-
-  async function refreshData() {
-    try {
-      const response = await fetch("/api/manwhas");
-      if (response.ok) {
-        const result = await response.json();
-        manwhas = result.manwhas;
-
-        stats = {
-          total: manwhas.length,
-          reading: manwhas.filter((m) => m.status === "reading").length,
-          completed: manwhas.filter((m) => m.status === "completed").length,
-          toContinue: manwhas.filter((m) =>
-            m.status === "to-continue"
-          ).length,
-          abandoned: manwhas.filter((m) => m.status === "abandoned").length,
-          ended: manwhas.filter((m) => m.status === "ended").length,
-        };
-      }
-    } catch (error) {
-      console.error("Error refreshing data:", error);
     }
   }
 </script>
@@ -190,6 +177,7 @@
             {manwha}
             onedit={handleEdit}
             ondelete={handleDelete}
+            onincrement={handleIncrement}
           />
         {/each}
       </div>
@@ -200,6 +188,7 @@
         sortOrder={data.sortOrder}
         onedit={handleEdit}
         ondelete={handleDelete}
+        onincrement={handleIncrement}
       />
     {/if}
   {/if}

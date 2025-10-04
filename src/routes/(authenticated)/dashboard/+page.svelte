@@ -5,13 +5,24 @@
   import ChapterInfo from "$lib/components/ChapterInfo.svelte";
   import IconButton from "$lib/components/IconButton.svelte";
   import { renderIcon } from "$lib/icons";
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
+  import { incrementManwhaChapter } from "$lib/utils/manwhaUtils.ts";
 
   interface Props {
     data: PageData;
   }
 
   let { data }: Props = $props();
+
+  async function handleIncrement(manwhaId: string) {
+    const manwha = data.recentManwhas.find((m) => m._id === manwhaId);
+    if (!manwha) return;
+
+    const success = await incrementManwhaChapter(manwhaId, manwha);
+    if (success) {
+      await invalidateAll();
+    }
+  }
 </script>
 
 <svelte:head>
@@ -66,7 +77,7 @@
         {#each data.recentManwhas as manwha}
           <div class="activity-item">
             <button
-              class="activity-item-link"
+              class="item-link"
               onclick={() => goto(`/manwhas/${manwha._id}`)}
             >
               {#if manwha.coverImage}
@@ -99,6 +110,15 @@
               </div>
             </button>
             <div class="activity-actions">
+              <IconButton
+                icon="plus"
+                onclick={() => handleIncrement(manwha._id!)}
+                title="Increment Chapter"
+                ariaLabel="Increment chapter"
+                textColor="text-green-400"
+                bgColor="bg-green-900/20"
+                hoverBgColor="hover:bg-green-900/30"
+              />
               <IconButton
                 icon="edit"
                 href="/manwhas/{manwha._id}/edit"
@@ -175,17 +195,13 @@
       border-gray-600 transition-colors hover:bg-gray-800 hover:border-gray-500;
   }
 
-  .activity-item-link {
+  .item-link {
     @apply flex items-center flex-1 min-w-0 cursor-pointer bg-transparent
       border-none p-0 text-left text-inherit;
   }
 
-  .activity-item-link:focus-visible {
-    @apply outline-2 outline-offset-2 outline-purple-500;
-  }
-
   .activity-actions {
-    @apply flex-shrink-0 ml-4;
+    @apply flex-shrink-0 ml-4 flex gap-2;
   }
 
   .activity-image {
