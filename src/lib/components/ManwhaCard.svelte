@@ -47,9 +47,17 @@
   }
 </script>
 
-<button
-  class="item-link"
+<div
+  class="manwha-card-wrapper"
   onclick={() => goto(`/manwhas/${manwha._id}`)}
+  role="button"
+  tabindex="0"
+  onkeydown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      goto(`/manwhas/${manwha._id}`);
+    }
+  }}
 >
   <div class="manwha-card">
     <div class="manwha-layout">
@@ -116,10 +124,6 @@
             {/if}
           </div>
 
-          {#if manwha.note}
-            <p class="manwha-notes">{manwha.note}</p>
-          {/if}
-
           {#if manwha.lastReadAt}
             <p class="last-read">Last read: {formatDate(manwha.lastReadAt)}</p>
           {/if}
@@ -127,10 +131,14 @@
       </div>
     </div>
   </div>
-</button>
+</div>
 
 <style>
   @reference "tailwindcss";
+
+  .manwha-card-wrapper {
+    @apply cursor-pointer;
+  }
 
   .manwha-card {
     @apply p-6 rounded-lg shadow-sm border border-gray-600 bg-gray-800
@@ -189,9 +197,5 @@
 
   .last-read {
     @apply text-xs text-gray-400;
-  }
-
-  .manwha-notes {
-    @apply text-sm p-3 rounded-lg bg-gray-700 text-gray-300;
   }
 </style>

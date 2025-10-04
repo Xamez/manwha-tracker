@@ -32,7 +32,6 @@ export interface Manwha {
   _id?: string;
   userId: string;
   title: string;
-  description?: string;
   note?: string;
   link?: string;
   currentChapter: number;
@@ -48,8 +47,7 @@ export interface Manwha {
 }
 
 export interface AddManwhaRequest {
-  title: string;
-  description?: string;
+  title?: string;
   note?: string;
   link?: string;
   currentChapter: number;

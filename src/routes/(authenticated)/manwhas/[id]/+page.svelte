@@ -153,13 +153,6 @@
         </div>
       </div>
 
-      {#if data.manwha.description}
-        <div class="info-card">
-          <h2 class="section-title">Description</h2>
-          <p class="description-text">{data.manwha.description}</p>
-        </div>
-      {/if}
-
       {#if data.manwha.note}
         <div class="info-card">
           <h2 class="section-title">Personal Notes</h2>
@@ -265,10 +258,6 @@
 
   .info-value.rating {
     @apply text-yellow-400;
-  }
-
-  .description-text {
-    @apply text-gray-300 leading-relaxed whitespace-pre-wrap;
   }
 
   .note-text {

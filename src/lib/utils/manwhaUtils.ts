@@ -12,7 +12,6 @@ export async function incrementManwhaChapter(
       },
       body: JSON.stringify({
         title: manwha.title,
-        description: manwha.description,
         note: manwha.note,
         link: manwha.link,
         currentChapter: manwha.currentChapter + 1,

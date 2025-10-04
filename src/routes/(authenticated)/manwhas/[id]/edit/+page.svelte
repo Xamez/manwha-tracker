@@ -10,7 +10,6 @@
   let { data }: Props = $props();
 
   let title = $state(data.manwha.title);
-  let description = $state(data.manwha.description || "");
   let note = $state(data.manwha.note || "");
   let link = $state(data.manwha.link || "");
   let currentChapter = $state(data.manwha.currentChapter);
@@ -63,7 +62,6 @@
     try {
       const manwhaData = {
         title: title.trim(),
-        description: description.trim() || undefined,
         note: note.trim() || undefined,
         link: link.trim() || undefined,
         currentChapter,
@@ -162,18 +160,6 @@
           required
           disabled={loading}
         />
-      </div>
-
-      <div class="form-group">
-        <label for="description" class="form-label">Description</label>
-        <textarea
-          id="description"
-          bind:value={description}
-          class="form-textarea"
-          placeholder="Brief description of the manwha"
-          rows="3"
-          disabled={loading}
-        ></textarea>
       </div>
 
       <div class="form-group">

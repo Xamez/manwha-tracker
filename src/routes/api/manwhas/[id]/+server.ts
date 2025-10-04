@@ -53,7 +53,6 @@ export const PUT: RequestHandler = async ({ request, params }) => {
     const body: UpdateManwhaRequest = await request.json();
     const {
       title,
-      description,
       note,
       link,
       currentChapter,
@@ -105,12 +104,12 @@ export const PUT: RequestHandler = async ({ request, params }) => {
 
     if (newLink && newLink !== existingLink) {
       try {
-        console.log(`Scraping new cover image for: ${newLink}`);
+        // console.log(`Scraping new cover image for: ${newLink}`);
         const coverData = await getCoverImage(newLink);
         coverImage = coverData.base64Image;
-        console.log(
-          `Cover image scraped successfully. Has image: ${coverData.hasImage}`,
-        );
+        // console.log(
+        //   `Cover image scraped successfully. Has image: ${coverData.hasImage}`,
+        // );
       } catch (error) {
         console.warn(`Failed to scrape cover image for ${newLink}:`, error);
       }
@@ -120,7 +119,6 @@ export const PUT: RequestHandler = async ({ request, params }) => {
 
     const updateData = {
       title: title.trim(),
-      description: description?.trim() || undefined,
       note: note?.trim() || undefined,
       link: newLink || undefined,
       currentChapter,

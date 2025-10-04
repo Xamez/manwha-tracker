@@ -20,7 +20,6 @@ export const POST: RequestHandler = async (
     const body: AddManwhaRequest = await request.json();
     const {
       title,
-      description,
       note,
       link,
       currentChapter,
@@ -30,8 +29,8 @@ export const POST: RequestHandler = async (
       endDate,
     } = body;
 
-    if (!title?.trim()) {
-      return json({ error: "Title is required" }, { status: 400 });
+    if (!link?.trim()) {
+      return json({ error: "Link is required" }, { status: 400 });
     }
 
     if (!isValidManwhaStatus(status)) {
@@ -57,27 +56,31 @@ export const POST: RequestHandler = async (
     const manwhasCollection = await getManwhasCollection();
 
     let coverImage: string | undefined;
+    let scrapedTitle: string;
 
-    if (link?.trim()) {
-      try {
-        console.log(`Scraping cover image for: ${link.trim()}`);
-        const coverData = await getCoverImage(link.trim());
-        coverImage = coverData.base64Image;
-        console.log(
-          `Cover image scraped successfully. Has image: ${coverData.hasImage}`,
-        );
-      } catch (error) {
-        console.warn(`Failed to scrape cover image for ${link.trim()}:`, error);
-      }
+    try {
+      console.log(`Scraping manga data for: ${link.trim()}`);
+      const scrapedData = await getCoverImage(link.trim());
+      coverImage = scrapedData.base64Image;
+      scrapedTitle = scrapedData.title;
+      console.log(
+        `Manga data scraped successfully. Title: ${scrapedTitle}, Has image: ${scrapedData.hasImage}`,
+      );
+    } catch (error) {
+      console.error(`Failed to scrape manga data for ${link.trim()}:`, error);
+      return json({
+        error: "Failed to scrape manga data from the provided link",
+      }, {
+        status: 400,
+      });
     }
 
     const now = new Date();
     const newManwha: Manwha = {
       userId: user.userId,
-      title: title.trim(),
-      description: description?.trim() || undefined,
+      title: title?.trim() || scrapedTitle,
       note: note?.trim() || undefined,
-      link: link?.trim() || undefined,
+      link: link.trim(),
       currentChapter,
       lastReadAt: now,
       startDate: new Date(startDate),
@@ -130,7 +133,6 @@ export const GET: RequestHandler = async (
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
         { note: { $regex: search, $options: "i" } },
       ];
     }

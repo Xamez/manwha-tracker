@@ -2,8 +2,6 @@
   import { goto } from "$app/navigation";
   import { renderIcon } from "$lib/icons";
 
-  let title = $state("");
-  let description = $state("");
   let note = $state("");
   let link = $state("");
   let currentChapter = $state(1);
@@ -34,8 +32,8 @@
   });
 
   async function handleSubmit() {
-    if (!title.trim()) {
-      errorMessage = "Title is required";
+    if (!link.trim()) {
+      errorMessage = "Link is required to scrape manga information";
       return;
     }
 
@@ -55,10 +53,8 @@
 
     try {
       const manwhaData = {
-        title: title.trim(),
-        description: description.trim() || undefined,
         note: note.trim() || undefined,
-        link: link.trim() || undefined,
+        link: link.trim(),
         currentChapter,
         status,
         rating: rating ? parseFloat(rating) : undefined,
@@ -100,7 +96,9 @@
 <div class="max-w-2xl mx-auto">
   <div class="page-header">
     <h1 class="page-title">Add New Manwha</h1>
-    <p class="page-subtitle">Start tracking a new series</p>
+    <p class="page-subtitle">
+      Enter a manga URL to automatically fetch title and cover image
+    </p>
   </div>
 
   <div class="form-container">
@@ -111,28 +109,21 @@
       }}
     >
       <div class="form-group">
-        <label for="title" class="form-label">Title *</label>
+        <label for="link" class="form-label">
+          Manga URL *
+          <span class="text-xs text-gray-400 font-normal block mt-1">
+            Enter the manga URL (title will be automatically scraped)
+          </span>
+        </label>
         <input
-          id="title"
-          type="text"
-          bind:value={title}
+          id="link"
+          type="url"
+          bind:value={link}
           class="form-input"
-          placeholder="Enter manwha title"
+          placeholder="https://demonicscans.org/manga/your-manga-title"
           required
           disabled={loading}
         />
-      </div>
-
-      <div class="form-group">
-        <label for="description" class="form-label">Description</label>
-        <textarea
-          id="description"
-          bind:value={description}
-          class="form-textarea"
-          placeholder="Brief description of the manwha"
-          rows="3"
-          disabled={loading}
-        ></textarea>
       </div>
 
       <div class="form-group">
@@ -145,23 +136,6 @@
           rows="2"
           disabled={loading}
         ></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="link" class="form-label">
-          Base Link
-          <span class="text-xs text-gray-400 font-normal block mt-1">
-            Enter the base URL (chapters will be automatically appended)
-          </span>
-        </label>
-        <input
-          id="link"
-          type="url"
-          bind:value={link}
-          class="form-input"
-          placeholder="https://demonicscans.org/manga/your-manga-title"
-          disabled={loading}
-        />
       </div>
 
       <div class="form-row">

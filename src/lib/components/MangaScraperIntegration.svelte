@@ -5,6 +5,7 @@
     base64Image: string;
     originalUrl?: string;
     downloadBlocked?: boolean;
+    title?: string;
   }
 
   let url = "";
@@ -123,6 +124,15 @@
           Ready for Database
         </span>
       </div>
+
+      {#if mangaData.title}
+        <div class="mb-4">
+          <h3 class="font-medium text-gray-700 mb-2">Title</h3>
+          <div class="bg-gray-50 rounded-md p-3 text-gray-800">
+            {mangaData.title}
+          </div>
+        </div>
+      {/if}
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="space-y-3">
