@@ -59,13 +59,9 @@ export const POST: RequestHandler = async (
     let scrapedTitle: string;
 
     try {
-      console.log(`Scraping manga data for: ${link.trim()}`);
       const scrapedData = await getCoverImage(link.trim());
       coverImage = scrapedData.base64Image;
       scrapedTitle = scrapedData.title;
-      console.log(
-        `Manga data scraped successfully. Title: ${scrapedTitle}, Has image: ${scrapedData.hasImage}`,
-      );
     } catch (error) {
       console.error(`Failed to scrape manga data for ${link.trim()}:`, error);
       return json({
