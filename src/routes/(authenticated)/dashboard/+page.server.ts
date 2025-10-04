@@ -12,14 +12,10 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
 
   try {
     const manwhasCollection = await getManwhasCollection();
-    const manwhas = await manwhasCollection
-      .find({ userId: user.userId })
-      .sort({ updatedAt: -1 })
-      .limit(3)
-      .toArray();
 
     const allManwhas = await manwhasCollection
       .find({ userId: user.userId })
+      .sort({ updatedAt: -1 })
       .toArray();
 
     const stats = {
@@ -31,10 +27,12 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
       ended: allManwhas.filter((m) => m.status === "ended").length,
     };
 
+    const recentManwhas = allManwhas.slice(0, 3);
+
     return {
       user,
       stats,
-      recentManwhas: manwhas.map((manwha) => ({
+      recentManwhas: recentManwhas.map((manwha) => ({
         ...manwha,
         _id: manwha._id?.toString(),
       })),

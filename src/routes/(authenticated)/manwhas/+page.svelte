@@ -214,8 +214,8 @@
   }
 
   .header-left {
-    @apply flex flex-row items-center md:items-center gap-4 md:gap-6 justify-between
-      w-full md:w-auto;
+    @apply flex flex-row items-center md:items-center gap-4 md:gap-6
+      justify-between w-full md:w-auto;
   }
 
   .page-title {

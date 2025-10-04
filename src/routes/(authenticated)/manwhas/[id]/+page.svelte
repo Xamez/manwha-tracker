@@ -14,7 +14,9 @@
   function formatDate(dateValue?: Date | string) {
     if (!dateValue) return "N/A";
     try {
-      const date = typeof dateValue === "string" ? new Date(dateValue) : dateValue;
+      const date = typeof dateValue === "string"
+        ? new Date(dateValue)
+        : dateValue;
       return date.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -94,7 +96,10 @@
           <div class="info-item">
             <span class="info-label">Current Chapter</span>
             <div class="info-value">
-              <ChapterInfo chapter={data.manwha.currentChapter} link={data.manwha.link} />
+              <ChapterInfo
+                chapter={data.manwha.currentChapter}
+                link={data.manwha.link}
+              />
             </div>
           </div>
 
@@ -169,8 +174,8 @@
   }
 
   .cover-button {
-    @apply relative rounded-lg overflow-hidden border-2 border-gray-600 
-      shadow-lg transition-all focus:outline-none focus:ring-2 
+    @apply relative rounded-lg overflow-hidden border-2 border-gray-600
+      shadow-lg transition-all focus:outline-none focus:ring-2
       focus:ring-purple-500;
     @apply max-w-xs w-full;
   }
@@ -189,7 +194,7 @@
   }
 
   .cover-overlay {
-    @apply absolute inset-0 bg-black/70 flex flex-col items-center 
+    @apply absolute inset-0 bg-black/70 flex flex-col items-center
       justify-center opacity-0 transition-opacity;
   }
 
@@ -214,7 +219,7 @@
   }
 
   .section-title {
-    @apply text-xl font-semibold mb-4 text-gray-100 pb-2 border-b 
+    @apply text-xl font-semibold mb-4 text-gray-100 pb-2 border-b
       border-gray-700;
   }
 
@@ -243,7 +248,7 @@
   }
 
   .note-text {
-    @apply text-gray-300 leading-relaxed whitespace-pre-wrap bg-gray-900 
-      p-4 rounded-lg border border-gray-700;
+    @apply text-gray-300 leading-relaxed whitespace-pre-wrap bg-gray-900 p-4
+      rounded-lg border border-gray-700;
   }
 </style>

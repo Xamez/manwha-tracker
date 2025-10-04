@@ -5,6 +5,7 @@
   import ChapterInfo from "$lib/components/ChapterInfo.svelte";
   import IconButton from "$lib/components/IconButton.svelte";
   import { renderIcon } from "$lib/icons";
+  import { goto } from "$app/navigation";
 
   interface Props {
     data: PageData;
@@ -64,7 +65,10 @@
       <div class="activity-list">
         {#each data.recentManwhas as manwha}
           <div class="activity-item">
-            <a href="/manwhas/{manwha._id}" class="activity-item-link">
+            <button
+              class="activity-item-link"
+              onclick={() => goto(`/manwhas/${manwha._id}`)}
+            >
               {#if manwha.coverImage}
                 <img
                   src={manwha.coverImage}
@@ -93,7 +97,7 @@
                   }
                 </p>
               </div>
-            </a>
+            </button>
             <div class="activity-actions">
               <IconButton
                 icon="edit"
@@ -172,7 +176,12 @@
   }
 
   .activity-item-link {
-    @apply flex items-center flex-1 min-w-0 no-underline text-inherit;
+    @apply flex items-center flex-1 min-w-0 cursor-pointer bg-transparent
+      border-none p-0 text-left text-inherit;
+  }
+
+  .activity-item-link:focus-visible {
+    @apply outline-2 outline-offset-2 outline-purple-500;
   }
 
   .activity-actions {

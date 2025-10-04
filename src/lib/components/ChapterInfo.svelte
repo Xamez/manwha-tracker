@@ -10,7 +10,7 @@
   let { chapter, link }: Props = $props();
 </script>
 
-<span class="chapter-container">
+<div class="chapter-container">
   {#if link}
     <a
       href={generateChapterUrl(link, chapter)}
@@ -25,7 +25,7 @@
   {:else}
     <span class="chapter-number">{chapter}</span>
   {/if}
-</span>
+</div>
 
 <style>
   @reference "tailwindcss";

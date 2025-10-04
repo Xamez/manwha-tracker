@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { renderIcon, type IconName } from "$lib/icons";
+  import { type IconName, renderIcon } from "$lib/icons";
 
   interface Props {
     icon: IconName;
@@ -39,9 +39,14 @@
     lg: "w-6 h-6",
   };
 
-  const baseClasses = `p-2 rounded-lg transition-all hover:scale-105 focus:outline-none flex items-center justify-center ${sizeClasses[size]}`;
+  const baseClasses =
+    `p-2 rounded-lg transition-all hover:scale-105 focus:outline-none flex items-center justify-center ${
+      sizeClasses[size]
+    }`;
   const colorClasses = `${textColor} ${bgColor} ${hoverBgColor}`;
-  const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer";
+  const disabledClasses = disabled
+    ? "opacity-50 cursor-not-allowed"
+    : "cursor-pointer";
 </script>
 
 {#if href}
