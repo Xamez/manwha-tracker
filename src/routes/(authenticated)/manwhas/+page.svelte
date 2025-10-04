@@ -30,6 +30,12 @@
   let manwhas = $state(data.manwhas);
   let stats = $state(data.stats);
 
+  // Update manwhas and stats when data changes
+  $effect(() => {
+    manwhas = data.manwhas;
+    stats = data.stats;
+  });
+
   onMount(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       const savedViewMode = localStorage.getItem("manwha-view-mode");
