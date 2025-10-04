@@ -136,7 +136,7 @@
     </div>
     <a href="/manwhas/add" class="btn-primary">
       {@html renderIcon("cross", "w-4 h-4")}
-      <span>Add New Manwha</span>
+      <span>New Manwha</span>
     </a>
   </div>
 
@@ -208,11 +208,6 @@
 <style>
   @reference "tailwindcss";
 
-  .container {
-    @apply max-w-[95%] sm:max-w-[90%] lg:max-w-[80%] xl:max-w-[70%] mx-auto
-      px-4;
-  }
-
   .header-section {
     @apply flex flex-col sm:flex-row items-start sm:items-center justify-between
       gap-4 mb-6;
@@ -256,7 +251,7 @@
   }
 
   .manwhas-grid {
-    @apply grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6;
+    @apply grid grid-cols-1 xl:grid-cols-2 gap-6;
   }
 
   .empty-state {

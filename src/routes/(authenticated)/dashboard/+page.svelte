@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { PageData } from "./$types";
   import StatsCard from "$lib/components/StatsCard.svelte";
-  import { formatManwhaStatus } from "$lib/types.ts";
+  import StatusBadge from "$lib/components/StatusBadge.svelte";
+  import ChapterInfo from "$lib/components/ChapterInfo.svelte";
+  import IconButton from "$lib/components/IconButton.svelte";
   import { renderIcon } from "$lib/icons";
 
   interface Props {
@@ -62,25 +64,47 @@
       <div class="activity-list">
         {#each data.recentManwhas as manwha}
           <div class="activity-item">
-            <div class="activity-info">
-              <h3 class="activity-title">{manwha.title}</h3>
-              <p class="activity-details">
-                Chapter {manwha.currentChapter}
-                • {formatManwhaStatus(manwha.status)}
-              </p>
-              <p class="activity-date">
-                Last updated: {
-                  new Date(manwha.updatedAt)
-                    .toLocaleDateString()
-                }
-              </p>
-            </div>
-            <a
-              href="/manwhas/{manwha._id}/edit"
-              class="activity-action"
-            >
-              Edit
+            <a href="/manwhas/{manwha._id}" class="activity-item-link">
+              {#if manwha.coverImage}
+                <img
+                  src={manwha.coverImage}
+                  alt={manwha.title}
+                  class="activity-image"
+                />
+              {:else}
+                <div class="activity-image-placeholder">
+                  {@html renderIcon("book")}
+                </div>
+              {/if}
+              <div class="activity-info">
+                <h3 class="activity-title">{manwha.title}</h3>
+                <div class="activity-details">
+                  <ChapterInfo
+                    chapter={manwha.currentChapter}
+                    link={manwha.link}
+                  />
+                  <span class="separator">•</span>
+                  <StatusBadge status={manwha.status} />
+                </div>
+                <p class="activity-date">
+                  Last updated: {
+                    new Date(manwha.updatedAt)
+                      .toLocaleDateString()
+                  }
+                </p>
+              </div>
             </a>
+            <div class="activity-actions">
+              <IconButton
+                icon="edit"
+                href="/manwhas/{manwha._id}/edit"
+                title="Edit"
+                ariaLabel="Edit manwha"
+                textColor="text-blue-400"
+                bgColor="bg-blue-900/20"
+                hoverBgColor="hover:bg-blue-900/30"
+              />
+            </div>
           </div>
         {/each}
       </div>
@@ -90,7 +114,9 @@
   <div class="actions-grid">
     <a href="/manwhas/add" class="quick-action-purple">
       <div class="quick-action-content">
-        {@html renderIcon("plus", "quick-action-icon")}
+        <div class="quick-action-icon">
+          {@html renderIcon("plus")}
+        </div>
         <div>
           <h3>Add New Manwha</h3>
           <p>Start tracking a new series</p>
@@ -100,7 +126,9 @@
 
     <a href="/manwhas" class="quick-action-blue">
       <div class="quick-action-content">
-        {@html renderIcon("library", "quick-action-icon")}
+        <div class="quick-action-icon">
+          {@html renderIcon("library")}
+        </div>
         <div>
           <h3>View All Manwhas</h3>
           <p>Browse your collection</p>
@@ -112,10 +140,6 @@
 
 <style>
   @reference "tailwindcss";
-
-  .container {
-    @apply max-w-[70%] mx-auto;
-  }
 
   .stats-grid {
     @apply grid gap-6 mb-8;
@@ -144,7 +168,28 @@
 
   .activity-item {
     @apply flex items-center justify-between p-4 bg-gray-900 rounded-lg border
-      border-gray-600;
+      border-gray-600 transition-colors hover:bg-gray-800 hover:border-gray-500;
+  }
+
+  .activity-item-link {
+    @apply flex items-center flex-1 min-w-0 no-underline text-inherit;
+  }
+
+  .activity-actions {
+    @apply flex-shrink-0 ml-4;
+  }
+
+  .activity-image {
+    @apply w-16 h-20 object-cover rounded mr-4 flex-shrink-0 hidden sm:block;
+  }
+
+  .activity-image-placeholder {
+    @apply w-16 h-20 bg-gray-700 rounded mr-4 flex-shrink-0 items-center
+      justify-center text-gray-500 hidden sm:flex;
+  }
+
+  .activity-image-placeholder :global(svg) {
+    @apply w-8 h-8;
   }
 
   .activity-info {
@@ -156,32 +201,25 @@
   }
 
   .activity-details {
-    @apply text-sm text-gray-300 mb-1;
+    @apply flex items-center gap-2 text-sm mb-1;
+  }
+
+  .separator {
+    @apply text-gray-500;
   }
 
   .activity-date {
     @apply text-xs text-gray-400 opacity-80;
   }
 
-  .activity-action {
-    @apply text-purple-400 text-sm no-underline px-4 py-2 rounded-md
-      transition-colors hover:bg-purple-500 hover:text-white;
-  }
-
   .quick-action-purple {
     @apply block p-4 rounded-xl shadow-lg transition-shadow text-white
-      no-underline;
-    background: linear-gradient(
-      135deg,
-      var(--color-purple-dark) 0%,
-      #5a4a7a 100%
-    );
+      no-underline bg-gradient-to-br from-purple-700 to-purple-900;
   }
 
   .quick-action-blue {
     @apply block p-4 rounded-xl shadow-lg transition-shadow text-white
-      no-underline;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      no-underline bg-gradient-to-br from-blue-500 to-blue-800;
   }
 
   .quick-action-purple:hover,
@@ -193,8 +231,12 @@
     @apply flex items-center;
   }
 
-  :global(.quick-action-icon) {
-    @apply w-8 h-8 mr-4 text-white;
+  .quick-action-icon {
+    @apply mr-4;
+  }
+
+  .quick-action-icon :global(svg) {
+    @apply w-8 h-8 text-white;
   }
 
   .quick-action-purple h3,

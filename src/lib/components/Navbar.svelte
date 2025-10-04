@@ -40,44 +40,18 @@
       <a href="/dashboard" class="brand-text">Manwha Tracker</a>
     </div>
 
-    <!-- Mobile menu button -->
     <button
       class="mobile-menu-button"
       onclick={toggleMobileMenu}
       aria-label="Toggle menu"
     >
       {#if mobileMenuOpen}
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        {@html renderIcon("close", "w-6 h-6")}
       {:else}
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
+        {@html renderIcon("menu", "w-6 h-6")}
       {/if}
     </button>
 
-    <!-- Desktop menu -->
     <div class="navbar-menu desktop-menu">
       <a href="/dashboard" class="navbar-link" class:active={isDashboard}>
         {@html renderIcon("dashboard")}
@@ -94,7 +68,6 @@
     </div>
   </div>
 
-  <!-- Mobile menu -->
   {#if mobileMenuOpen}
     <div class="mobile-menu">
       <a
@@ -143,7 +116,7 @@
   .navbar-container {
     @apply flex justify-between items-center h-16 mx-auto;
     @apply px-3 md:px-6 lg:px-8;
-    @apply max-w-full md:max-w-[90%] lg:max-w-screen-xl;
+    @apply max-w-[80%];
   }
 
   .navbar-brand {
@@ -168,10 +141,6 @@
 
   .mobile-menu-button:hover {
     background-color: var(--color-dark-secondary);
-  }
-
-  .mobile-menu-button svg {
-    @apply w-6 h-6;
   }
 
   .desktop-menu {
@@ -212,7 +181,6 @@
     @apply w-5 h-5 flex-shrink-0;
   }
 
-  /* Show mobile menu button on small screens */
   @media (max-width: 768px) {
     .mobile-menu-button {
       @apply block;

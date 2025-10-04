@@ -51,6 +51,10 @@ export const icons = {
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
   </svg>`,
 
+  info: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+  </svg>`,
+
   // Sort icons
   chevronUp: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
@@ -99,21 +103,21 @@ export const icons = {
   cross: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
   </svg>`,
+
+  menu: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+  </svg>`,
 } as const;
 
-// Export the icon names as a type
 export type IconName = keyof typeof icons;
 
-// Helper function to get an icon with custom classes
 export function getIcon(name: IconName, customClasses?: string): string {
   const icon = icons[name];
   if (!customClasses) return icon;
 
-  // Replace the class attribute with custom classes
   return icon.replace(/class="[^"]*"/, `class="${customClasses}"`);
 }
 
-// Helper function to render an icon as an HTML string (for use in @html directive)
 export function renderIcon(name: IconName, customClasses?: string): string {
   return getIcon(name, customClasses);
 }

@@ -52,27 +52,32 @@ a svg {
 }
 
 .page-title {
-  @apply text-3xl font-bold text-gray-50;
+  @apply text-2xl sm:text-3xl font-bold text-gray-50;
 }
 
 .page-subtitle {
-  @apply text-gray-300 text-sm;
+  @apply text-gray-300 text-xs sm:text-sm;
 }
 
 .page-header {
-  @apply mb-8;
+  @apply mb-6 sm:mb-8;
 }
 
 .app-layout {
   @apply min-h-screen bg-slate-900;
 }
 
+.container {
+  @apply max-w-[80%] mx-auto;
+}
+
 .main-content {
-  @apply p-8 min-h-[calc(100vh-80px)];
+  @apply p-4 sm:p-6 md:p-8 min-h-[calc(100vh-80px)];
 }
 
 .form-container {
-  @apply bg-gray-800 rounded-xl shadow-2xl p-8 border border-gray-600;
+  @apply bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-6 md:p-8 border
+    border-gray-600;
 }
 
 .form-group {
@@ -80,7 +85,7 @@ a svg {
 }
 
 .form-row {
-  @apply flex gap-4 mb-4;
+  @apply flex flex-col sm:flex-row gap-4 mb-4;
 }
 
 .form-row .form-group {
@@ -94,8 +99,9 @@ a svg {
 .form-input,
 .form-textarea,
 .form-select {
-  @apply w-full px-4 py-3 rounded-lg border border-gray-600 bg-slate-800
-    text-gray-50 text-sm transition-all duration-200 placeholder-gray-300;
+  @apply w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-600
+    bg-slate-800 text-gray-50 text-sm transition-all duration-200
+    placeholder-gray-300;
 }
 
 .form-input:focus,
@@ -109,27 +115,30 @@ a svg {
 }
 
 .form-actions {
-  @apply flex justify-between items-center mt-8 pt-6 border-t border-gray-600;
+  @apply flex flex-col sm:flex-row justify-between items-stretch sm:items-center
+    gap-3 mt-8 pt-6 border-t border-gray-600;
 }
 
 .btn-primary {
-  @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm
-    text-white bg-indigo-600 border-none cursor-pointer transition-all
-    duration-200 no-underline hover:bg-purple-500 disabled:opacity-50
-    disabled:cursor-not-allowed;
+  @apply flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+    rounded-lg font-medium text-sm text-white bg-indigo-600 border-none
+    cursor-pointer transition-all duration-200 no-underline hover:bg-purple-500
+    disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto;
 }
 
 .btn-secondary {
-  @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm
-    text-gray-50 bg-slate-800 border border-gray-600 cursor-pointer
-    transition-all duration-200 no-underline hover:bg-slate-700
-    disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+    rounded-lg font-medium text-sm text-gray-50 bg-slate-800 border
+    border-gray-600 cursor-pointer transition-all duration-200 no-underline
+    hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed w-full
+    sm:w-auto;
 }
 
 .btn-danger {
-  @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm
-    text-white bg-red-500 border-none cursor-pointer transition-all duration-200
-    hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
+    rounded-lg font-medium text-sm text-white bg-red-500 border-none
+    cursor-pointer transition-all duration-200 hover:bg-red-600
+    disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto;
 }
 
 .error-message {
@@ -140,11 +149,4 @@ a svg {
 .success-message {
   @apply text-green-400 text-sm mt-2 p-3 rounded-lg bg-green-500/10 border
     border-green-500/30;
-}
-
-.chapter-link {
-  @apply inline-flex items-center font-semibold text-indigo-400
-    hover:text-indigo-300 transition-colors duration-200 no-underline
-    hover:underline;
-  gap: 0.25rem;
 }

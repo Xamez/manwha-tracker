@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Manwha, ManwhaStatus } from "$lib/types";
   import StatusBadge from "./StatusBadge.svelte";
-  import { generateChapterUrl } from "$lib/utils/urlUtils.ts";
-  import { renderIcon } from "$lib/icons";
+  import ChapterInfo from "./ChapterInfo.svelte";
+  import IconButton from "./IconButton.svelte";
 
   interface Props {
     manwha: Manwha;
@@ -52,22 +52,33 @@
       <div class="manwha-header">
         <h3 class="manwha-title">{manwha.title}</h3>
         <div class="manwha-actions">
-          <button
+          <IconButton
+            icon="info"
+            href="/manwhas/{manwha._id}"
+            title="View Details"
+            ariaLabel="View manwha details"
+            textColor="text-purple-400"
+            bgColor="bg-purple-900/20"
+            hoverBgColor="hover:bg-purple-900/30"
+          />
+          <IconButton
+            icon="edit"
             onclick={handleEdit}
-            class="action-btn edit-btn"
             title="Edit"
-            aria-label="Edit manwha"
-          >
-            {@html renderIcon("edit")}
-          </button>
-          <button
+            ariaLabel="Edit manwha"
+            textColor="text-blue-400"
+            bgColor="bg-blue-900/20"
+            hoverBgColor="hover:bg-blue-900/30"
+          />
+          <IconButton
+            icon="delete"
             onclick={handleDelete}
-            class="action-btn delete-btn"
             title="Delete"
-            aria-label="Delete manwha"
-          >
-            {@html renderIcon("delete")}
-          </button>
+            ariaLabel="Delete manwha"
+            textColor="text-red-400"
+            bgColor="bg-red-900/20"
+            hoverBgColor="hover:bg-red-900/30"
+          />
         </div>
       </div>
 
@@ -75,23 +86,7 @@
         <div class="manwha-info">
           <div class="info-item">
             <span class="info-label">Chapter:</span>
-            {#if manwha.link}
-              <a
-                href={generateChapterUrl(
-                  manwha.link,
-                  manwha.currentChapter,
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="chapter-link"
-                title="Read Chapter {manwha.currentChapter}"
-              >
-                {manwha.currentChapter}
-                {@html renderIcon("externalLink")}
-              </a>
-            {:else}
-              <span class="info-value">{manwha.currentChapter}</span>
-            {/if}
+            <ChapterInfo chapter={manwha.currentChapter} link={manwha.link} />
           </div>
           <div class="info-item">
             <span class="info-label">Status:</span>
@@ -152,21 +147,7 @@
   }
 
   .manwha-actions {
-    @apply flex gap-2 flex-shrink-0;
-  }
-
-  .action-btn {
-    @apply p-2 rounded-lg transition-all hover:scale-105 focus:outline-none
-      cursor-pointer flex items-center justify-center;
-    @apply w-8 h-8 sm:w-8 sm:h-8;
-  }
-
-  .edit-btn {
-    @apply bg-blue-900/20 text-blue-400 hover:bg-blue-900/30;
-  }
-
-  .delete-btn {
-    @apply bg-red-900/20 text-red-400 hover:bg-red-900/30;
+    @apply flex flex-col md:flex-row gap-2 flex-shrink-0;
   }
 
   .manwha-details {
