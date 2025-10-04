@@ -132,7 +132,7 @@
     </a>
   </div>
 
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
     <StatsMini value={stats.total} label="Total" />
     <StatsMini
       value={stats.reading}
@@ -140,14 +140,14 @@
       colorClass={getStatColor("reading")}
     />
     <StatsMini
-      value={stats.completed}
-      label="Completed"
-      colorClass={getStatColor("completed")}
-    />
-    <StatsMini
       value={stats.toContinue}
       label="To Continue"
       colorClass={getStatColor("to-continue")}
+    />
+    <StatsMini
+      value={stats.completed}
+      label="Completed"
+      colorClass={getStatColor("completed")}
     />
     <StatsMini
       value={stats.abandoned}
