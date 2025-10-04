@@ -209,17 +209,17 @@
   @reference "tailwindcss";
 
   .header-section {
-    @apply flex flex-col sm:flex-row items-start sm:items-center justify-between
+    @apply flex flex-col md:flex-row items-start md:items-center justify-between
       gap-4 mb-6;
   }
 
   .header-left {
-    @apply flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6
-      w-full sm:w-auto;
+    @apply flex flex-row items-center md:items-center gap-4 md:gap-6 justify-between
+      w-full md:w-auto;
   }
 
   .page-title {
-    @apply text-2xl sm:text-3xl font-bold;
+    @apply text-xl md:text-3xl font-bold;
   }
 
   .view-toggle {
@@ -240,14 +240,10 @@
   }
 
   .btn-primary {
-    @apply flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3
-      rounded-lg font-medium text-sm sm:text-base text-white no-underline
+    @apply flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3
+      rounded-lg font-medium text-sm md:text-base text-white no-underline
       transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 w-full
-      sm:w-auto whitespace-nowrap;
-  }
-
-  .btn-primary span {
-    @apply hidden sm:inline;
+      md:w-auto whitespace-nowrap;
   }
 
   .manwhas-grid {
