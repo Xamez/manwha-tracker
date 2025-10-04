@@ -7,6 +7,11 @@
   import { getManwhaStatusColor } from "$lib/types.ts";
   import { renderIcon } from "$lib/icons";
   import { incrementManwhaChapter } from "$lib/utils/manwhaUtils.ts";
+  import {
+    filterManwhas,
+    sortManwhasByLastUpdate,
+    type StatusFilter,
+  } from "$lib/utils/manwhaUtils.ts";
   import type {
     AuthenticatedUser,
     Manwha,
@@ -27,12 +32,17 @@
 
   let { data }: Props = $props();
   let viewMode: "cards" | "table" = $state("cards");
-  let manwhas = $state(data.manwhas);
-  let stats = $state(data.stats);
+  let statusFilter: StatusFilter = $state("all");
+  let searchQuery = $state("");
 
-  $effect(() => {
-    manwhas = data.manwhas;
-    stats = data.stats;
+  let filteredManwhas = $derived.by(() => {
+    const filtered = filterManwhas(data.manwhas, statusFilter, searchQuery);
+
+    if (viewMode === "cards") {
+      return sortManwhasByLastUpdate(filtered);
+    }
+    
+    return filtered;
   });
 
   onMount(() => {
@@ -51,6 +61,10 @@
     }
   }
 
+  function setStatusFilter(filter: StatusFilter) {
+    statusFilter = filter;
+  }
+
   function getStatColor(status: string) {
     const colorClasses = getManwhaStatusColor(status as any);
     return colorClasses.split(" ").find((cls) => cls.startsWith("text-")) ||
@@ -66,7 +80,7 @@
   }
 
   async function handleIncrement(manwhaId: string) {
-    const manwha = manwhas.find((m) => m._id === manwhaId);
+    const manwha = data.manwhas.find((m) => m._id === manwhaId);
     if (!manwha) return;
 
     const success = await incrementManwhaChapter(manwhaId, manwha);
@@ -133,56 +147,110 @@
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
-    <StatsMini value={stats.total} label="Total" />
     <StatsMini
-      value={stats.reading}
+      value={data.stats.total}
+      label="Total"
+      onclick={() => setStatusFilter("all")}
+      active={statusFilter === "all"}
+    />
+    <StatsMini
+      value={data.stats.reading}
       label="Reading"
       colorClass={getStatColor("reading")}
+      onclick={() => setStatusFilter("reading")}
+      active={statusFilter === "reading"}
     />
     <StatsMini
-      value={stats.toContinue}
+      value={data.stats.toContinue}
       label="To Continue"
       colorClass={getStatColor("to-continue")}
+      onclick={() => setStatusFilter("to-continue")}
+      active={statusFilter === "to-continue"}
     />
     <StatsMini
-      value={stats.completed}
+      value={data.stats.completed}
       label="Completed"
       colorClass={getStatColor("completed")}
+      onclick={() => setStatusFilter("completed")}
+      active={statusFilter === "completed"}
     />
     <StatsMini
-      value={stats.abandoned}
+      value={data.stats.abandoned}
       label="Abandoned"
       colorClass={getStatColor("abandoned")}
+      onclick={() => setStatusFilter("abandoned")}
+      active={statusFilter === "abandoned"}
     />
     <StatsMini
-      value={stats.totalChaptersRead.toLocaleString()}
+      value={data.stats.totalChaptersRead.toLocaleString()}
       label="Chapters Read"
       colorClass="text-purple-400"
     />
     <StatsMini
-      value={`${stats.estimatedReadingHours}h`}
+      value={`${data.stats.estimatedReadingHours}h`}
       label="Reading Time"
       colorClass="text-cyan-400"
     />
   </div>
 
-  {#if manwhas.length === 0}
+  <div class="search-container">
+    <div class="search-wrapper">
+      <div class="search-icon">
+        {@html renderIcon("search", "w-5 h-5")}
+      </div>
+      <input
+        type="text"
+        bind:value={searchQuery}
+        placeholder="Search manwhas by title or note..."
+        class="search-input"
+      />
+      {#if searchQuery}
+        <button
+          class="clear-search-btn"
+          onclick={() => (searchQuery = "")}
+          aria-label="Clear search"
+        >
+          {@html renderIcon("close", "w-4 h-4")}
+        </button>
+      {/if}
+    </div>
+  </div>
+
+  {#if filteredManwhas.length === 0}
     <div class="empty-state">
       <div class="text-center">
         {@html renderIcon("book", "w-16 h-16 mx-auto text-gray-400 mb-4")}
-        <h3 class="text-xl font-semibold text-gray-300 mb-2">
-          No manwhas yet
-        </h3>
-        <p class="text-gray-400 mb-6">
-          Start tracking your favorite manwhas!
-        </p>
-        <a href="/manwhas/add" class="btn-primary">Add Your First Manwha</a>
+        {#if searchQuery || statusFilter !== "all"}
+          <h3 class="text-xl font-semibold text-gray-300 mb-2">
+            No manwhas found
+          </h3>
+          <p class="text-gray-400 mb-6">
+            Try adjusting your filters or search query
+          </p>
+          <button
+            class="btn-secondary"
+            onclick={() => {
+              searchQuery = "";
+              statusFilter = "all";
+            }}
+          >
+            Clear Filters
+          </button>
+        {:else}
+          <h3 class="text-xl font-semibold text-gray-300 mb-2">
+            No manwhas yet
+          </h3>
+          <p class="text-gray-400 mb-6">
+            Start tracking your favorite manwhas!
+          </p>
+          <a href="/manwhas/add" class="btn-primary">Add Your First Manwha</a>
+        {/if}
       </div>
     </div>
   {:else}
     {#if viewMode === "cards"}
       <div class="manwhas-grid">
-        {#each manwhas as manwha}
+        {#each filteredManwhas as manwha}
           <ManwhaCard
             {manwha}
             onedit={handleEdit}
@@ -193,7 +261,7 @@
       </div>
     {:else}
       <ManwhaTable
-        {manwhas}
+        manwhas={filteredManwhas}
         sortBy={data.sortBy}
         sortOrder={data.sortOrder}
         onedit={handleEdit}
@@ -243,6 +311,39 @@
       rounded-lg font-medium text-sm md:text-base text-white no-underline
       transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 w-full
       md:w-auto whitespace-nowrap;
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3
+      rounded-lg font-medium text-sm md:text-base text-white no-underline
+      transition-all duration-200 bg-gray-600 hover:bg-gray-500 w-full md:w-auto
+      whitespace-nowrap border-none cursor-pointer;
+  }
+
+  .search-container {
+    @apply mb-6;
+  }
+
+  .search-wrapper {
+    @apply relative;
+  }
+
+  .search-icon {
+    @apply absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400
+      pointer-events-none;
+  }
+
+  .search-input {
+    @apply w-full pl-12 pr-12 py-3 bg-gray-800 border border-gray-600 rounded-lg
+      text-gray-200 placeholder-gray-500 focus:outline-none
+      focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500
+      transition-colors duration-200;
+  }
+
+  .clear-search-btn {
+    @apply absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400
+      hover:text-gray-200 transition-colors duration-200 bg-transparent
+      border-none cursor-pointer p-1;
   }
 
   .manwhas-grid {
