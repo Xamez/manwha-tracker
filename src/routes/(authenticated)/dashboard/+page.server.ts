@@ -23,7 +23,6 @@ export const load: ServerLoad = async ({ parent }) => {
       completed: allManwhas.filter((m) => m.status === "completed").length,
       toContinue: allManwhas.filter((m) => m.status === "to-continue").length,
       abandoned: allManwhas.filter((m) => m.status === "abandoned").length,
-      ended: allManwhas.filter((m) => m.status === "ended").length,
     };
 
     const recentManwhas = allManwhas.slice(0, 3);
@@ -44,7 +43,6 @@ export const load: ServerLoad = async ({ parent }) => {
         completed: 0,
         toContinue: 0,
         abandoned: 0,
-        ended: 0,
       },
       recentManwhas: [],
     };

@@ -29,7 +29,6 @@ export const load: ServerLoad = async ({ parent, url }) => {
       completed: manwhas.filter((m) => m.status === "completed").length,
       toContinue: manwhas.filter((m) => m.status === "to-continue").length,
       abandoned: manwhas.filter((m) => m.status === "abandoned").length,
-      ended: manwhas.filter((m) => m.status === "ended").length,
     };
 
     return {
@@ -51,7 +50,6 @@ export const load: ServerLoad = async ({ parent, url }) => {
         completed: 0,
         toContinue: 0,
         abandoned: 0,
-        ended: 0,
       },
       sortBy: "updatedAt",
       sortOrder: "desc",

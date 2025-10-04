@@ -27,13 +27,11 @@
     { value: "to-continue", label: "To Continue" },
     { value: "completed", label: "Completed" },
     { value: "abandoned", label: "Abandoned" },
-    { value: "ended", label: "Ended" },
   ];
 
   $effect(() => {
     if (
-      (status === "completed" || status === "abandoned" ||
-        status === "ended") &&
+      (status === "completed" || status === "abandoned") &&
       !endDate
     ) {
       endDate = new Date().toISOString().split("T")[0];
@@ -250,8 +248,7 @@
         </div>
       </div>
 
-      {#if         status === "completed" || status === "abandoned" ||
-          status === "ended"}
+      {#if status === "completed" || status === "abandoned"}
         <div class="form-group">
           <label for="endDate" class="form-label">End Date</label>
           <input

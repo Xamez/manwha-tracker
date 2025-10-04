@@ -16,14 +16,12 @@ export interface AuthenticatedUser {
 export type ManwhaStatus =
   | "reading"
   | "abandoned"
-  | "ended"
   | "to-continue"
   | "completed";
 
 export const VALID_MANWHA_STATUSES: ManwhaStatus[] = [
   "reading",
   "abandoned",
-  "ended",
   "to-continue",
   "completed",
 ];
@@ -65,7 +63,6 @@ export interface ManwhaStats {
   completed: number;
   toContinue: number;
   abandoned: number;
-  ended: number;
 }
 
 export function isValidManwhaStatus(status: string): status is ManwhaStatus {
@@ -91,8 +88,6 @@ export function getManwhaStatusColor(status: ManwhaStatus): string {
       return "bg-yellow-900/30 text-yellow-400 border-yellow-700";
     case "abandoned":
       return "bg-red-900/30 text-red-400 border-red-700";
-    case "ended":
-      return "bg-purple-900/30 text-purple-400 border-purple-700";
     default:
       return "bg-gray-800/30 text-gray-400 border-gray-600";
   }

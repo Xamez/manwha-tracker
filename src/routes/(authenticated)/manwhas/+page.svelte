@@ -154,11 +154,6 @@
       label="Abandoned"
       colorClass={getStatColor("abandoned")}
     />
-    <StatsMini
-      value={stats.ended}
-      label="Ended"
-      colorClass={getStatColor("ended")}
-    />
   </div>
 
   {#if manwhas.length === 0}

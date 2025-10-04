@@ -15,7 +15,6 @@
   class:completed={status === "completed"}
   class:to-continue={status === "to-continue"}
   class:abandoned={status === "abandoned"}
-  class:ended={status === "ended"}
 >
   {formatManwhaStatus(status)}
 </span>
@@ -41,9 +40,5 @@
 
   .status-badge.abandoned {
     @apply bg-red-900/30 text-red-400 border border-red-700;
-  }
-
-  .status-badge.ended {
-    @apply bg-purple-900/30 text-purple-400 border border-purple-700;
   }
 </style>
