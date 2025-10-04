@@ -55,7 +55,7 @@ class MangaCoverScraper {
 
   private extractTitle(document: Document): string {
     let title = document.querySelector("h1")?.textContent?.trim();
-    
+
     if ((!title || title === "")) {
       title = document.querySelector('meta[property="og:title"]')
         ?.getAttribute("content")?.trim();
@@ -67,33 +67,12 @@ class MangaCoverScraper {
   private isValidCoverImage(url: string): boolean {
     const lowerUrl = url.toLowerCase();
 
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
+    const imageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
     const hasImageExtension = imageExtensions.some((ext) =>
       lowerUrl.includes(ext)
     );
 
-    const excludePatterns = [
-      "avatar",
-      "logo",
-      "icon",
-      "btn_",
-      "button",
-      "dflazy",
-      "placeholder",
-      "loading",
-      "spinner",
-      "banner",
-      "header",
-      "footer",
-      "sidebar",
-      "menu",
-      "navigation",
-    ];
-    const isExcluded = excludePatterns.some((pattern) =>
-      lowerUrl.includes(pattern)
-    );
-
-    return hasImageExtension && !isExcluded;
+    return hasImageExtension;
   }
 
   private resolveURL(imageUrl: string, baseUrl: string): string {
@@ -153,7 +132,6 @@ class MangaCoverScraper {
       const dom = new JSDOM(html);
       const document = dom.window.document;
       console.log(document.title);
-      
 
       const coverImageUrl = this.extractCoverImageUrl(document, url);
       const title = this.extractTitle(document);

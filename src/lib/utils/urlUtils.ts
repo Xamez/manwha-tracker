@@ -3,7 +3,6 @@ const supportedSites = [
   "manhuaus.com",
   "manganato",
   "mangakakalot",
-  "asuracomic",
 ];
 
 export function generateChapterUrl(
@@ -39,9 +38,6 @@ export function generateChapterUrl(
       return `${cleanBaseUrl}/chapter-${chapterNumber}`;
     }
     case "manganato": {
-      return `${cleanBaseUrl}/chapter-${chapterNumber}`;
-    }
-    case "asuracomic": {
       return `${cleanBaseUrl}/chapter-${chapterNumber}`;
     }
     default: {

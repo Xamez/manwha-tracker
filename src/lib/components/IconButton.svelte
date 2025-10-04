@@ -27,6 +27,11 @@
     size = "md",
   }: Props = $props();
 
+  function handleClick(event: MouseEvent) {
+    event.stopPropagation();
+    onclick?.();
+  }
+
   const sizeClasses = {
     sm: "w-7 h-7",
     md: "w-8 h-8",
@@ -56,12 +61,13 @@
     {title}
     aria-label={ariaLabel}
     tabindex={disabled ? -1 : 0}
+    onclick={(e) => e.stopPropagation()}
   >
     {@html renderIcon(icon, iconSizeClasses[size])}
   </a>
 {:else}
   <button
-    {onclick}
+    onclick={handleClick}
     class="{baseClasses} {colorClasses} {disabledClasses}"
     {title}
     aria-label={ariaLabel}
