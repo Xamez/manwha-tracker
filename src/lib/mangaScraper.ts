@@ -42,11 +42,26 @@ class MangaCoverScraper {
       coverImage = this.resolveURL(metaImage, url);
     }
 
+    if (!coverImage) {
+      const posterImg = document.querySelector('img[alt="poster"]');
+      const posterSrc = posterImg?.getAttribute("src");
+      if (posterSrc && this.isValidCoverImage(posterSrc)) {
+        coverImage = this.resolveURL(posterSrc, url);
+      }
+    }
+
     return coverImage;
   }
 
   private extractTitle(document: Document): string {
-    return document.querySelector("h1")?.textContent?.trim() || "Not found";
+    let title = document.querySelector("h1")?.textContent?.trim();
+    
+    if ((!title || title === "")) {
+      title = document.querySelector('meta[property="og:title"]')
+        ?.getAttribute("content")?.trim();
+    }
+
+    return title || "Not found";
   }
 
   private isValidCoverImage(url: string): boolean {
@@ -137,6 +152,8 @@ class MangaCoverScraper {
       const html = await this.fetchHTML(url);
       const dom = new JSDOM(html);
       const document = dom.window.document;
+      console.log(document.title);
+      
 
       const coverImageUrl = this.extractCoverImageUrl(document, url);
       const title = this.extractTitle(document);
