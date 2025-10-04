@@ -1,13 +1,9 @@
 import type { ServerLoad } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { authenticateUser } from "$lib/middleware.ts";
 import { getManwhasCollection } from "$lib/database.ts";
 
-export const load: ServerLoad = async (
-  { request, url }: { request: Request; url: URL },
-) => {
-  const cookieHeader = request.headers.get("cookie");
-  const user = authenticateUser(cookieHeader || undefined);
+export const load: ServerLoad = async ({ parent, url }) => {
+  const { user } = await parent();
 
   if (!user) {
     throw redirect(302, "/login");
@@ -37,7 +33,6 @@ export const load: ServerLoad = async (
     };
 
     return {
-      user,
       manwhas: manwhas.map((manwha) => ({
         ...manwha,
         _id: manwha._id?.toString(),
@@ -49,7 +44,6 @@ export const load: ServerLoad = async (
   } catch (error) {
     console.error("Error fetching manwhas:", error);
     return {
-      user,
       manwhas: [],
       stats: {
         total: 0,

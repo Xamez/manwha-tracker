@@ -1,10 +1,9 @@
 import type { ServerLoad } from "@sveltejs/kit";
 import { redirect } from "@sveltejs/kit";
-import { authenticateRequest } from "$lib/middleware.ts";
 import { getManwhasCollection } from "$lib/database.ts";
 
-export const load: ServerLoad = async ({ request }: { request: Request }) => {
-  const user = authenticateRequest(request);
+export const load: ServerLoad = async ({ parent }) => {
+  const { user } = await parent();
 
   if (!user) {
     throw redirect(302, "/login");
@@ -30,7 +29,6 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
     const recentManwhas = allManwhas.slice(0, 3);
 
     return {
-      user,
       stats,
       recentManwhas: recentManwhas.map((manwha) => ({
         ...manwha,
@@ -40,7 +38,6 @@ export const load: ServerLoad = async ({ request }: { request: Request }) => {
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     return {
-      user,
       stats: {
         total: 0,
         reading: 0,
