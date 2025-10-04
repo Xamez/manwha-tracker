@@ -141,7 +141,7 @@
   }
 
   .manwha-card {
-    @apply p-6 rounded-lg shadow-sm border border-gray-600 bg-gray-800
+    @apply p-6 rounded-lg shadow-sm border h-full border-gray-600 bg-gray-800
       transition-all hover:shadow-md hover:border-gray-500;
   }
 
