@@ -1,9 +1,10 @@
-import { createToken } from "~~/server/utils/jwt";
-import { useDatabase } from "~~/server/utils/mongodb";
-import { verifyPassword } from "~~/server/utils/password";
+import { createToken } from '~~/server/utils/jwt';
+import { useDatabase } from '~~/server/utils/mongodb';
+import { verifyPassword } from '~~/server/utils/password';
+import type { User } from '~~/shared/models/user';
 
-export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig(); 
+export default defineEventHandler(async event => {
+  const config = useRuntimeConfig();
   const { email, password } = await readBody(event);
 
   if (!email || !password) {
@@ -11,26 +12,27 @@ export default defineEventHandler(async (event) => {
   }
 
   const db = useDatabase();
-  
-  const user = await db.collection('users').findOne({ email });
-  if (!user) {
+
+  const userDb = await db.collection('users').findOne({ email });
+  if (!userDb) {
     throw createError({ statusCode: 401, statusMessage: 'Invalid email or password' });
   }
 
-  const isPasswordValid = await verifyPassword(password, user.password);
+  const isPasswordValid = await verifyPassword(password, userDb.password);
   if (!isPasswordValid) {
     throw createError({ statusCode: 401, statusMessage: 'Invalid email or password' });
   }
 
-  const token = createToken(user._id.toString());
+  const user: User = { id: userDb._id.toString(), email: userDb.email, username: userDb.username };
+  const token = createToken(user);
+
   setCookie(event, 'auth_token', token, {
     httpOnly: true,
     sameSite: 'strict',
     secure: config.public.env === 'production',
     maxAge: 60 * 60 * 24 * 7, // 1 week
+    path: '/',
   });
 
-  const userInfo = { id: user._id, email: user.email, username: user.username };
-
-  return { user: userInfo };
-})
+  return { user };
+});

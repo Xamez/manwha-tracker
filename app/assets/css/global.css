@@ -1,12 +1,12 @@
-* { 
-    outline: none !important;
+* {
+  outline: none !important;
 }
 
 button {
-    cursor: pointer !important;
+  cursor: pointer !important;
 }
 
 button:disabled {
-    cursor: not-allowed !important;
-    opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
 }
