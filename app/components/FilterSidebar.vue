@@ -37,6 +37,16 @@
         <label for="favorites-only" class="text-sm cursor-pointer"> Favorites Only </label>
       </div>
 
+      <div class="flex items-center gap-2">
+        <input
+          id="unrated-only"
+          v-model="unratedOnly"
+          type="checkbox"
+          class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary"
+        />
+        <label for="unrated-only" class="text-sm cursor-pointer"> Unrated Only </label>
+      </div>
+
       <div class="mt-2">
         <div class="flex justify-between items-center mb-1">
           <label class="text-sm">Min Rating</label>
@@ -110,9 +120,10 @@ const props = defineProps<{
 const name = ref('');
 const selectedStatus = ref<ReadingStatus | ''>('');
 const favoritesOnly = ref(false);
+const unratedOnly = ref(false);
 const minRating = ref(0);
 const selectedGenre = ref('');
-const sortBy = ref<SortOption>('lastReadAt');
+const sortBy = ref<SortOption>('updatedAt');
 const sortOrder = ref<SortOrder>('desc');
 
 const statusOptions = [
@@ -140,9 +151,10 @@ function clearFilters() {
   name.value = '';
   selectedStatus.value = '';
   favoritesOnly.value = false;
+  unratedOnly.value = false;
   minRating.value = 0;
   selectedGenre.value = '';
-  sortBy.value = 'lastReadAt';
+  sortBy.value = 'updatedAt';
   sortOrder.value = 'desc';
 }
 
@@ -150,15 +162,18 @@ const emit = defineEmits<{
   filterChange: [filters: Filters];
 }>();
 
-watch([name, selectedStatus, favoritesOnly, minRating, selectedGenre, sortBy, sortOrder], () => {
-  emit('filterChange', {
-    name: name.value,
-    status: selectedStatus.value,
-    favoritesOnly: favoritesOnly.value,
-    minRating: minRating.value,
-    genre: selectedGenre.value,
-    sortBy: sortBy.value,
-    sortOrder: sortOrder.value,
-  });
-});
+watch(
+  [name, selectedStatus, favoritesOnly, unratedOnly, minRating, selectedGenre, sortBy, sortOrder],
+  () => {
+    emit('filterChange', {
+      name: name.value,
+      status: selectedStatus.value,
+      favoritesOnly: favoritesOnly.value,
+      unratedOnly: unratedOnly.value,
+      minRating: minRating.value,
+      sortBy: sortBy.value,
+      sortOrder: sortOrder.value,
+    });
+  },
+);
 </script>

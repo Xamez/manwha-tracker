@@ -21,7 +21,6 @@ export default defineEventHandler(async event => {
     const userManwhaData = {
       userId: ObjectId.createFromHexString(user.id),
       manwhaId,
-      manwha: userManwha.manwha,
       status: userManwha.status,
       rating: userManwha.rating,
       lastReadChapter: userManwha.lastReadChapter,
@@ -48,14 +47,14 @@ export default defineEventHandler(async event => {
     const response: UserManwha = {
       id: result._id.toString(),
       userId: result.userId.toString(),
-      manwha: result.manwha as Manwha,
+      manwha: userManwha.manwha,
       status: result.status,
       rating: result.rating,
       lastReadChapter: result.lastReadChapter,
       readingUrl: result.readingUrl,
       isFavorite: result.isFavorite,
       startedAt: result.startedAt,
-      lastReadAt: result.lastReadAt,
+      updatedAt: result.updatedAt,
     };
 
     return response;

@@ -18,9 +18,9 @@ const filters = ref<Filters>({
   name: '',
   status: '',
   favoritesOnly: false,
+  unratedOnly: false,
   minRating: 0,
-  genre: '',
-  sortBy: 'lastReadAt',
+  sortBy: 'updatedAt',
   sortOrder: 'desc',
 });
 
@@ -46,22 +46,20 @@ const filteredManwhas = computed(() => {
     result = result.filter(um => um.isFavorite);
   }
 
-  if (filters.value.minRating > 0) {
-    result = result.filter(um => (um.rating ?? 0) >= filters.value.minRating);
+  if (filters.value.unratedOnly) {
+    result = result.filter(um => um.rating === null);
   }
 
-  if (filters.value.genre) {
-    result = result.filter(um =>
-      um.manwha.genres.some(g => g.toLowerCase() === filters.value.genre.toLowerCase()),
-    );
+  if (filters.value.minRating > 0) {
+    result = result.filter(um => um.rating === null || um.rating >= filters.value.minRating);
   }
 
   result.sort((a, b) => {
     let comparison = 0;
 
     switch (filters.value.sortBy) {
-      case 'lastReadAt':
-        comparison = new Date(a.lastReadAt).getTime() - new Date(b.lastReadAt).getTime();
+      case 'updatedAt':
+        comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
         break;
       case 'startedAt':
         comparison = new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime();

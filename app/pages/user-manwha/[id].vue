@@ -29,16 +29,13 @@
         <button
           class="absolute -top-3 -left-4 z-10 w-10 h-10 rounded-full bg-black/80 flex items-center justify-center"
           :class="{
-            'text-primary': userManwhaData.isFavorite,
+            'text-red-500': userManwhaData.isFavorite,
             'text-white/60': !userManwhaData.isFavorite,
           }"
           @click="toggleFavorite"
         >
-          <Icon
-            :name="userManwhaData.isFavorite ? 'lucide:heart' : 'lucide:heart'"
-            :class="{ 'fill-current': userManwhaData.isFavorite }"
-            size="20"
-          />
+          <Icon v-if="userManwhaData.isFavorite" name="mdi:heart" size="20" />
+          <Icon v-else name="mdi:heart-outline" size="20" />
         </button>
 
         <div class="w-[120px] md:w-[240px] aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
@@ -185,10 +182,10 @@
         </div>
 
         <div>
-          <label for="lastReadAt" class="block text-sm font-medium mb-2">Last Read Date</label>
+          <label for="updatedAt" class="block text-sm font-medium mb-2">Last Read Date</label>
           <input
-            id="lastReadAt"
-            v-model="userManwhaData.lastReadAt"
+            id="updatedAt"
+            v-model="userManwhaData.updatedAt"
             type="date"
             readonly
             class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-gray-400 cursor-not-allowed"
@@ -236,7 +233,7 @@ const userManwhaData = ref({
   rating: null as number | null,
   readingUrl: null as string | null,
   startedAt: new Date().toISOString().split('T')[0] as string,
-  lastReadAt: new Date().toISOString().split('T')[0] as string,
+  updatedAt: new Date().toISOString().split('T')[0] as string,
   isFavorite: false,
 });
 
@@ -260,8 +257,8 @@ onMounted(async () => {
       startedAt: (userData.startedAt
         ? new Date(userData.startedAt).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0]) as string,
-      lastReadAt: (userData.lastReadAt
-        ? new Date(userData.lastReadAt).toISOString().split('T')[0]
+      updatedAt: (userData.updatedAt
+        ? new Date(userData.updatedAt).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0]) as string,
       isFavorite: userData.isFavorite,
     };
@@ -287,7 +284,7 @@ function buildRequestBody(): UserManwha {
     lastReadChapter: userManwhaData.value.lastReadChapter,
     readingUrl: userManwhaData.value.readingUrl,
     startedAt: new Date(userManwhaData.value.startedAt),
-    lastReadAt: new Date(),
+    updatedAt: new Date(),
     isFavorite: userManwhaData.value.isFavorite,
   };
 }

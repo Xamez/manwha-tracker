@@ -1,5 +1,5 @@
 export enum SORT_OPTIONS {
-  lastReadAt = 'Last Read At',
+  updatedAt = 'Updated At',
   startedAt = 'Started At',
   rating = 'Rating',
   title = 'Title',

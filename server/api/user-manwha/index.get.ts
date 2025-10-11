@@ -51,7 +51,7 @@ export default defineEventHandler(async event => {
         readingUrl: doc.readingUrl,
         isFavorite: doc.isFavorite,
         startedAt: doc.startedAt,
-        lastReadAt: doc.lastReadAt,
+        updatedAt: doc.updatedAt,
       };
     });
 

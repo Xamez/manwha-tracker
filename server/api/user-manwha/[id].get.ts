@@ -38,8 +38,8 @@ export default defineEventHandler(async event => {
       const now = new Date();
       const newManwha = {
         ...manwhaDetails,
-        createdAt: now,
         updatedAt: now,
+        createdAt: now,
       };
 
       const insertResult = await manwhasCollection.insertOne(newManwha);
@@ -57,8 +57,6 @@ export default defineEventHandler(async event => {
         readingUrl: null,
         isFavorite: false,
         startedAt: now,
-        lastReadAt: now,
-        createdAt: now,
         updatedAt: now,
       };
 
@@ -98,7 +96,7 @@ export default defineEventHandler(async event => {
       readingUrl: userManwhaDoc.readingUrl,
       isFavorite: userManwhaDoc.isFavorite,
       startedAt: userManwhaDoc.startedAt,
-      lastReadAt: userManwhaDoc.lastReadAt,
+      updatedAt: userManwhaDoc.updatedAt,
     };
 
     return response;

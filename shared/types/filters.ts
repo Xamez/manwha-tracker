@@ -5,8 +5,8 @@ export type Filters = {
   name: string;
   status: ReadingStatus | '';
   favoritesOnly: boolean;
+  unratedOnly: boolean;
   minRating: number;
-  genre: string;
   sortBy: SortOption;
   sortOrder: SortOrder;
 };

@@ -11,5 +11,5 @@ export type UserManwha = {
   readingUrl: string | null;
   isFavorite: boolean;
   startedAt: Date;
-  lastReadAt: Date;
+  updatedAt: Date;
 };
