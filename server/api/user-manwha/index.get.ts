@@ -6,6 +6,7 @@ export default defineEventHandler(async event => {
   try {
     const db = useDatabase();
     const userManwhasCollection = db.collection('user_manwhas');
+    const manwhasCollection = db.collection('manwhas');
 
     const userManwhaDocs = await userManwhasCollection
       .find({
@@ -13,18 +14,46 @@ export default defineEventHandler(async event => {
       })
       .toArray();
 
-    const response: UserManwha[] = userManwhaDocs.map(doc => ({
-      id: doc._id.toString(),
-      userId: doc.userId.toString(),
-      manwha: doc.manwha as Manwha,
-      status: doc.status,
-      score: doc.score,
-      lastReadChapter: doc.lastReadChapter,
-      readingUrl: doc.readingUrl,
-      isFavorite: doc.isFavorite,
-      startedAt: doc.startedAt,
-      lastReadAt: doc.lastReadAt,
-    }));
+    const manwhaIds = userManwhaDocs.map(doc => doc.manwhaId);
+    const manwhaDocs = await manwhasCollection
+      .find({
+        id: { $in: manwhaIds },
+      })
+      .toArray();
+
+    const manwhaMap = new Map(manwhaDocs.map(doc => [doc.id, doc]));
+
+    const response: UserManwha[] = userManwhaDocs.map(doc => {
+      const manwhaDoc = manwhaMap.get(doc.manwhaId);
+
+      if (!manwhaDoc) {
+        throw new Error(`Manwha ${doc.manwhaId} not found`);
+      }
+
+      return {
+        id: doc._id.toString(),
+        userId: doc.userId.toString(),
+        manwha: {
+          id: manwhaDoc.id,
+          title: manwhaDoc.title,
+          bannerImage: manwhaDoc.bannerImage,
+          coverImage: manwhaDoc.coverImage,
+          meanScore: manwhaDoc.meanScore,
+          description: manwhaDoc.description,
+          synonyms: manwhaDoc.synonyms,
+          genres: manwhaDoc.genres,
+          tags: manwhaDoc.tags,
+          startDate: manwhaDoc.startDate,
+        } as Manwha,
+        status: doc.status,
+        score: doc.score,
+        lastReadChapter: doc.lastReadChapter,
+        readingUrl: doc.readingUrl,
+        isFavorite: doc.isFavorite,
+        startedAt: doc.startedAt,
+        lastReadAt: doc.lastReadAt,
+      };
+    });
 
     return response;
   } catch (error) {

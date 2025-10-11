@@ -16,13 +16,16 @@ export default defineEventHandler(async event => {
   try {
     const db = useDatabase();
     const userManwhasCollection = db.collection('user_manwhas');
+    const manwhasCollection = db.collection('manwhas');
 
     let userManwhaDoc = await userManwhasCollection.findOne({
       userId: ObjectId.createFromHexString(user.id),
       manwhaId,
     });
 
-    if (!userManwhaDoc) {
+    let manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
+
+    if (!manwhaDoc) {
       const manwhaDetails = await fetchAniListDetails(manwhaId);
 
       if (!manwhaDetails) {
@@ -33,10 +36,21 @@ export default defineEventHandler(async event => {
       }
 
       const now = new Date();
+      const newManwha = {
+        ...manwhaDetails,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      const insertResult = await manwhasCollection.insertOne(newManwha);
+      manwhaDoc = { ...newManwha, _id: insertResult.insertedId };
+    }
+
+    if (!userManwhaDoc) {
+      const now = new Date();
       const newUserManwha = {
         userId: ObjectId.createFromHexString(user.id),
         manwhaId,
-        manwha: manwhaDetails,
         status: 'reading',
         score: null,
         lastReadChapter: 0,
@@ -56,10 +70,28 @@ export default defineEventHandler(async event => {
       throw new Error('Failed to retrieve user manwha');
     }
 
+    if (!manwhaDoc) {
+      throw createError({
+        statusCode: 404,
+        message: 'Manwha not found',
+      });
+    }
+
     const response: UserManwha = {
       id: userManwhaDoc._id.toString(),
       userId: userManwhaDoc.userId.toString(),
-      manwha: userManwhaDoc.manwha as Manwha,
+      manwha: {
+        id: manwhaDoc.id,
+        title: manwhaDoc.title,
+        bannerImage: manwhaDoc.bannerImage,
+        coverImage: manwhaDoc.coverImage,
+        meanScore: manwhaDoc.meanScore,
+        description: manwhaDoc.description,
+        synonyms: manwhaDoc.synonyms,
+        genres: manwhaDoc.genres,
+        tags: manwhaDoc.tags,
+        startDate: manwhaDoc.startDate,
+      } as Manwha,
       status: userManwhaDoc.status,
       score: userManwhaDoc.score,
       lastReadChapter: userManwhaDoc.lastReadChapter,

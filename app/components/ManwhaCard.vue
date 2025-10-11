@@ -6,7 +6,7 @@
         :style="{ backgroundImage: `url(${userManwha.manwha.coverImage})` }"
       ></div>
       <div
-        class="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full bg-gradient-to-t from-black/100 to-black/1 text-white"
+        class="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full bg-gradient-to-t from-black/90 to-black/5 text-white"
       >
         <h2 class="m-0 mb-2 text-sm md:text-md font-semibold">{{ userManwha.manwha.title }}</h2>
         <p class="my-1 text-xs">
