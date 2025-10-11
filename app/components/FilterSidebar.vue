@@ -101,6 +101,11 @@
 import { ref, watch } from 'vue';
 import { READING_STATUS } from '~~/shared/types/reading-status';
 import { SORT_OPTIONS, SORT_ORDERS } from '~~/shared/types/sort';
+import type { Filters } from '~~/shared/types/filters';
+
+const props = defineProps<{
+  userManwhas?: UserManwha[];
+}>();
 
 const name = ref('');
 const selectedStatus = ref<ReadingStatus | ''>('');
@@ -125,12 +130,10 @@ const sortOpptions = [
   })),
 ];
 
-// TODO: fix this mock function
 function countManwhaOfType(status: ReadingStatus | ''): number {
-  if (status === '') {
-    return 42;
-  }
-  return status.length * 2;
+  if (!props.userManwhas) return 0;
+  if (status === '') return props.userManwhas.length;
+  return props.userManwhas.filter(um => um.status === status).length;
 }
 
 function clearFilters() {
@@ -144,17 +147,7 @@ function clearFilters() {
 }
 
 const emit = defineEmits<{
-  filterChange: [
-    filters: {
-      name: string;
-      status: ReadingStatus | '';
-      favoritesOnly: boolean;
-      minScore: number;
-      genre: string;
-      sortBy: string;
-      sortOrder: 'asc' | 'desc';
-    },
-  ];
+  filterChange: [filters: Filters];
 }>();
 
 watch([name, selectedStatus, favoritesOnly, minScore, selectedGenre, sortBy, sortOrder], () => {
