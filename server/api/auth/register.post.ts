@@ -1,7 +1,3 @@
-import { createToken } from '~~/server/utils/jwt';
-import { useDatabase } from '~~/server/utils/mongodb';
-import { hashPassword } from '~~/server/utils/password';
-
 export default defineEventHandler(async event => {
   const config = useRuntimeConfig();
   const { username, email, password } = await readBody(event);

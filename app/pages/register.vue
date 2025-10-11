@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen bg-darker">
+  <div class="w-screen h-screen bg-dark">
     <div class="flex items-center justify-center h-full">
       <div class="w-full max-w-md m-5 p-8 space-y-6 bg-dark rounded-md text-white">
         <h2 class="text-2xl font-bold text-center">Create Account</h2>
@@ -13,7 +13,7 @@
               type="text"
               placeholder="johndoe"
               required
-              class="w-full px-3 py-2 mt-2 border border-gray focus:border-white/60 rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
           </div>
           <div>
@@ -24,7 +24,7 @@
               type="email"
               placeholder="test@gmail.com"
               required
-              class="w-full px-3 py-2 mt-2 border border-gray focus:border-white/60 rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
           </div>
           <div>
@@ -35,7 +35,7 @@
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-3 py-2 mt-2 border border-gray focus:border-white/60 rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
           </div>
           <div>
@@ -46,7 +46,7 @@
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-3 py-2 mt-2 border border-gray focus:border-white/60 rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
           </div>
 
@@ -70,7 +70,7 @@
           </button>
         </form>
         <div class="flex gap-2 justify-center text-sm">
-          <p class="text-gray-300">Already have an account?</p>
+          <p class="text-gray-400">Already have an account?</p>
           <NuxtLink to="/login" class="text-primary-lighter hover:underline">Login</NuxtLink>
         </div>
       </div>

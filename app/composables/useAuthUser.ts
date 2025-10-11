@@ -27,10 +27,22 @@ export function useAuthUser() {
     userChecked.value = true;
   };
 
+  const logout = async () => {
+    try {
+      await $fetch('/api/auth/logout', { method: 'POST' });
+      authUser.value = null;
+      userChecked.value = true;
+      await navigateTo('/login');
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
+
   return {
     authUser,
     userChecked,
     fetchCurrentUser,
     setCurrentUser,
+    logout,
   };
 }

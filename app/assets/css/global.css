@@ -10,3 +10,12 @@ button:disabled {
   cursor: not-allowed !important;
   opacity: 0.6 !important;
 }
+
+select option:checked {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+input[type='checkbox'] {
+  accent-color: var(--color-primary) !important;
+}

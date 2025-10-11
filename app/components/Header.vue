@@ -1,19 +1,25 @@
 <template>
-  <div class="w-full h-16 bg-gray-800 flex justify-center">
+  <div class="w-full h-16 bg-dark flex justify-center border-b border-gray-800">
     <div class="w-[80%] h-full text-white flex items-center justify-between">
-      <div class="ml-4 text-lg font-bold">Manwha Tracker</div>
-      <div class="mr-4">
-        <NuxtLink
-          to="/login"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Login
-        </NuxtLink>
+      <NuxtLink to="/" class="text-lg font-bold">Manwha Tracker</NuxtLink>
+      <div v-if="authUser" class="flex items-center gap-4">
+        <span class="text-white font-bold">{{ authUser.username }}</span>
+        <button title="Logout" class="flex items-center" @click="handleLogout">
+          <Icon name="lucide:log-out" class="text-primary hover:text-primary-lighter w-5 h-5" />
+        </button>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const { authUser, fetchCurrentUser, logout } = useAuthUser();
+
+await fetchCurrentUser();
+
+const handleLogout = async () => {
+  await logout();
+};
+</script>
 
 <style></style>
