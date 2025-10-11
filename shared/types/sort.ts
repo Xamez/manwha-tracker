@@ -1,7 +1,7 @@
 export enum SORT_OPTIONS {
   lastReadAt = 'Last Read At',
   startedAt = 'Started At',
-  score = 'Score',
+  rating = 'Rating',
   title = 'Title',
   meanScore = 'Mean Score',
 }

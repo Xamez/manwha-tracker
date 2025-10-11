@@ -39,13 +39,13 @@
 
       <div class="mt-2">
         <div class="flex justify-between items-center mb-1">
-          <label class="text-sm">Min Score</label>
+          <label class="text-sm">Min Rating</label>
           <span class="text-sm text-primary font-medium">
-            {{ minScore === 0 ? 'Any' : `${minScore}+` }}
+            {{ minRating === 0 ? 'Any' : `${minRating}+` }}
           </span>
         </div>
         <input
-          v-model.number="minScore"
+          v-model.number="minRating"
           type="range"
           min="0"
           max="10"
@@ -110,7 +110,7 @@ const props = defineProps<{
 const name = ref('');
 const selectedStatus = ref<ReadingStatus | ''>('');
 const favoritesOnly = ref(false);
-const minScore = ref(0);
+const minRating = ref(0);
 const selectedGenre = ref('');
 const sortBy = ref<SortOption>('lastReadAt');
 const sortOrder = ref<SortOrder>('desc');
@@ -140,7 +140,7 @@ function clearFilters() {
   name.value = '';
   selectedStatus.value = '';
   favoritesOnly.value = false;
-  minScore.value = 0;
+  minRating.value = 0;
   selectedGenre.value = '';
   sortBy.value = 'lastReadAt';
   sortOrder.value = 'desc';
@@ -150,12 +150,12 @@ const emit = defineEmits<{
   filterChange: [filters: Filters];
 }>();
 
-watch([name, selectedStatus, favoritesOnly, minScore, selectedGenre, sortBy, sortOrder], () => {
+watch([name, selectedStatus, favoritesOnly, minRating, selectedGenre, sortBy, sortOrder], () => {
   emit('filterChange', {
     name: name.value,
     status: selectedStatus.value,
     favoritesOnly: favoritesOnly.value,
-    minScore: minScore.value,
+    minRating: minRating.value,
     genre: selectedGenre.value,
     sortBy: sortBy.value,
     sortOrder: sortOrder.value,

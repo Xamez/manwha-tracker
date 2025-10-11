@@ -18,7 +18,7 @@ const filters = ref<Filters>({
   name: '',
   status: '',
   favoritesOnly: false,
-  minScore: 0,
+  minRating: 0,
   genre: '',
   sortBy: 'lastReadAt',
   sortOrder: 'desc',
@@ -46,8 +46,8 @@ const filteredManwhas = computed(() => {
     result = result.filter(um => um.isFavorite);
   }
 
-  if (filters.value.minScore > 0) {
-    result = result.filter(um => (um.score ?? 0) >= filters.value.minScore);
+  if (filters.value.minRating > 0) {
+    result = result.filter(um => (um.rating ?? 0) >= filters.value.minRating);
   }
 
   if (filters.value.genre) {
@@ -66,8 +66,8 @@ const filteredManwhas = computed(() => {
       case 'startedAt':
         comparison = new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime();
         break;
-      case 'score':
-        comparison = (a.score ?? 0) - (b.score ?? 0);
+      case 'rating':
+        comparison = (a.rating ?? 0) - (b.rating ?? 0);
         break;
       case 'title':
         comparison = a.manwha.title.localeCompare(b.manwha.title);

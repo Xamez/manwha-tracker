@@ -5,7 +5,7 @@ export type Filters = {
   name: string;
   status: ReadingStatus | '';
   favoritesOnly: boolean;
-  minScore: number;
+  minRating: number;
   genre: string;
   sortBy: SortOption;
   sortOrder: SortOrder;

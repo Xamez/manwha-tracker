@@ -6,7 +6,7 @@ export type UserManwha = {
   userId: string;
   manwha: Manwha;
   status: ReadingStatus;
-  score: number | null;
+  rating: number | null;
   lastReadChapter: number;
   readingUrl: string | null;
   isFavorite: boolean;

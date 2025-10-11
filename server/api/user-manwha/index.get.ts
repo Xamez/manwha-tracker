@@ -46,7 +46,7 @@ export default defineEventHandler(async event => {
           startDate: manwhaDoc.startDate,
         } as Manwha,
         status: doc.status,
-        score: doc.score,
+        rating: doc.rating,
         lastReadChapter: doc.lastReadChapter,
         readingUrl: doc.readingUrl,
         isFavorite: doc.isFavorite,

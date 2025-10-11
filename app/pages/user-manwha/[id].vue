@@ -142,12 +142,12 @@
         </div>
 
         <div class="md:col-span-2">
-          <label for="score" class="block text-sm font-medium mb-2">
-            Your Score: {{ userManwhaData.score || 0 }}/10
+          <label for="rating" class="block text-sm font-medium mb-2">
+            Your Rating: {{ userManwhaData.rating || 0 }}/10
           </label>
           <input
-            id="score"
-            v-model.number="userManwhaData.score"
+            id="rating"
+            v-model.number="userManwhaData.rating"
             type="range"
             min="0"
             max="10"
@@ -233,7 +233,7 @@ const manwha = ref<Manwha | null>(null);
 const userManwhaData = ref({
   status: 'reading' as ReadingStatus,
   lastReadChapter: 0,
-  score: null as number | null,
+  rating: null as number | null,
   readingUrl: null as string | null,
   startedAt: new Date().toISOString().split('T')[0] as string,
   lastReadAt: new Date().toISOString().split('T')[0] as string,
@@ -255,7 +255,7 @@ onMounted(async () => {
     userManwhaData.value = {
       status: userData.status,
       lastReadChapter: userData.lastReadChapter,
-      score: userData.score,
+      rating: userData.rating,
       readingUrl: userData.readingUrl,
       startedAt: (userData.startedAt
         ? new Date(userData.startedAt).toISOString().split('T')[0]
@@ -283,7 +283,7 @@ function buildRequestBody(): UserManwha {
     userId: '',
     manwha: manwha.value,
     status: userManwhaData.value.status,
-    score: userManwhaData.value.score,
+    rating: userManwhaData.value.rating,
     lastReadChapter: userManwhaData.value.lastReadChapter,
     readingUrl: userManwhaData.value.readingUrl,
     startedAt: new Date(userManwhaData.value.startedAt),
