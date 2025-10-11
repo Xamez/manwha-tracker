@@ -25,15 +25,32 @@
       class="flex flex-row gap-4 md:gap-6 relative z-10 max-w-6xl mx-auto"
       :class="{ 'md:-mt-28': manwha.bannerImage }"
     >
-      <div class="w-[120px] md:w-[240px] aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
-        <img
-          v-if="manwha.coverImage"
-          :src="manwha.coverImage"
-          :alt="manwha.title"
-          class="w-full h-full object-cover"
-        />
-        <div v-else class="w-full h-full bg-white/10 flex items-center justify-center">
-          <Icon name="lucide:file-image" size="64" class="text-white/40" />
+      <div class="relative">
+        <button
+          class="absolute -top-3 -left-4 z-10 w-10 h-10 rounded-full bg-black/80 flex items-center justify-center"
+          :class="{
+            'text-primary': userManwhaData.isFavorite,
+            'text-white/60': !userManwhaData.isFavorite,
+          }"
+          @click="toggleFavorite"
+        >
+          <Icon
+            :name="userManwhaData.isFavorite ? 'lucide:heart' : 'lucide:heart'"
+            :class="{ 'fill-current': userManwhaData.isFavorite }"
+            size="20"
+          />
+        </button>
+
+        <div class="w-[120px] md:w-[240px] aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
+          <img
+            v-if="manwha.coverImage"
+            :src="manwha.coverImage"
+            :alt="manwha.title"
+            class="w-full h-full object-cover"
+          />
+          <div v-else class="w-full h-full bg-white/10 flex items-center justify-center">
+            <Icon name="lucide:file-image" size="64" class="text-white/40" />
+          </div>
         </div>
       </div>
 
@@ -153,7 +170,7 @@
             v-model="userManwhaData.readingUrl"
             type="url"
             class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
-            placeholder="https://..."
+            placeholder="https://demonicscans.org/manga/Solo-Leveling"
           />
         </div>
 
@@ -163,8 +180,7 @@
             id="startedAt"
             v-model="userManwhaData.startedAt"
             type="date"
-            readonly
-            class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-gray-400 cursor-not-allowed"
+            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-gray-400"
           />
         </div>
 
@@ -177,18 +193,6 @@
             readonly
             class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-gray-400 cursor-not-allowed"
           />
-        </div>
-
-        <div class="md:col-span-2 flex items-center gap-3">
-          <input
-            id="isFavorite"
-            v-model="userManwhaData.isFavorite"
-            type="checkbox"
-            class="w-5 h-5 rounded"
-          />
-          <label for="isFavorite" class="text-sm font-medium text-white/80 cursor-pointer">
-            Mark as Favorite
-          </label>
         </div>
       </div>
 
@@ -231,36 +235,95 @@ const userManwhaData = ref({
   lastReadChapter: 0,
   score: null as number | null,
   readingUrl: null as string | null,
-  startedAt: new Date().toISOString().split('T')[0],
-  lastReadAt: new Date().toISOString().split('T')[0],
+  startedAt: new Date().toISOString().split('T')[0] as string,
+  lastReadAt: new Date().toISOString().split('T')[0] as string,
   isFavorite: false,
 });
 
 onMounted(async () => {
   try {
     loading.value = true;
-    const data = await $fetch('/api/anilist/detail', {
-      query: { id },
-    });
-    manwha.value = data as Manwha;
+
+    const userData = (await $fetch(`/api/user-manwha/${id}`)) as UserManwha;
+
+    if (!userData.manwha) {
+      error.value = 'Failed to load manwha details. Please try again later.';
+      return;
+    }
+
+    manwha.value = userData.manwha;
+    userManwhaData.value = {
+      status: userData.status,
+      lastReadChapter: userData.lastReadChapter,
+      score: userData.score,
+      readingUrl: userData.readingUrl,
+      startedAt: (userData.startedAt
+        ? new Date(userData.startedAt).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0]) as string,
+      lastReadAt: (userData.lastReadAt
+        ? new Date(userData.lastReadAt).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0]) as string,
+      isFavorite: userData.isFavorite,
+    };
   } catch (err) {
-    console.error('Failed to fetch manwha details:', err);
+    console.error('Failed to fetch user manwha:', err);
     error.value = 'Failed to load manwha details. Please try again later.';
   } finally {
     loading.value = false;
   }
 });
 
+function buildRequestBody(): UserManwha {
+  if (!manwha.value) {
+    throw new Error('Manwha data is required');
+  }
+
+  return {
+    id: '',
+    userId: '',
+    manwha: manwha.value,
+    status: userManwhaData.value.status,
+    score: userManwhaData.value.score,
+    lastReadChapter: userManwhaData.value.lastReadChapter,
+    readingUrl: userManwhaData.value.readingUrl,
+    startedAt: new Date(userManwhaData.value.startedAt),
+    lastReadAt: new Date(),
+    isFavorite: userManwhaData.value.isFavorite,
+  };
+}
+
 async function saveUserManwha() {
+  if (!manwha.value) return;
+
   saving.value = true;
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await $fetch('/api/user-manwha', {
+      method: 'POST',
+      body: buildRequestBody(),
+    });
     navigateTo('/');
   } catch (err) {
     console.error('Failed to save user manwha:', err);
     alert('Failed to save. Please try again.');
   } finally {
     saving.value = false;
+  }
+}
+
+async function toggleFavorite() {
+  if (!manwha.value) return;
+
+  const previousValue = userManwhaData.value.isFavorite;
+  userManwhaData.value.isFavorite = !previousValue;
+
+  try {
+    await $fetch('/api/user-manwha', {
+      method: 'POST',
+      body: buildRequestBody(),
+    });
+  } catch (err) {
+    console.error('Failed to update favorite status:', err);
+    userManwhaData.value.isFavorite = previousValue;
   }
 }
 </script>

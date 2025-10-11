@@ -1,0 +1,69 @@
+import { ObjectId } from 'mongodb';
+
+export default defineEventHandler(async event => {
+  const user = event.context.user;
+  const userManwha = (await readBody(event)) as UserManwha;
+
+  if (!userManwha.manwha.id) {
+    throw createError({
+      statusCode: 400,
+      message: 'Manwha data is required',
+    });
+  }
+
+  try {
+    const db = useDatabase();
+    const userManwhasCollection = db.collection('user_manwhas');
+
+    const manwhaId = userManwha.manwha.id;
+    const now = new Date();
+
+    const userManwhaData = {
+      userId: ObjectId.createFromHexString(user.id),
+      manwhaId,
+      manwha: userManwha.manwha,
+      status: userManwha.status,
+      score: userManwha.score,
+      lastReadChapter: userManwha.lastReadChapter,
+      readingUrl: userManwha.readingUrl,
+      isFavorite: userManwha.isFavorite,
+      startedAt: new Date(userManwha.startedAt),
+      lastReadAt: now,
+      updatedAt: now,
+    };
+
+    const result = await userManwhasCollection.findOneAndUpdate(
+      { userId: ObjectId.createFromHexString(user.id), manwhaId },
+      { $set: userManwhaData },
+      { returnDocument: 'after' },
+    );
+
+    if (!result) {
+      throw createError({
+        statusCode: 404,
+        message: 'User manwha not found',
+      });
+    }
+
+    const response: UserManwha = {
+      id: result._id.toString(),
+      userId: result.userId.toString(),
+      manwha: result.manwha as Manwha,
+      status: result.status,
+      score: result.score,
+      lastReadChapter: result.lastReadChapter,
+      readingUrl: result.readingUrl,
+      isFavorite: result.isFavorite,
+      startedAt: result.startedAt,
+      lastReadAt: result.lastReadAt,
+    };
+
+    return response;
+  } catch (error) {
+    console.error('Failed to update user manwha:', error);
+    throw createError({
+      statusCode: 500,
+      message: 'Failed to update user manwha',
+    });
+  }
+});

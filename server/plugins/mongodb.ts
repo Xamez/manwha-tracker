@@ -39,8 +39,8 @@ async function createCollectionsIfNotExist(db: Db) {
     await db.createCollection('users');
     console.log('Created users collection');
   }
-  if (!collectionNames.includes('manwhas')) {
-    await db.createCollection('manwhas');
-    console.log('Created manwhas collection');
+  if (!collectionNames.includes('user_manwhas')) {
+    await db.createCollection('user_manwhas');
+    console.log('Created user_manwhas collection');
   }
 }

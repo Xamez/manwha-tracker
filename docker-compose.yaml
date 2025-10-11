@@ -9,6 +9,15 @@ services:
       - '27017:27017'
     volumes:
       - mongo-data:/data/db
+  mongo-express:
+    image: mongo-express:1.0-20-alpine3.19
+    container_name: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+    ports:
+      - '8081:8081'
 
 volumes:
   mongo-data:
