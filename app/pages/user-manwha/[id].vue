@@ -123,8 +123,18 @@
         </div>
 
         <div>
-          <label for="lastReadChapter" class="block text-sm font-medium mb-2">
-            Current Chapter
+          <label for="lastReadChapter" class="flex items-center gap-2 text-sm font-medium mb-2">
+            <span>Current Chapter</span>
+            <a
+              v-if="userManwhaData.readingUrl && userManwhaData.lastReadChapter > 0"
+              :href="generateManwhaUrl(userManwhaData.readingUrl, userManwhaData.lastReadChapter)"
+              target="_blank"
+              class="text-primary hover:text-primary-lighter"
+              title="Open chapter in new tab"
+              @click.stop
+            >
+              <Icon name="lucide:link" size="14" />
+            </a>
           </label>
           <input
             id="lastReadChapter"

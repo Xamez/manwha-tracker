@@ -12,7 +12,27 @@
         <div class="flex items-center justify-between gap-2">
           <p class="my-1 text-xs">
             Chapter:
-            <span class="text-primary font-bold">{{ currentChapter }}</span>
+            <!-- Used to avoid hydration issues -->
+            <ClientOnly>
+              <a
+                v-if="userManwha.readingUrl"
+                :href="generateManwhaUrl(userManwha.readingUrl, currentChapter)"
+                target="_blank"
+                class="text-primary font-bold underline cursor-pointer group/link inline-block"
+                @click.stop
+              >
+                {{ currentChapter
+                }}<Icon
+                  name="lucide:link"
+                  size="12"
+                  class="inline-block ml-1 opacity-0 group-hover/link:opacity-100"
+                  style="color: #5540ec"
+                />
+              </a>
+              <span v-else class="text-primary font-bold">
+                {{ currentChapter }}
+              </span>
+            </ClientOnly>
           </p>
           <button
             class="w-6 h-6 flex items-center justify-center rounded bg-black/40 hover:bg-primary text-white opacity-0 group-hover:opacity-100"
