@@ -14,9 +14,33 @@ export default defineEventHandler(async event => {
   try {
     const db = useDatabase();
     const userManwhasCollection = db.collection('user_manwhas');
+    const manwhasCollection = db.collection('manwhas');
 
     const manwhaId = userManwha.manwha.id;
     const now = new Date();
+
+    // Check if manwha exists in database, if not, store it
+    const manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
+
+    if (!manwhaDoc) {
+      // Fetch from AniList and store
+      const manwhaDetails = await fetchAniListDetails(manwhaId);
+
+      if (!manwhaDetails) {
+        throw createError({
+          statusCode: 404,
+          message: 'Manwha not found on AniList',
+        });
+      }
+
+      const newManwha = {
+        ...manwhaDetails,
+        updatedAt: now,
+        createdAt: now,
+      };
+
+      await manwhasCollection.insertOne(newManwha);
+    }
 
     const userManwhaData = {
       userId: ObjectId.createFromHexString(user.id),

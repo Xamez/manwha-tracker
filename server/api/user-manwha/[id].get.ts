@@ -23,34 +23,20 @@ export default defineEventHandler(async event => {
       manwhaId,
     });
 
-    let manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
+    const manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
+    let manwhaData;
 
     if (!manwhaDoc) {
-      const manwhaDetails = await fetchAniListDetails(manwhaId);
+      manwhaData = await fetchAniListDetails(manwhaId);
 
-      if (!manwhaDetails) {
+      if (!manwhaData) {
         throw createError({
           statusCode: 404,
           message: 'Manwha not found on AniList',
         });
       }
-
-      const now = new Date();
-      const newManwha = {
-        ...manwhaDetails,
-        updatedAt: now,
-        createdAt: now,
-      };
-
-      const insertResult = await manwhasCollection.insertOne(newManwha);
-      manwhaDoc = { ...newManwha, _id: insertResult.insertedId };
-    }
-
-    if (!manwhaDoc) {
-      throw createError({
-        statusCode: 404,
-        message: 'Manwha not found',
-      });
+    } else {
+      manwhaData = manwhaDoc;
     }
 
     const now = new Date();
@@ -58,16 +44,16 @@ export default defineEventHandler(async event => {
       id: userManwhaDoc?._id.toString() || '',
       userId: user.id,
       manwha: {
-        id: manwhaDoc.id,
-        title: manwhaDoc.title,
-        bannerImage: manwhaDoc.bannerImage,
-        coverImage: manwhaDoc.coverImage,
-        meanScore: manwhaDoc.meanScore,
-        description: manwhaDoc.description,
-        synonyms: manwhaDoc.synonyms,
-        genres: manwhaDoc.genres,
-        tags: manwhaDoc.tags,
-        startDate: manwhaDoc.startDate,
+        id: manwhaData.id,
+        title: manwhaData.title,
+        bannerImage: manwhaData.bannerImage,
+        coverImage: manwhaData.coverImage,
+        meanScore: manwhaData.meanScore,
+        description: manwhaData.description,
+        synonyms: manwhaData.synonyms,
+        genres: manwhaData.genres,
+        tags: manwhaData.tags,
+        startDate: manwhaData.startDate,
       } as Manwha,
       status: userManwhaDoc?.status || 'reading',
       rating: userManwhaDoc?.rating || null,
