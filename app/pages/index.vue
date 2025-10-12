@@ -1,11 +1,29 @@
 <template>
-  <div class="flex flex-row gap-10">
-    <FilterSidebar
-      class="hidden sm:block"
-      :user-manwhas="userManwhas ?? []"
-      @filter-change="handleFilterChange"
-    />
-    <ManwhaGrid :user-manwhas="filteredManwhas" />
+  <div class="flex flex-col gap-4">
+    <div class="sm:hidden flex gap-4 mb-4">
+      <IconInput
+        v-model="filters.name"
+        icon="lucide:search"
+        placeholder="Search..."
+        class="flex-1"
+      />
+      <button
+        class="px-4 py-2 bg-primary hover:bg-primary-lighter rounded flex items-center justify-center"
+        @click="showMobileFilters = !showMobileFilters"
+      >
+        <Icon name="lucide:sliders-horizontal" class="w-5 h-5" />
+      </button>
+    </div>
+
+    <div class="flex flex-row gap-10 relative">
+      <FilterSidebar v-model="filters" class="hidden sm:block" :user-manwhas="userManwhas ?? []" />
+
+      <MobileDrawer v-model="showMobileFilters" title="Filters">
+        <FilterSidebar v-model="filters" :user-manwhas="userManwhas ?? []" hide-search />
+      </MobileDrawer>
+
+      <ManwhaGrid :user-manwhas="filteredManwhas" class="flex-1" />
+    </div>
   </div>
 </template>
 
@@ -13,6 +31,8 @@
 import type { Filters } from '~~/shared/types/filters';
 
 const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha');
+
+const showMobileFilters = ref(false);
 
 const filters = ref<Filters>({
   name: '',
@@ -80,10 +100,6 @@ const filteredManwhas = computed(() => {
 
   return result;
 });
-
-function handleFilterChange(newFilters: Filters) {
-  filters.value = newFilters;
-}
 </script>
 
 <style></style>

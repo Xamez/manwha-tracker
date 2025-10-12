@@ -1,8 +1,8 @@
 <template>
-  <div class="w-72">
-    <IconInput v-model="name" icon="lucide:search" placeholder="Search..." />
+  <div class="md:w-72">
+    <IconInput v-if="!hideSearch" v-model="name" icon="lucide:search" placeholder="Search..." />
 
-    <div class="flex flex-col gap-2 mt-4">
+    <div class="flex flex-col gap-2" :class="{ 'mt-4': !hideSearch }">
       <label class="block text-sm font-medium mb-2">Status</label>
       <div class="flex flex-col gap-1">
         <button
@@ -108,23 +108,53 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
 import { READING_STATUS } from '~~/shared/types/reading-status';
 import { SORT_OPTIONS, SORT_ORDERS } from '~~/shared/types/sort';
-import type { Filters } from '~~/shared/types/filters';
 
 const props = defineProps<{
   userManwhas?: UserManwha[];
+  hideSearch?: boolean;
+  modelValue: Filters;
 }>();
 
-const name = ref('');
-const selectedStatus = ref<ReadingStatus | ''>('');
-const favoritesOnly = ref(false);
-const unratedOnly = ref(false);
-const minRating = ref(0);
-const selectedGenre = ref('');
-const sortBy = ref<SortOption>('updatedAt');
-const sortOrder = ref<SortOrder>('desc');
+const emit = defineEmits<{
+  'update:modelValue': [value: Filters];
+}>();
+
+const name = computed({
+  get: () => props.modelValue.name,
+  set: value => emit('update:modelValue', { ...props.modelValue, name: value }),
+});
+
+const selectedStatus = computed({
+  get: () => props.modelValue.status,
+  set: value => emit('update:modelValue', { ...props.modelValue, status: value }),
+});
+
+const favoritesOnly = computed({
+  get: () => props.modelValue.favoritesOnly,
+  set: value => emit('update:modelValue', { ...props.modelValue, favoritesOnly: value }),
+});
+
+const unratedOnly = computed({
+  get: () => props.modelValue.unratedOnly,
+  set: value => emit('update:modelValue', { ...props.modelValue, unratedOnly: value }),
+});
+
+const minRating = computed({
+  get: () => props.modelValue.minRating,
+  set: value => emit('update:modelValue', { ...props.modelValue, minRating: value }),
+});
+
+const sortBy = computed({
+  get: () => props.modelValue.sortBy,
+  set: value => emit('update:modelValue', { ...props.modelValue, sortBy: value }),
+});
+
+const sortOrder = computed({
+  get: () => props.modelValue.sortOrder,
+  set: value => emit('update:modelValue', { ...props.modelValue, sortOrder: value }),
+});
 
 const statusOptions = [
   { value: '' as const, label: 'All' },
@@ -148,32 +178,14 @@ function countManwhaOfType(status: ReadingStatus | ''): number {
 }
 
 function clearFilters() {
-  name.value = '';
-  selectedStatus.value = '';
-  favoritesOnly.value = false;
-  unratedOnly.value = false;
-  minRating.value = 0;
-  selectedGenre.value = '';
-  sortBy.value = 'updatedAt';
-  sortOrder.value = 'desc';
+  emit('update:modelValue', {
+    name: '',
+    status: '',
+    favoritesOnly: false,
+    unratedOnly: false,
+    minRating: 0,
+    sortBy: 'updatedAt',
+    sortOrder: 'desc',
+  });
 }
-
-const emit = defineEmits<{
-  filterChange: [filters: Filters];
-}>();
-
-watch(
-  [name, selectedStatus, favoritesOnly, unratedOnly, minRating, selectedGenre, sortBy, sortOrder],
-  () => {
-    emit('filterChange', {
-      name: name.value,
-      status: selectedStatus.value,
-      favoritesOnly: favoritesOnly.value,
-      unratedOnly: unratedOnly.value,
-      minRating: minRating.value,
-      sortBy: sortBy.value,
-      sortOrder: sortOrder.value,
-    });
-  },
-);
 </script>

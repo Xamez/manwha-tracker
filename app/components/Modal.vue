@@ -9,30 +9,51 @@
       <div
         v-if="modelValue"
         class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]"
+        :class="slideFromRight ? 'sm:items-center sm:justify-center justify-end' : ''"
         @mousedown="handleOverlayMouseDown"
         @mouseup="handleOverlayMouseUp"
       >
-        <div
-          class="bg-dark rounded-lg max-w-[800px] w-[80%] max-h-[90vh] overflow-y-auto shadow-2xl transition-transform duration-300"
-          :class="modelValue ? 'scale-100' : 'scale-90'"
-          @mousedown.stop
-          @mouseup.stop
+        <Transition
+          :enter-active-class="
+            slideFromRight
+              ? 'transition-transform duration-300 ease-out'
+              : 'transition-transform duration-300'
+          "
+          :leave-active-class="
+            slideFromRight
+              ? 'transition-transform duration-300 ease-in'
+              : 'transition-transform duration-300'
+          "
+          :enter-from-class="slideFromRight ? 'translate-x-full sm:translate-x-0' : ''"
+          :leave-to-class="slideFromRight ? 'translate-x-full sm:translate-x-0' : ''"
         >
-          <div class="flex items-center justify-between p-6 border-b border-gray-800">
-            <slot name="header">
-              <h3 class="text-xl font-semibold text-white m-0">{{ title }}</h3>
-            </slot>
-            <button
-              class="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white"
-              @click="close"
-            >
-              <Icon name="lucide:x" size="24" />
-            </button>
+          <div
+            v-if="modelValue"
+            class="bg-dark rounded-lg max-h-[90vh] overflow-y-auto shadow-2xl transition-transform duration-300"
+            :class="[
+              slideFromRight
+                ? 'h-full sm:h-auto w-[85%] sm:max-w-[800px] sm:w-[80%] rounded-l-lg sm:rounded-lg'
+                : 'max-w-[800px] w-[80%] scale-100',
+            ]"
+            @mousedown.stop
+            @mouseup.stop
+          >
+            <div class="flex items-center justify-between p-6 border-b border-gray-800">
+              <slot name="header">
+                <h3 class="text-xl font-semibold text-white m-0">{{ title }}</h3>
+              </slot>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 text-white"
+                @click="close"
+              >
+                <Icon name="lucide:x" size="24" />
+              </button>
+            </div>
+            <div class="p-6 text-white">
+              <slot></slot>
+            </div>
           </div>
-          <div class="p-6 text-white">
-            <slot></slot>
-          </div>
-        </div>
+        </Transition>
       </div>
     </Transition>
   </Teleport>
@@ -42,6 +63,7 @@
 defineProps<{
   modelValue: boolean;
   title?: string;
+  slideFromRight?: boolean;
 }>();
 
 const emit = defineEmits<{
