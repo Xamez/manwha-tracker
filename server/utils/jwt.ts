@@ -14,7 +14,7 @@ export async function verifyToken(token: string): Promise<User | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
     return payload as User;
-  } catch (err) {
+  } catch {
     console.error('Invalid token');
     return null;
   }

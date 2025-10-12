@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
     const userManwhasCollection = db.collection('user_manwhas');
     const manwhasCollection = db.collection('manwhas');
 
-    let userManwhaDoc = await userManwhasCollection.findOne({
+    const userManwhaDoc = await userManwhasCollection.findOne({
       userId: ObjectId.createFromHexString(user.id),
       manwhaId,
     });

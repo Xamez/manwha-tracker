@@ -1,18 +1,18 @@
 // @ts-check
-import withNuxt from "./.nuxt/eslint.config.mjs";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import withNuxt from './.nuxt/eslint.config.mjs';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default withNuxt([
   eslintPluginPrettierRecommended,
   {
     rules: {
-      "prettier/prettier": [
-        "error",
+      'prettier/prettier': [
+        'error',
         {
-          endOfLine: "auto",
+          endOfLine: 'auto',
         },
       ],
-      "vue/multi-word-component-names": "off",
+      'vue/multi-word-component-names': 'off',
     },
   },
 ]);

@@ -7,8 +7,8 @@
     </div>
 
     <input
-      ref="inputRef"
       :id="id"
+      ref="inputRef"
       :type="type"
       :placeholder="placeholder"
       :value="modelValue"
