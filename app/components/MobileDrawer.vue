@@ -6,7 +6,7 @@
       enter-from-class="opacity-0"
       leave-to-class="opacity-0"
     >
-      <div v-if="modelValue" class="sm:hidden fixed inset-0 z-50 bg-black/70" @click="close"></div>
+      <div v-if="modelValue" class="sm:hidden fixed inset-0 bg-black/70" @click="close"></div>
     </Transition>
 
     <Transition
@@ -17,15 +17,12 @@
     >
       <div
         v-if="modelValue"
-        class="sm:hidden fixed right-0 top-0 h-full w-[80%] max-w-sm bg-dark overflow-y-auto z-50 text-white"
+        class="sm:hidden fixed right-0 top-0 h-full w-[80%] bg-dark overflow-y-auto text-white"
         @click.stop
       >
         <div class="p-4 border-b border-gray-800 flex justify-between items-center">
           <h2 class="text-xl font-semibold">{{ title }}</h2>
-          <button
-            class="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10"
-            @click="close"
-          >
+          <button class="flex items-center" @click="close">
             <Icon name="lucide:x" size="24" />
           </button>
         </div>
