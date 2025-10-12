@@ -4,7 +4,7 @@
 
     <div class="flex flex-col gap-2 mt-4">
       <label class="block text-sm font-medium mb-2">Status</label>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-1">
         <button
           v-for="option in statusOptions"
           :key="option.value"
@@ -88,7 +88,7 @@
           :class="[
             'flex-1 px-2 py-1 rounded text-sm',
             sortOrder === order
-              ? 'bg-primary text-white font-medium'
+              ? 'bg-primary hover:bg-primary-lighter text-white font-medium'
               : 'text-gray-400 bg-gray-800 hover:bg-gray-700',
           ]"
           @click="sortOrder = order"

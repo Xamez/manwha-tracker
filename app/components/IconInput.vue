@@ -7,6 +7,7 @@
     </div>
 
     <input
+      ref="inputRef"
       :id="id"
       :type="type"
       :placeholder="placeholder"
@@ -36,20 +37,32 @@ interface Props {
   type?: string;
   placeholder?: string;
   id?: string;
+  autofocus?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
   icon: 'lucide:search',
   iconSize: '16',
   type: 'text',
   placeholder: '',
   id: 'search-input',
+  autofocus: false,
 });
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
+
+const inputRef = ref<HTMLInputElement | null>(null);
+
+onMounted(() => {
+  if (props.autofocus && inputRef.value) {
+    nextTick(() => {
+      inputRef.value?.focus();
+    });
+  }
+});
 
 function handleInput(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -59,4 +72,8 @@ function handleInput(event: Event) {
 function clearInput() {
   emit('update:modelValue', '');
 }
+
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+});
 </script>

@@ -34,7 +34,7 @@ export default defineEventHandler(async event => {
     const result = await userManwhasCollection.findOneAndUpdate(
       { userId: ObjectId.createFromHexString(user.id), manwhaId },
       { $set: userManwhaData },
-      { returnDocument: 'after' },
+      { upsert: true, returnDocument: 'after' },
     );
 
     if (!result) {

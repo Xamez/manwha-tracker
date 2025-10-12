@@ -4,5 +4,5 @@ export default defineEventHandler(async event => {
   if (!token) {
     return null;
   }
-  return verifyToken(token);
+  return await verifyToken(token);
 });

@@ -1,20 +1,21 @@
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 
-export function createToken(user: User) {
-  const config = useRuntimeConfig();
-  const secret = config.jwtSecret;
-  const token = jwt.sign(user, secret, { expiresIn: '7d' });
-  return token;
+const config = useRuntimeConfig();
+const secret = new TextEncoder().encode(config.jwtSecret);
+
+export async function createToken(user: User): Promise<string> {
+  return await new SignJWT(user)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('7d')
+    .sign(secret);
 }
 
-export function verifyToken(token: string): User | null {
-  const config = useRuntimeConfig();
-  const secret = config.jwtSecret;
+export async function verifyToken(token: string): Promise<User | null> {
   try {
-    const decoded = jwt.verify(token, secret);
-    return decoded as User;
-  } catch (error) {
-    console.error('Token verification failed:', error);
+    const { payload } = await jwtVerify(token, secret);
+    return payload as User;
+  } catch (err) {
+    console.error('Invalid token');
     return null;
   }
 }

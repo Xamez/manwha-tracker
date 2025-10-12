@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
   }
 
   const user: User = { id: userDb._id.toString(), email: userDb.email, username: userDb.username };
-  const token = createToken(user);
+  const token = await createToken(user);
 
   setCookie(event, 'auth_token', token, {
     httpOnly: true,

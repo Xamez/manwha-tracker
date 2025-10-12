@@ -46,28 +46,6 @@ export default defineEventHandler(async event => {
       manwhaDoc = { ...newManwha, _id: insertResult.insertedId };
     }
 
-    if (!userManwhaDoc) {
-      const now = new Date();
-      const newUserManwha = {
-        userId: ObjectId.createFromHexString(user.id),
-        manwhaId,
-        status: 'reading',
-        rating: null,
-        lastReadChapter: 0,
-        readingUrl: null,
-        isFavorite: false,
-        startedAt: now,
-        updatedAt: now,
-      };
-
-      const result = await userManwhasCollection.insertOne(newUserManwha);
-      userManwhaDoc = { ...newUserManwha, _id: result.insertedId };
-    }
-
-    if (!userManwhaDoc) {
-      throw new Error('Failed to retrieve user manwha');
-    }
-
     if (!manwhaDoc) {
       throw createError({
         statusCode: 404,
@@ -75,9 +53,10 @@ export default defineEventHandler(async event => {
       });
     }
 
+    const now = new Date();
     const response: UserManwha = {
-      id: userManwhaDoc._id.toString(),
-      userId: userManwhaDoc.userId.toString(),
+      id: userManwhaDoc?._id.toString() || '',
+      userId: user.id,
       manwha: {
         id: manwhaDoc.id,
         title: manwhaDoc.title,
@@ -90,13 +69,13 @@ export default defineEventHandler(async event => {
         tags: manwhaDoc.tags,
         startDate: manwhaDoc.startDate,
       } as Manwha,
-      status: userManwhaDoc.status,
-      rating: userManwhaDoc.rating,
-      lastReadChapter: userManwhaDoc.lastReadChapter,
-      readingUrl: userManwhaDoc.readingUrl,
-      isFavorite: userManwhaDoc.isFavorite,
-      startedAt: userManwhaDoc.startedAt,
-      updatedAt: userManwhaDoc.updatedAt,
+      status: userManwhaDoc?.status || 'reading',
+      rating: userManwhaDoc?.rating || null,
+      lastReadChapter: userManwhaDoc?.lastReadChapter ?? 0,
+      readingUrl: userManwhaDoc?.readingUrl || null,
+      isFavorite: userManwhaDoc?.isFavorite || false,
+      startedAt: userManwhaDoc?.startedAt || now,
+      updatedAt: userManwhaDoc?.updatedAt || now,
     };
 
     return response;

@@ -10,7 +10,10 @@
       <div
         class="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-center h-full bg-black/60 text-white"
       >
-        <h2 class="m-0 text-md md:text-lg font-bold">Add Manwha</h2>
+        <div class="flex flex-col items-center gap-3 group-hover:scale-110">
+          <Icon name="lucide:plus" size="64" class="group-hover:rotate-90" />
+          <h2 class="m-0 text-md md:text-lg font-bold">Add Manwha</h2>
+        </div>
       </div>
     </div>
   </button>

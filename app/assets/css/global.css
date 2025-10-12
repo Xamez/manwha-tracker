@@ -2,6 +2,14 @@
   outline: none !important;
 }
 
+button,
+a {
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s !important;
+}
+
 button {
   cursor: pointer !important;
 }

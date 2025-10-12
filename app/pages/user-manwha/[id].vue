@@ -15,7 +15,7 @@
   <div v-else-if="manwha" class="pb-8">
     <div
       v-if="manwha.bannerImage"
-      class="hidden md:block not-even:w-full h-[400px] bg-cover bg-center relative -mt-8"
+      class="hidden md:block w-screen relative left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] h-[400px] bg-cover bg-center -mt-8"
       :style="{ backgroundImage: `url(${manwha.bannerImage})` }"
     >
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-dark/30 to-dark"></div>
@@ -55,9 +55,7 @@
         <div>
           <h1 class="text-3xl font-bold text-white mb-2">{{ manwha.title }}</h1>
           <div v-if="manwha.synonyms.length > 0" class="group relative inline-block mb-2">
-            <button
-              class="text-sm text-white/60 hover:text-primary flex items-center gap-1 transition-colors"
-            >
+            <button class="text-sm text-white/60 hover:text-primary flex items-center gap-1">
               <Icon name="lucide:info" size="16" />
               <span>
                 {{ manwha.synonyms.length }} alternative title{{
@@ -140,7 +138,8 @@
 
         <div class="md:col-span-2">
           <label for="rating" class="block text-sm font-medium mb-2">
-            Your Rating: {{ userManwhaData.rating || 0 }}/10
+            <span v-if="userManwhaData.rating">Your Rating: {{ userManwhaData.rating }}/10</span>
+            <span v-else>Your Rating: Not rated</span>
           </label>
           <input
             id="rating"
@@ -182,7 +181,7 @@
         </div>
 
         <div>
-          <label for="updatedAt" class="block text-sm font-medium mb-2">Last Read Date</label>
+          <label for="updatedAt" class="block text-sm font-medium mb-2">Last Updated Date</label>
           <input
             id="updatedAt"
             v-model="userManwhaData.updatedAt"
@@ -193,24 +192,31 @@
         </div>
       </div>
 
-      <div class="flex gap-3 pt-6 mt-6 border-t border-gray-700">
+      <div class="flex flex-col sm:flex-row gap-3 pt-6 mt-6 border-t border-gray-700">
         <button
-          class="flex-1 px-6 py-3 bg-primary hover:bg-primary-lighter rounded text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-1 px-6 py-2.5 bg-primary hover:bg-primary-lighter rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="saving"
           @click="saveUserManwha"
         >
-          <span v-if="saving" class="flex items-center justify-center gap-2">
-            <Icon name="lucide:loader-2" size="20" class="animate-spin" />
-            Saving...
-          </span>
-          <span v-else>Save</span>
+          <span>{{ userManwhaId ? 'Save Changes' : 'Add to My List' }}</span>
         </button>
         <NuxtLink
           to="/"
-          class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded text-white font-medium transition-colors flex items-center justify-center"
+          class="flex-1 px-6 py-2.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-400 font-medium flex items-center justify-center"
         >
           Cancel
         </NuxtLink>
+        <button
+          v-if="userManwhaId"
+          class="sm:w-auto px-6 py-2.5 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="deleting"
+          @click="deleteUserManwha"
+        >
+          <span class="flex items-center justify-center gap-2">
+            <Icon name="lucide:trash-2" size="16" />
+            Delete
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -224,8 +230,10 @@ const id = route.params.id as string;
 
 const loading = ref(true);
 const saving = ref(false);
+const deleting = ref(false);
 const error = ref<string | null>(null);
 const manwha = ref<Manwha | null>(null);
+const userManwhaId = ref('');
 
 const userManwhaData = ref({
   status: 'reading' as ReadingStatus,
@@ -241,7 +249,7 @@ onMounted(async () => {
   try {
     loading.value = true;
 
-    const userData = (await $fetch(`/api/user-manwha/${id}`)) as UserManwha;
+    const userData = await $fetch<UserManwha>(`/api/user-manwha/${id}`);
 
     if (!userData.manwha) {
       error.value = 'Failed to load manwha details. Please try again later.';
@@ -249,6 +257,7 @@ onMounted(async () => {
     }
 
     manwha.value = userData.manwha;
+    userManwhaId.value = userData.id;
     userManwhaData.value = {
       status: userData.status,
       lastReadChapter: userData.lastReadChapter,
@@ -270,12 +279,10 @@ onMounted(async () => {
   }
 });
 
-function buildRequestBody(): UserManwha {
-  if (!manwha.value) {
-    throw new Error('Manwha data is required');
-  }
+async function saveUserManwha() {
+  if (!manwha.value) return;
 
-  return {
+  const body = {
     id: '',
     userId: '',
     manwha: manwha.value,
@@ -287,23 +294,39 @@ function buildRequestBody(): UserManwha {
     updatedAt: new Date(),
     isFavorite: userManwhaData.value.isFavorite,
   };
-}
-
-async function saveUserManwha() {
-  if (!manwha.value) return;
 
   saving.value = true;
   try {
     await $fetch('/api/user-manwha', {
       method: 'POST',
-      body: buildRequestBody(),
+      body,
     });
     navigateTo('/');
   } catch (err) {
     console.error('Failed to save user manwha:', err);
-    alert('Failed to save. Please try again.');
   } finally {
     saving.value = false;
+  }
+}
+
+async function deleteUserManwha() {
+  if (!manwha.value) return;
+
+  // TODO: change this with a modal
+  if (!confirm('Are you sure you want to delete this manwha from your list?')) {
+    return;
+  }
+
+  deleting.value = true;
+  try {
+    await $fetch(`/api/user-manwha/${id}`, {
+      method: 'DELETE',
+    });
+    navigateTo('/');
+  } catch (err) {
+    console.error('Failed to delete user manwha:', err);
+  } finally {
+    deleting.value = false;
   }
 }
 
@@ -313,10 +336,19 @@ async function toggleFavorite() {
   const previousValue = userManwhaData.value.isFavorite;
   userManwhaData.value.isFavorite = !previousValue;
 
+  if (!userManwhaId.value) {
+    return;
+  }
+
+  const body = {
+    manwhaId: manwha.value.id,
+    isFavorite: userManwhaData.value.isFavorite,
+  };
+
   try {
-    await $fetch('/api/user-manwha', {
-      method: 'POST',
-      body: buildRequestBody(),
+    await $fetch('/api/user-manwha/favorite', {
+      method: 'PATCH',
+      body,
     });
   } catch (err) {
     console.error('Failed to update favorite status:', err);

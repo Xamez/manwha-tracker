@@ -5,6 +5,7 @@
         v-model="searchQuery"
         icon="lucide:search"
         placeholder="Search for manwha..."
+        autofocus
         @update:model-value="handleSearch"
       />
 
