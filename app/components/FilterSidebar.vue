@@ -59,7 +59,7 @@
           type="range"
           min="0"
           max="10"
-          step="1"
+          step="0.1"
           class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-700 accent-primary"
         />
         <div class="flex justify-between text-xs text-gray-500 mt-1">
