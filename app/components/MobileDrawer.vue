@@ -1,13 +1,23 @@
 <template>
-  <Transition
-    enter-active-class="transition-transform duration-300 ease-out"
-    leave-active-class="transition-transform duration-300 ease-in"
-    enter-from-class="translate-x-full"
-    leave-to-class="translate-x-full"
-  >
-    <div v-if="modelValue" class="sm:hidden fixed inset-0 z-50 bg-black/70" @click="close">
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition-opacity duration-300 ease-out"
+      leave-active-class="transition-opacity duration-300 ease-in"
+      enter-from-class="opacity-0"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="modelValue" class="sm:hidden fixed inset-0 z-50 bg-black/70" @click="close"></div>
+    </Transition>
+
+    <Transition
+      enter-active-class="transition-transform duration-300 ease-out"
+      leave-active-class="transition-transform duration-300 ease-in"
+      enter-from-class="translate-x-full"
+      leave-to-class="translate-x-full"
+    >
       <div
-        class="absolute right-0 top-0 h-full w-[80%] max-w-sm bg-dark overflow-y-auto"
+        v-if="modelValue"
+        class="sm:hidden fixed right-0 top-0 h-full w-[80%] max-w-sm bg-dark overflow-y-auto z-50 text-white"
         @click.stop
       >
         <div class="p-4 border-b border-gray-800 flex justify-between items-center">
@@ -23,8 +33,8 @@
           <slot></slot>
         </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>
