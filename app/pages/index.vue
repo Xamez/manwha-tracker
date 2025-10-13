@@ -29,6 +29,7 @@
 
 <script lang="ts" setup>
 import type { Filters } from '~~/shared/types/filters';
+import { READING_STATUS_ORDER } from '~~/shared/types/reading-status';
 
 const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha');
 
@@ -92,6 +93,9 @@ const filteredManwhas = computed(() => {
         break;
       case 'meanScore':
         comparison = (a.manwha.meanScore ?? 0) - (b.manwha.meanScore ?? 0);
+        break;
+      case 'status':
+        comparison = READING_STATUS_ORDER[a.status] - READING_STATUS_ORDER[b.status];
         break;
     }
 

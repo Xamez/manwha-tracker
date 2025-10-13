@@ -4,6 +4,7 @@ export enum SORT_OPTIONS {
   rating = 'Rating',
   title = 'Title',
   meanScore = 'Mean Score',
+  status = 'Reading Status',
 }
 export type SortOption = keyof typeof SORT_OPTIONS;
 
