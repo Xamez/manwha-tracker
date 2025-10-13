@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen bg-dark">
     <div class="flex items-center justify-center h-full">
-      <div class="w-full max-w-md m-5 p-8 space-y-6 bg-dark rounded-md text-white">
+      <div class="w-full max-w-md m-5 p-8 space-y-6 bg-dark rounded text-white">
         <h2 class="text-2xl font-bold text-center">Create Account</h2>
 
         <form class="space-y-4 mb-2" @submit.prevent="handleRegister">
@@ -13,7 +13,7 @@
               type="text"
               placeholder="Sung Jin-Woo"
               required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded"
             />
           </div>
           <div>
@@ -24,7 +24,7 @@
               type="email"
               placeholder="sung.jin-woo@gmail.com"
               required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded"
             />
           </div>
           <div>
@@ -35,7 +35,7 @@
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded"
             />
           </div>
           <div>
@@ -46,7 +46,7 @@
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded"
             />
           </div>
 
@@ -64,7 +64,7 @@
               password !== confirmPassword ||
               loading
             "
-            class="w-full px-4 py-2 font-bold text-white bg-primary hover:bg-primary-lighter rounded-md"
+            class="w-full px-4 py-2 font-bold text-white bg-primary hover:bg-primary-lighter rounded"
           >
             Create Account
           </button>

@@ -111,15 +111,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label for="status" class="block text-sm font-medium mb-2">Status</label>
-          <select
-            id="status"
-            v-model="userManwhaData.status"
-            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
-          >
-            <option v-for="(label, key) in READING_STATUS" :key="key" :value="key">
-              {{ label }}
-            </option>
-          </select>
+          <Dropdown v-model="userManwhaData.status" :options="statusOptions" />
         </div>
 
         <div>
@@ -244,6 +236,11 @@ const deleting = ref(false);
 const error = ref<string | null>(null);
 const manwha = ref<Manwha | null>(null);
 const userManwhaId = ref('');
+
+const statusOptions = Object.keys(READING_STATUS).map(key => ({
+  value: key,
+  label: READING_STATUS[key as ReadingStatus],
+}));
 
 const userManwhaData = ref({
   status: 'reading' as ReadingStatus,

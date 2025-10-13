@@ -12,7 +12,7 @@
       :type="type"
       :placeholder="placeholder"
       :value="modelValue"
-      class="w-full py-1 pl-10 border border-white/60 focus:border-white rounded-md text-white placeholder:text-white/40"
+      class="w-full py-1 pl-10 border border-white/60 focus:border-white rounded text-white placeholder:text-white/40"
       :class="{ 'pr-10': modelValue }"
       @input="handleInput"
     />

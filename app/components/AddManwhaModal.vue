@@ -18,7 +18,7 @@
         <button
           v-for="result in searchResults"
           :key="result.id"
-          class="w-full text-left p-3 rounded-md bg-white/5 hover:bg-primary flex items-center gap-3"
+          class="w-full text-left p-3 rounded bg-white/5 hover:bg-primary flex items-center gap-3"
           @click="selectManwha(result.id)"
         >
           <img
