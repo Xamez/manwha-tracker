@@ -6,46 +6,29 @@
 
         <form class="space-y-4 mb-4" @submit.prevent="handleLogin">
           <div>
-            <label for="email" class="text-sm font-medium">Email</label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              placeholder="test@gmail.com"
-              required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
-            />
+            <label for="username" class="text-sm font-medium">Username</label>
+            <input id="username" v-model="username" type="text" placeholder="Sung Jin-Woo" required
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md" />
           </div>
           <div>
             <label for="password" class="text-sm font-medium">Password</label>
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
-            />
+            <input id="password" v-model="password" type="password" placeholder="••••••••" required
+              class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md" />
           </div>
 
           <div v-if="errorMessage" class="text-sm text-red-400">
             {{ errorMessage }}
           </div>
 
-          <button
-            type="submit"
-            :disabled="!email || !password || loading"
-            class="w-full px-4 py-2 font-bold text-white bg-primary hover:bg-primary-lighter rounded-md"
-          >
+          <button type="submit" :disabled="!username || !password || loading"
+            class="w-full px-4 py-2 font-bold text-white bg-primary hover:bg-primary-lighter rounded-md">
             Login
           </button>
         </form>
 
         <div class="flex gap-2 justify-center text-sm">
           <p class="text-gray-400">Don't have an account?</p>
-          <NuxtLink to="/register" class="text-primary-lighter hover:underline"
-            >Create an account</NuxtLink
-          >
+          <NuxtLink to="/register" class="text-primary-lighter hover:underline">Create an account</NuxtLink>
         </div>
       </div>
     </div>
@@ -60,7 +43,7 @@ definePageMeta({
   layout: 'unauthenticated',
 });
 
-const email = ref('');
+const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const loading = ref(false);
@@ -72,7 +55,7 @@ async function handleLogin() {
   try {
     const response = await $fetch('/api/auth/login', {
       method: 'post',
-      body: { email: email.value, password: password.value },
+      body: { username: username.value, password: password.value },
     });
     const { user } = response;
     localStorage.setItem('user', JSON.stringify(user));

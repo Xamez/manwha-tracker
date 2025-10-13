@@ -11,9 +11,14 @@ export default defineEventHandler(async event => {
 
   const db = useDatabase();
 
-  const existingUser = await db.collection('users').findOne({ email });
-  if (existingUser) {
+  const existingUserByEmail = await db.collection('users').findOne({ email });
+  if (existingUserByEmail) {
     throw createError({ statusCode: 409, statusMessage: 'User with this email already exists' });
+  }
+
+  const existingUserByUsername = await db.collection('users').findOne({ username });
+  if (existingUserByUsername) {
+    throw createError({ statusCode: 409, statusMessage: 'User with this username already exists' });
   }
 
   const hashedPassword = await hashPassword(password);

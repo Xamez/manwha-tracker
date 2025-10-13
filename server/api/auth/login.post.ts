@@ -1,21 +1,21 @@
 export default defineEventHandler(async event => {
   const config = useRuntimeConfig();
-  const { email, password } = await readBody(event);
+  const { username, password } = await readBody(event);
 
-  if (!email || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Email and password are required' });
+  if (!username || !password) {
+    throw createError({ statusCode: 400, statusMessage: 'Username and password are required' });
   }
 
   const db = useDatabase();
 
-  const userDb = await db.collection('users').findOne({ email });
+  const userDb = await db.collection('users').findOne({ username });
   if (!userDb) {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid email or password' });
+    throw createError({ statusCode: 401, statusMessage: 'Invalid username or password' });
   }
 
   const isPasswordValid = await verifyPassword(password, userDb.password);
   if (!isPasswordValid) {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid email or password' });
+    throw createError({ statusCode: 401, statusMessage: 'Invalid username or password' });
   }
 
   const user: User = { id: userDb._id.toString(), email: userDb.email, username: userDb.username };
