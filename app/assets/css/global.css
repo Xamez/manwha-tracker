@@ -5,6 +5,7 @@
 /* Used to avoid horizontal scrolling due to full bleed banner */
 html,
 body {
+  background-color: var(--color-dark) !important;
   overflow-x: hidden;
 }
 
