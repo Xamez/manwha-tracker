@@ -2,6 +2,12 @@
   outline: none !important;
 }
 
+/* Used to avoid horizontal scrolling due to full bleed banner */
+html,
+body {
+  overflow-x: hidden;
+}
+
 button,
 a {
   transition:
