@@ -11,7 +11,7 @@
               id="username"
               v-model="username"
               type="text"
-              placeholder="johndoe"
+              placeholder="Sung Jin-Woo"
               required
               class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
@@ -22,7 +22,7 @@
               id="email"
               v-model="email"
               type="email"
-              placeholder="test@gmail.com"
+              placeholder="sung.jin-woo@gmail.com"
               required
               class="w-full px-3 py-2 mt-2 border border-white/60 focus:border-white rounded-md"
             />
