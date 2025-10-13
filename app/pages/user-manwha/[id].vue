@@ -128,14 +128,25 @@
               <Icon name="lucide:link" size="14" />
             </a>
           </label>
-          <input
-            id="lastReadChapter"
-            v-model.number="userManwhaData.lastReadChapter"
-            type="number"
-            min="0"
-            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
-            placeholder="0"
-          />
+          <div class="relative">
+            <input
+              id="lastReadChapter"
+              v-model.number="userManwhaData.lastReadChapter"
+              type="number"
+              min="0"
+              class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
+              :class="{ 'pr-10 md:pr-4': userManwhaData.status === 'reading' }"
+              placeholder="0"
+            />
+            <button
+              v-if="userManwhaData.status === 'reading'"
+              class="md:hidden absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-primary hover:text-primary-lighter"
+              title="Increment chapter"
+              @click="incrementChapter"
+            >
+              <Icon name="lucide:plus" size="20" />
+            </button>
+          </div>
         </div>
 
         <div class="md:col-span-2">
@@ -361,6 +372,11 @@ async function toggleFavorite() {
     console.error('Failed to update favorite status:', err);
     userManwhaData.value.isFavorite = previousValue;
   }
+}
+
+async function incrementChapter() {
+  userManwhaData.value.lastReadChapter++;
+  await saveUserManwha();
 }
 </script>
 
