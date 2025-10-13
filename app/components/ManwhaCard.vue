@@ -18,14 +18,14 @@
                 v-if="userManwha.readingUrl"
                 :href="generateManwhaUrl(userManwha.readingUrl, currentChapter)"
                 target="_blank"
-                class="text-primary font-bold underline cursor-pointer group/link inline-block"
+                class="text-primary font-bold underline cursor-pointer group/link inline-block relative"
                 @click.stop
               >
-                {{ currentChapter
-                }}<Icon
+                {{ currentChapter }}
+                <Icon
                   name="lucide:link"
                   size="12"
-                  class="inline-block ml-1 opacity-0 group-hover/link:opacity-100"
+                  class="absolute left-full ml-1 opacity-0 group-hover/link:opacity-100"
                   style="color: #5540ec"
                 />
               </a>
@@ -35,6 +35,7 @@
             </ClientOnly>
           </p>
           <button
+            v-if="userManwha.status === 'reading'"
             class="w-6 h-6 flex items-center justify-center rounded bg-black/40 hover:bg-primary text-white opacity-0 group-hover:opacity-100"
             @click.prevent="() => updateChapter(currentChapter + 1)"
           >
