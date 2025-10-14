@@ -17,7 +17,7 @@
     >
       <div
         v-if="modelValue"
-        class="sm:hidden fixed right-0 top-0 h-full w-[80%] bg-dark overflow-y-auto text-white"
+        class="sm:hidden fixed right-0 top-0 h-full w-[80%] bg-dark overflow-y-auto text-white z-100"
         @click.stop
       >
         <div class="p-4 border-b border-gray-800 flex justify-between items-center">
