@@ -37,7 +37,7 @@ export async function scrapAndUpdateLastChapter(
 ): Promise<void> {
   console.log(`Processing manwhaId: ${manwhaId}`);
   const lastChapter = await scrapLastChapter(readingUrl);
-  if (lastChapter && lastChapter < lastAvailableChapter) {
+  if (lastChapter && lastChapter > lastAvailableChapter) {
     await db
       .collection('manwhas')
       .updateOne({ id: manwhaId }, { $set: { lastAvailableChapter: lastChapter } });
