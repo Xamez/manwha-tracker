@@ -2,6 +2,22 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'Manwha Tracker',
+      htmlAttrs: { lang: 'en' },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          name: 'description',
+          content:
+            'Track your favorite manhwa, manhua and get notified when new chapters are released.',
+        },
+        { name: 'keywords', content: 'manwha, manga, tracker, notifications, reading list' },
+      ],
+    },
+  },
   nitro: {
     experimental: {
       tasks: true,

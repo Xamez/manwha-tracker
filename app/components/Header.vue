@@ -1,8 +1,8 @@
 <template>
   <div class="w-full h-16 bg-dark flex justify-center border-b border-gray-800">
     <div class="w-[80%] h-full text-white flex items-center justify-between">
-      <NuxtLink to="/" class="text-lg font-bold">
-        <img src="/logo.png" alt="Logo" class="h-15 inline" />
+      <NuxtLink to="/" class="text-lg font-bold overflow-hidden">
+        <img src="/logo.png" alt="Logo" class="h-20 inline" />
       </NuxtLink>
       <div v-if="authUser" class="flex items-center gap-4">
         <span class="text-white font-bold">{{ authUser.username }}</span>
