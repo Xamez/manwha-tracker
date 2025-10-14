@@ -297,7 +297,7 @@ onMounted(async () => {
   }
 });
 
-async function saveUserManwha() {
+async function saveUserManwha(redirect = true) {
   if (!manwha.value) return;
 
   const body = {
@@ -319,7 +319,9 @@ async function saveUserManwha() {
       method: 'POST',
       body,
     });
-    navigateTo('/');
+    if (redirect) {
+      navigateTo('/');
+    }
   } catch (err) {
     console.error('Failed to save user manwha:', err);
   } finally {
@@ -376,7 +378,7 @@ async function toggleFavorite() {
 
 async function incrementChapter() {
   userManwhaData.value.lastReadChapter++;
-  await saveUserManwha();
+  await saveUserManwha(false);
 }
 </script>
 
