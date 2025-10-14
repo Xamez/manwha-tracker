@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { jwtVerify, SignJWT } from 'jose';
 
 const config = useRuntimeConfig();
 const secret = new TextEncoder().encode(config.jwtSecret);

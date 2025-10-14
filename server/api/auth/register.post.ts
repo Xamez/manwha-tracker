@@ -13,12 +13,20 @@ export default defineEventHandler(async event => {
 
   const existingUserByEmail = await db.collection('users').findOne({ email });
   if (existingUserByEmail) {
-    throw createError({ statusCode: 409, statusMessage: 'User with this email already exists' });
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'User with this email already exists',
+    });
   }
 
-  const existingUserByUsername = await db.collection('users').findOne({ username });
+  const existingUserByUsername = await db.collection('users').findOne({
+    username,
+  });
   if (existingUserByUsername) {
-    throw createError({ statusCode: 409, statusMessage: 'User with this username already exists' });
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'User with this username already exists',
+    });
   }
 
   const hashedPassword = await hashPassword(password);
@@ -30,12 +38,21 @@ export default defineEventHandler(async event => {
     createdAt: new Date(),
   });
 
-  const userDb = await db.collection('users').findOne({ _id: result.insertedId });
+  const userDb = await db.collection('users').findOne({
+    _id: result.insertedId,
+  });
   if (!userDb) {
-    throw createError({ statusCode: 500, statusMessage: 'Failed to create user' });
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to create user',
+    });
   }
 
-  const user: User = { id: userDb._id.toString(), email: userDb.email, username: userDb.username };
+  const user: User = {
+    id: userDb._id.toString(),
+    email: userDb.email,
+    username: userDb.username,
+  };
   const token = await createToken(user);
 
   setCookie(event, 'auth_token', token, {

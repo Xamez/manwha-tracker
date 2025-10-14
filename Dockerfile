@@ -1,18 +1,28 @@
-FROM oven/bun:canary-alpine AS build
+FROM node:24-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=true
 WORKDIR /app
+RUN corepack enable
 
-COPY package.json bun.lock* ./
+FROM base AS prod-deps
+COPY package.json pnpm-lock.yaml /app/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
 
-RUN bun install --frozen-lockfile --ignore-scripts
+FROM base AS build
+COPY package.json pnpm-lock.yaml /app/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY . /app
+RUN pnpm run build
 
-COPY . .
+FROM base
+RUN groupadd --gid 1000 nodejs \
+    && useradd --uid 1000 --gid nodejs --shell /bin/bash --create-home nodejs
+USER nodejs
 
-RUN bun run build
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/.output /app/.output
+COPY package.json /app/
 
-FROM oven/bun:canary-alpine AS production
-WORKDIR /app
-
-COPY --from=build /app/.output /app
-
-EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "/app/server/index.mjs" ]
+EXPOSE 3000
+CMD ["node", ".output/server/index.mjs"]

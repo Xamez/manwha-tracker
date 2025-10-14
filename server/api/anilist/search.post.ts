@@ -2,7 +2,10 @@ export default defineEventHandler(async event => {
   const { search } = await readBody(event);
 
   if (!search) {
-    throw createError({ statusCode: 400, statusMessage: 'Search query is required' });
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Search query is required',
+    });
   }
 
   const query = `
@@ -52,7 +55,10 @@ export default defineEventHandler(async event => {
     const data = await response.json();
 
     if (data.errors) {
-      throw createError({ statusCode: 500, statusMessage: 'AniList API returned errors' });
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'AniList API returned errors',
+      });
     }
 
     const media = data.data.Page.media || [];
@@ -67,6 +73,9 @@ export default defineEventHandler(async event => {
       )
       .filter((item: ManwhaSearchResult) => item.title);
   } catch {
-    throw createError({ statusCode: 500, statusMessage: 'Failed to search manga' });
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to search manga',
+    });
   }
 });
