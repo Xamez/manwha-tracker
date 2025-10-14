@@ -92,7 +92,7 @@
 
         <div v-if="manwha.description" class="text-white/80 hidden md:block">
           <h2 class="text-xl font-semibold text-white mb-2">Description</h2>
-          <div v-dompurify-html="manwha.description" class="prose prose-invert max-w-none"></div>
+          <div v-dompurify-html="manwha.description" class="prose prose-invert max-h-[145px]"></div>
         </div>
       </div>
     </div>
@@ -111,7 +111,27 @@
     <div class="mt-4 md:hidden">
       <div v-if="manwha.description" class="text-white/80">
         <h2 class="text-xl font-semibold text-white mb-2">Description</h2>
-        <div v-dompurify-html="manwha.description" class="prose prose-invert max-w-none"></div>
+        <div
+          class="relative cursor-pointer"
+          @click="!descriptionExpanded && (descriptionExpanded = true)"
+        >
+          <div
+            ref="descriptionContentRef"
+            v-dompurify-html="manwha.description"
+            class="prose-invert transition-all duration-300"
+            :class="{
+              'max-h-[80px] overflow-hidden description-gradient': !descriptionExpanded,
+              'prose max-h-none': descriptionExpanded,
+            }"
+          ></div>
+          <button
+            v-if="descriptionExpanded"
+            class="mt-2 text-sm text-white/60"
+            @click.stop="collapseDescription"
+          >
+            Show less
+          </button>
+        </div>
       </div>
     </div>
 
@@ -273,6 +293,16 @@ const userManwhaData = ref({
   isFavorite: false,
 });
 
+const descriptionExpanded = ref(false);
+const descriptionContentRef = ref<HTMLElement | null>(null);
+
+function collapseDescription() {
+  if (descriptionContentRef.value) {
+    descriptionContentRef.value.scrollTop = 0;
+  }
+  descriptionExpanded.value = false;
+}
+
 onMounted(async () => {
   try {
     loading.value = true;
@@ -401,6 +431,21 @@ input[type='number']::-webkit-outer-spin-button {
 .prose {
   max-height: 150px;
   overflow-y: auto;
+}
+
+.description-gradient {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 70%,
+    transparent 100%
+  );
 }
 
 * {
