@@ -1,6 +1,6 @@
 <template>
   <button @click="isModalOpen = true">
-    <div class="w-full h-[210px] rounded-md overflow-hidden relative group">
+    <div class="w-full h-[190px] md:h-[210px] rounded-md overflow-hidden relative group">
       <div
         class="absolute inset-0 bg-cover bg-center transition-transform group-hover:scale-110"
         :style="{

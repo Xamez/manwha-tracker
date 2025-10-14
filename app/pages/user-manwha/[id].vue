@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <div v-if="manwha.genres.length > 0" class="flex flex-wrap gap-2">
+        <div v-if="manwha.genres.length > 0" class="flex-wrap gap-2 hidden md:flex">
           <span
             v-for="genre in manwha.genres"
             :key="genre"
@@ -98,7 +98,17 @@
     </div>
 
     <!-- Description for mobile -->
-    <div class="max-w-6xl mx-auto mt-4 md:hidden">
+    <div v-if="manwha.genres.length > 0" class="flex flex-wrap gap-2 mt-6 md:hidden">
+      <span
+        v-for="genre in manwha.genres"
+        :key="genre"
+        class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm"
+      >
+        {{ genre }}
+      </span>
+    </div>
+
+    <div class="mt-4 md:hidden">
       <div v-if="manwha.description" class="text-white/80">
         <h2 class="text-xl font-semibold text-white mb-2">Description</h2>
         <div v-dompurify-html="manwha.description" class="prose prose-invert max-w-none"></div>
@@ -209,7 +219,7 @@
         <button
           class="flex-1 px-6 py-2.5 bg-primary hover:bg-primary-lighter rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="saving"
-          @click="saveUserManwha"
+          @click="saveUserManwha()"
         >
           <span>{{ userManwhaId ? 'Save Changes' : 'Add to My List' }}</span>
         </button>

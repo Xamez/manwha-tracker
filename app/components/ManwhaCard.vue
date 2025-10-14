@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-[210px] relative group">
+  <div class="w-full h-[190px] md:h-[210px] relative group">
     <span
       v-if="
         userManwha.manwha.lastAvailableChapter &&
