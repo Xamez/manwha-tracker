@@ -1,4 +1,6 @@
-export async function fetchAniListDetails(id: number) {
+import type { Manwha } from '~~/shared/types/manwha';
+
+export async function fetchAniListDetails(id: number): Promise<Manwha | null> {
   const graphqlQuery = `
     query($id: Int)  {
       Media(id: $id)  {
@@ -45,16 +47,13 @@ export async function fetchAniListDetails(id: number) {
     });
 
     if (!response.ok) {
-      throw createError({
-        statusCode: response.status,
-        statusMessage: 'Failed to fetch from AniList API',
-      });
+      return null;
     }
 
     const data = await response.json();
 
     if (data.errors) {
-      throw createError({ statusCode: 500, statusMessage: 'AniList API returned errors' });
+      return null;
     }
 
     const media = data.data.Media;
@@ -78,8 +77,9 @@ export async function fetchAniListDetails(id: number) {
       genres: media.genres || [],
       tags: media.tags || [],
       startDate,
+      lastAvailableChapter: null,
     };
   } catch {
-    throw createError({ statusCode: 500, statusMessage: 'Failed to fetch manga details' });
+    return null;
   }
 }

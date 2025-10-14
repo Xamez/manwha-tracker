@@ -44,6 +44,7 @@ export default defineEventHandler(async event => {
           genres: manwhaDoc.genres,
           tags: manwhaDoc.tags,
           startDate: manwhaDoc.startDate,
+          lastAvailableChapter: manwhaDoc.lastAvailableChapter,
         } as Manwha,
         status: doc.status,
         rating: doc.rating,

@@ -23,8 +23,8 @@ export default defineEventHandler(async event => {
       manwhaId,
     });
 
-    const manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
-    let manwhaData;
+    const manwhaDoc = (await manwhasCollection.findOne({ id: manwhaId })) as Manwha | null;
+    let manwhaData: Manwha | null;
 
     if (!manwhaDoc) {
       manwhaData = await fetchAniListDetails(manwhaId);
@@ -32,7 +32,7 @@ export default defineEventHandler(async event => {
       if (!manwhaData) {
         throw createError({
           statusCode: 404,
-          message: 'Manwha not found on AniList',
+          message: 'Manwha not found',
         });
       }
     } else {
@@ -54,7 +54,8 @@ export default defineEventHandler(async event => {
         genres: manwhaData.genres,
         tags: manwhaData.tags,
         startDate: manwhaData.startDate,
-      } as Manwha,
+        lastAvailableChapter: manwhaData.lastAvailableChapter,
+      },
       status: userManwhaDoc?.status || 'reading',
       rating: userManwhaDoc?.rating || null,
       lastReadChapter: userManwhaDoc?.lastReadChapter ?? 0,

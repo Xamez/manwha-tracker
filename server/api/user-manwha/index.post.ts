@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { scrapAndUpdateLastChapter } from '~~/server/utils/scrapAndUpdateLastChapter';
 
 export default defineEventHandler(async event => {
   const user = event.context.user;
@@ -19,11 +20,9 @@ export default defineEventHandler(async event => {
     const manwhaId = userManwha.manwha.id;
     const now = new Date();
 
-    // Check if manwha exists in database, if not, store it
     const manwhaDoc = await manwhasCollection.findOne({ id: manwhaId });
 
     if (!manwhaDoc) {
-      // Fetch from AniList and store
       const manwhaDetails = await fetchAniListDetails(manwhaId);
 
       if (!manwhaDetails) {
@@ -40,6 +39,15 @@ export default defineEventHandler(async event => {
       };
 
       await manwhasCollection.insertOne(newManwha);
+
+      if (!userManwha.readingUrl) return;
+
+      await scrapAndUpdateLastChapter(
+        db,
+        manwhaId,
+        userManwha.readingUrl,
+        userManwha.lastReadChapter,
+      );
     }
 
     const userManwhaData = {

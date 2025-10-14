@@ -11,5 +11,5 @@ export type Manwha = {
   genres: string[];
   tags: Tag[];
   startDate: Date | null;
-  // lastAvailableChapter: number; // TODO: this kind of tricky (calculated field but depends on websites from user but is also linked to manwha itself)
+  lastAvailableChapter: number | null;
 };
