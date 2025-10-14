@@ -24,9 +24,7 @@ RUN pnpm run build
 
 
 FROM base
-RUN groupadd --gid 1000 nodejs \
-    && useradd --uid 1000 --gid 1000 --shell /bin/bash --create-home nodejs
-USER nodejs
+USER node
 
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/.output /app/.output
