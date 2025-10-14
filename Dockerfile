@@ -5,19 +5,27 @@ ENV CI=true
 WORKDIR /app
 RUN corepack enable
 
-FROM base AS prod-deps
+
+FROM base AS cache
 COPY package.json pnpm-lock.yaml /app/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile
+
+
+FROM base AS prod-deps
+COPY --from=cache /app/node_modules /app/node_modules
+COPY package.json pnpm-lock.yaml /app/
+
 
 FROM base AS build
 COPY package.json pnpm-lock.yaml /app/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY --from=cache /app/node_modules /app/node_modules
 COPY . /app
 RUN pnpm run build
 
+
 FROM base
 RUN groupadd --gid 1000 nodejs \
-    && useradd --uid 1000 --gid nodejs --shell /bin/bash --create-home nodejs
+    && useradd --uid 1000 --gid 1000 --shell /bin/bash --create-home nodejs
 USER nodejs
 
 COPY --from=prod-deps /app/node_modules /app/node_modules
