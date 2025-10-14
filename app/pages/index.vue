@@ -31,7 +31,9 @@
 import type { Filters } from '~~/shared/types/filters';
 import { READING_STATUS_ORDER } from '~~/shared/types/reading-status';
 
-const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha');
+const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha', {
+  key: 'user-manwha',
+});
 
 const showMobileFilters = ref(false);
 
@@ -41,7 +43,7 @@ const filters = ref<Filters>({
   favoritesOnly: false,
   unratedOnly: false,
   minRating: 0,
-  sortBy: 'updatedAt',
+  sortBy: 'unreadChapters',
   sortOrder: 'desc',
 });
 
@@ -97,6 +99,11 @@ const filteredManwhas = computed(() => {
       case 'status':
         comparison = READING_STATUS_ORDER[a.status] - READING_STATUS_ORDER[b.status];
         break;
+      case 'unreadChapters':
+        const lastAvailableChapterA = a.manwha.lastAvailableChapter ?? 0;
+        const lastAvailableChapterB = b.manwha.lastAvailableChapter ?? 0;
+        comparison =
+          lastAvailableChapterA - a.lastReadChapter - (lastAvailableChapterB - b.lastReadChapter);
     }
 
     return filters.value.sortOrder === 'asc' ? comparison : -comparison;

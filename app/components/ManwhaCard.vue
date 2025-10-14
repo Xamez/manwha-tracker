@@ -156,6 +156,7 @@ async function updateChapter(newChapter: number) {
       method: 'POST',
       body,
     });
+    await refreshNuxtData('user-manwha');
   } catch (error) {
     console.error('Failed to update chapter:', error);
     currentChapter.value = previousChapter;

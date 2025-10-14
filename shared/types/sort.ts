@@ -1,10 +1,11 @@
 export enum SORT_OPTIONS {
+  status = 'Reading Status',
+  unreadChapters = 'Unread Chapters',
   updatedAt = 'Updated At',
   startedAt = 'Started At',
   rating = 'Rating',
   title = 'Title',
   meanScore = 'Mean Score',
-  status = 'Reading Status',
 }
 export type SortOption = keyof typeof SORT_OPTIONS;
 
