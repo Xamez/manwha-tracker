@@ -54,7 +54,7 @@ const searchQuery = ref('');
 const searchResults = ref<ManwhaSearchResult[]>([]);
 const isSearching = ref(false);
 
-let searchTimeout: NodeJS.Timeout | null = null;
+let searchTimeout: number | null = null;
 
 async function handleSearch() {
   if (!searchQuery.value.trim()) {

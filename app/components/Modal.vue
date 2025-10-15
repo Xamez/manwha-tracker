@@ -32,8 +32,8 @@
             class="bg-dark rounded-lg max-h-[90vh] overflow-y-auto shadow-2xl transition-transform duration-300"
             :class="[
               slideFromRight
-                ? 'h-full sm:h-auto w-[85%] sm:max-w-[800px] sm:w-[80%] rounded-l-lg sm:rounded-lg'
-                : 'max-w-[800px] w-[80%] scale-100',
+                ? 'h-full sm:h-auto w-[85%] sm:w-[80%] rounded-l-lg sm:rounded-lg'
+                : `${modalSize} scale-100`,
             ]"
             @mousedown.stop
             @mouseup.stop
@@ -60,15 +60,31 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+interface Props {
   modelValue: boolean;
   title?: string;
   slideFromRight?: boolean;
-}>();
+  size?: 'large' | 'medium' | 'small';
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  size: 'large',
+});
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean];
 }>();
+
+const modalSize = computed(() => {
+  switch (props.size) {
+    case 'large':
+      return 'w-[80%]';
+    case 'medium':
+      return 'w-[60%]';
+    case 'small':
+      return 'w-[40%]';
+  }
+});
 
 let isMouseDownOutside = false;
 

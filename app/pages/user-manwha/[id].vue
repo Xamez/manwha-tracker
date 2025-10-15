@@ -225,14 +225,18 @@
 
         <div>
           <label for="updatedAt" class="block text-sm font-medium mb-2">Last Updated Date</label>
-          <input
+          <p
             id="updatedAt"
-            v-model="userManwhaData.updatedAt"
             type="date"
-            readonly
             class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-gray-400 cursor-not-allowed"
-          />
+          >
+            {{ formatDate(userManwhaData.updatedAt) }}
+          </p>
         </div>
+      </div>
+
+      <div v-if="errorMessage">
+        <p class="mt-4 text-red-500">{{ errorMessage }}</p>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3 pt-6 mt-6 border-t border-gray-700">
@@ -263,6 +267,12 @@
       </div>
     </div>
   </div>
+
+  <DeleteModal
+    v-model="showDeleteModal"
+    message="Are you sure you want to delete this manwha from your list?"
+    @confirm="confirmDelete"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -277,6 +287,8 @@ const deleting = ref(false);
 const error = ref<string | null>(null);
 const manwha = ref<Manwha | null>(null);
 const userManwhaId = ref('');
+const errorMessage = ref<string | null>(null);
+const showDeleteModal = ref(false);
 
 const statusOptions = Object.keys(READING_STATUS).map(key => ({
   value: key,
@@ -340,6 +352,11 @@ onMounted(async () => {
 async function saveUserManwha(redirect = true) {
   if (!manwha.value) return;
 
+  if (!userManwhaData.value.startedAt) {
+    errorMessage.value = 'Please select a valid start date.';
+    return;
+  }
+
   const body = {
     id: '',
     userId: '',
@@ -369,15 +386,16 @@ async function saveUserManwha(redirect = true) {
   }
 }
 
-async function deleteUserManwha() {
+function deleteUserManwha() {
+  showDeleteModal.value = true;
+}
+
+async function confirmDelete() {
   if (!manwha.value) return;
 
-  // TODO: change this with a modal
-  if (!confirm('Are you sure you want to delete this manwha from your list?')) {
-    return;
-  }
-
+  showDeleteModal.value = false;
   deleting.value = true;
+
   try {
     await $fetch(`/api/user-manwha/${id}`, {
       method: 'DELETE',
