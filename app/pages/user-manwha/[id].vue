@@ -215,12 +215,19 @@
 
         <div>
           <label for="startedAt" class="block text-sm font-medium mb-2">Start Date</label>
-          <input
-            id="startedAt"
-            v-model="userManwhaData.startedAt"
-            type="date"
-            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-gray-400"
-          />
+          <div class="relative">
+            <input
+              id="startedAt"
+              v-model="userManwhaData.startedAt"
+              type="date"
+              class="w-full px-4 py-2 pl-10 bg-gray-700 border border-gray-600 rounded text-gray-400"
+            />
+            <Icon
+              name="lucide:calendar"
+              size="18"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            />
+          </div>
         </div>
 
         <div>

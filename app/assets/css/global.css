@@ -29,3 +29,10 @@ button:disabled {
 input[type='checkbox'] {
   accent-color: var(--color-primary) !important;
 }
+
+/* Fix date input appearance issue with Safari */
+input[type='date'] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
