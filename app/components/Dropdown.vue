@@ -25,7 +25,7 @@
       <div
         v-if="isOpen"
         ref="dropdownRef"
-        class="absolute z-50 w-full bg-gray-700 border border-gray-600 rounded shadow-lg max-h-62 overflow-y-auto"
+        class="absolute z-50 w-full bg-gray-700 border border-gray-600 rounded shadow-lg max-h-64 overflow-y-auto"
         :class="dropdownPosition === 'top' ? 'bottom-full mb-1' : 'top-full mt-1'"
       >
         <button
