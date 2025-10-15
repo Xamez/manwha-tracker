@@ -11,15 +11,12 @@ export default defineTask({
     const db = useDatabase();
     const response = await db
       .collection('user_manwhas')
-      .find(
-        { readingUrl: { $ne: null } },
-        { projection: { manwhaId: 1, readingUrl: 1, lastAvailableChapter: 1 } },
-      )
+      .find({ readingUrl: { $ne: null } }, { projection: { manwhaId: 1, readingUrl: 1 } })
       .toArray();
 
     for (const doc of response) {
-      const { manwhaId, readingUrl, lastAvailableChapter } = doc;
-      await scrapAndUpdateLastChapter(db, manwhaId, readingUrl, lastAvailableChapter);
+      const { manwhaId, readingUrl } = doc;
+      await scrapAndUpdateLastChapter(db, manwhaId, readingUrl, 0);
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
