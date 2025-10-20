@@ -99,11 +99,13 @@ const filteredManwhas = computed(() => {
       case 'status':
         comparison = READING_STATUS_ORDER[a.status] - READING_STATUS_ORDER[b.status];
         break;
-      case 'unreadChapters':
+      case 'unreadChapters': {
         const lastAvailableChapterA = a.manwha.lastAvailableChapter ?? 0;
         const lastAvailableChapterB = b.manwha.lastAvailableChapter ?? 0;
         comparison =
           lastAvailableChapterA - a.lastReadChapter - (lastAvailableChapterB - b.lastReadChapter);
+        break;
+      }
     }
 
     return filters.value.sortOrder === 'asc' ? comparison : -comparison;

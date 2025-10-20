@@ -62,7 +62,7 @@
 <script lang="ts" setup>
 interface Props {
   modelValue: boolean;
-  title?: string;
+  title: string;
   slideFromRight?: boolean;
   size?: 'large' | 'medium' | 'small';
 }
@@ -83,6 +83,8 @@ const modalSize = computed(() => {
       return 'w-[60%]';
     case 'small':
       return 'w-[40%]';
+    default:
+      return 'w-[80%]';
   }
 });
 
