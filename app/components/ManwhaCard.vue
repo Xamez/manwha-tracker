@@ -60,6 +60,7 @@
                 :href="generateManwhaUrl(userManwha.readingUrl, currentChapter)"
                 target="_blank"
                 class="text-primary font-bold underline cursor-pointer group/link inline-block relative"
+                @click.stop
               >
                 {{ currentChapter }}
                 <Icon
