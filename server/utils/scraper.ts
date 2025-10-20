@@ -34,7 +34,6 @@ export async function scrapLastChapter(url: string): Promise<number | null> {
 export async function suggestReadingUrl(manwhaTitle: string): Promise<string | null> {
   try {
     const searchUrl = `${BASE_URL}/search.php?manga=${manwhaTitle}`;
-    console.log(searchUrl);
     const response = await fetch(searchUrl, { headers });
     const html = await response.text();
 
@@ -48,7 +47,7 @@ export async function suggestReadingUrl(manwhaTitle: string): Promise<string | n
 
     return null;
   } catch (error) {
-    console.info('Error suggesting reading URL:', error);
+    console.error('Error suggesting reading URL:', error);
     return null;
   }
 }
