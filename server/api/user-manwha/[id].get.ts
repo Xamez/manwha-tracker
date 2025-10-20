@@ -40,6 +40,16 @@ export default defineEventHandler(async event => {
     }
 
     const now = new Date();
+    let suggestedUrl: string | null = null;
+
+    if (!userManwhaDoc?.readingUrl) {
+      suggestedUrl = await suggestReadingUrl(manwhaData.title);
+
+      if (!suggestedUrl && manwhaData.alternativeTitles.length > 0) {
+        suggestedUrl = await suggestReadingUrl(manwhaData.alternativeTitles[0]);
+      }
+    }
+
     const response: UserManwha = {
       id: userManwhaDoc?._id.toString() || '',
       userId: user.id,
@@ -50,7 +60,7 @@ export default defineEventHandler(async event => {
         coverImage: manwhaData.coverImage,
         meanScore: manwhaData.meanScore,
         description: manwhaData.description,
-        synonyms: manwhaData.synonyms,
+        alternativeTitles: manwhaData.alternativeTitles,
         genres: manwhaData.genres,
         tags: manwhaData.tags,
         startDate: manwhaData.startDate,
@@ -59,7 +69,7 @@ export default defineEventHandler(async event => {
       status: userManwhaDoc?.status || 'reading',
       rating: userManwhaDoc?.rating || null,
       lastReadChapter: userManwhaDoc?.lastReadChapter ?? 0,
-      readingUrl: userManwhaDoc?.readingUrl || null,
+      readingUrl: userManwhaDoc?.readingUrl || suggestedUrl,
       isFavorite: userManwhaDoc?.isFavorite || false,
       startedAt: userManwhaDoc?.startedAt || now,
       updatedAt: userManwhaDoc?.updatedAt || now,

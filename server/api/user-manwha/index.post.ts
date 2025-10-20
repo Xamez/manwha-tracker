@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { scrapAndUpdateLastChapter } from '~~/server/utils/scrapAndUpdateLastChapter';
+import { scrapAndUpdateLastChapter } from '~~/server/utils/scraper';
 
 export default defineEventHandler(async event => {
   const user = event.context.user;

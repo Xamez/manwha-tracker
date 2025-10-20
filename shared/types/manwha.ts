@@ -7,7 +7,7 @@ export type Manwha = {
   coverImage: string | null;
   meanScore: number | null;
   description: string;
-  synonyms: string[];
+  alternativeTitles: string[];
   genres: string[];
   tags: Tag[];
   startDate: Date | null;

@@ -40,7 +40,7 @@ export default defineEventHandler(async event => {
           coverImage: manwhaDoc.coverImage,
           meanScore: manwhaDoc.meanScore,
           description: manwhaDoc.description,
-          synonyms: manwhaDoc.synonyms,
+          alternativeTitles: manwhaDoc.alternativeTitles,
           genres: manwhaDoc.genres,
           tags: manwhaDoc.tags,
           startDate: manwhaDoc.startDate,

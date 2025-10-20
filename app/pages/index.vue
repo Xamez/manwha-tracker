@@ -57,7 +57,7 @@ const filteredManwhas = computed(() => {
     result = result.filter(
       um =>
         um.manwha.title.toLowerCase().includes(searchTerm) ||
-        um.manwha.synonyms.some(s => s.toLowerCase().includes(searchTerm)),
+        um.manwha.alternativeTitles.some(s => s.toLowerCase().includes(searchTerm)),
     );
   }
 

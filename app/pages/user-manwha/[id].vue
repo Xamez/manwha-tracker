@@ -54,12 +54,12 @@
       <div class="flex-1 space-y-6">
         <div>
           <h1 class="text-3xl font-bold text-white mb-2">{{ manwha.title }}</h1>
-          <div v-if="manwha.synonyms.length > 0" class="group relative inline-block mb-2">
+          <div v-if="manwha.alternativeTitles.length > 0" class="group relative inline-block mb-2">
             <button class="text-sm text-white/60 hover:text-primary flex items-center gap-1">
               <Icon name="lucide:info" size="16" />
               <span>
-                {{ manwha.synonyms.length }} alternative title{{
-                  manwha.synonyms.length > 1 ? 's' : ''
+                {{ manwha.alternativeTitles.length }} alternative title{{
+                  manwha.alternativeTitles.length > 1 ? 's' : ''
                 }}
               </span>
             </button>
@@ -68,7 +68,11 @@
             >
               <p class="text-xs text-white/60 mb-2 font-semibold">Alternative Titles:</p>
               <ul class="space-y-1">
-                <li v-for="synonym in manwha.synonyms" :key="synonym" class="text-sm text-white/90">
+                <li
+                  v-for="synonym in manwha.alternativeTitles"
+                  :key="synonym"
+                  class="text-sm text-white/90"
+                >
                   {{ synonym }}
                 </li>
               </ul>

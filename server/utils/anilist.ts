@@ -73,7 +73,7 @@ export async function fetchAniListDetails(id: number): Promise<Manwha | null> {
       coverImage: media.coverImage?.large,
       meanScore: media.meanScore,
       description: media.description || '',
-      synonyms: media.synonyms || [],
+      alternativeTitles: media.synonyms || [],
       genres: media.genres || [],
       tags: media.tags || [],
       startDate,

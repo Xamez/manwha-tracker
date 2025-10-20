@@ -1,4 +1,4 @@
-import { scrapAndUpdateLastChapter } from '~~/server/utils/scrapAndUpdateLastChapter';
+import { scrapAndUpdateLastChapter } from '~~/server/utils/scraper';
 
 export default defineTask({
   meta: {

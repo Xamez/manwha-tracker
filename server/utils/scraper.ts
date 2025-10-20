@@ -9,6 +9,8 @@ const headers = {
   'Accept-Language': 'en-US,en;q=0.5',
 };
 
+const BASE_URL = 'https://demonicscans.org';
+
 export async function scrapLastChapter(url: string): Promise<number | null> {
   try {
     const response = await fetch(url, { headers });
@@ -25,6 +27,28 @@ export async function scrapLastChapter(url: string): Promise<number | null> {
     return parseInt(chapterNumber, 10);
   } catch (error) {
     console.error('Error scraping last chapter:', error);
+    return null;
+  }
+}
+
+export async function suggestReadingUrl(manwhaTitle: string): Promise<string | null> {
+  try {
+    const searchUrl = `${BASE_URL}/search.php?manga=${manwhaTitle}`;
+    console.log(searchUrl);
+    const response = await fetch(searchUrl, { headers });
+    const html = await response.text();
+
+    const $ = cheerio.load(html);
+    const firstResult = $('a[href^="/manga/"]').first();
+    const href = firstResult.attr('href');
+
+    if (href) {
+      return `${BASE_URL}${href}`;
+    }
+
+    return null;
+  } catch (error) {
+    console.info('Error suggesting reading URL:', error);
     return null;
   }
 }
