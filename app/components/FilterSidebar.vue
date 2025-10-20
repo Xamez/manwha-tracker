@@ -163,7 +163,7 @@ function clearFilters() {
     favoritesOnly: false,
     unratedOnly: false,
     minRating: 0,
-    sortBy: 'updatedAt',
+    sortBy: 'unreadChapters',
     sortOrder: 'desc',
   });
 }
