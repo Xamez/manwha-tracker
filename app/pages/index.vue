@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Filters } from '~~/shared/types/filters';
+import { DEFAULT_FILTERS, FILTERS_STORAGE_KEY, type Filters } from '~~/shared/types/filters';
 import { READING_STATUS_ORDER } from '~~/shared/types/reading-status';
 
 const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha', {
@@ -37,15 +37,36 @@ const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha', {
 
 const showMobileFilters = ref(false);
 
-const filters = ref<Filters>({
-  name: '',
-  status: '',
-  favoritesOnly: false,
-  unratedOnly: false,
-  minRating: 0,
-  sortBy: 'unreadChapters',
-  sortOrder: 'desc',
+// Load filters from localStorage on mount
+const filters = ref<Filters>(DEFAULT_FILTERS);
+
+// Load saved filters from localStorage
+onMounted(() => {
+  if (import.meta.client) {
+    try {
+      const savedFilters = localStorage.getItem(FILTERS_STORAGE_KEY);
+      if (savedFilters) {
+        filters.value = { ...DEFAULT_FILTERS, ...JSON.parse(savedFilters) };
+      }
+    } catch (error) {
+      console.error('Failed to load filters from localStorage:', error);
+    }
+  }
 });
+
+watch(
+  filters,
+  newFilters => {
+    if (import.meta.client) {
+      try {
+        localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(newFilters));
+      } catch (error) {
+        console.error('Failed to save filters to localStorage:', error);
+      }
+    }
+  },
+  { deep: true },
+);
 
 const filteredManwhas = computed(() => {
   if (!userManwhas.value) return [];
@@ -61,8 +82,8 @@ const filteredManwhas = computed(() => {
     );
   }
 
-  if (filters.value.status) {
-    result = result.filter(um => um.status === filters.value.status);
+  if (filters.value.statuses.length > 0) {
+    result = result.filter(um => filters.value.statuses.includes(um.status));
   }
 
   if (filters.value.favoritesOnly) {

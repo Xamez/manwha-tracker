@@ -10,11 +10,11 @@
           :key="option.value"
           :class="[
             'px-2 py-1 rounded text-left',
-            selectedStatus === option.value
+            isStatusSelected(option.value)
               ? 'bg-primary text-white font-medium'
               : 'text-gray-400 hover:bg-gray-700',
           ]"
-          @click="selectedStatus = option.value"
+          @click="toggleStatus(option.value)"
         >
           <div class="flex justify-between">
             {{ option.label }}
@@ -105,9 +105,9 @@ const name = computed({
   set: value => emit('update:modelValue', { ...props.modelValue, name: value }),
 });
 
-const selectedStatus = computed({
-  get: () => props.modelValue.status,
-  set: value => emit('update:modelValue', { ...props.modelValue, status: value }),
+const selectedStatuses = computed({
+  get: () => props.modelValue.statuses || [],
+  set: value => emit('update:modelValue', { ...props.modelValue, statuses: value }),
 });
 
 const favoritesOnly = computed({
@@ -150,6 +150,27 @@ const sortOpptions = [
   })),
 ];
 
+function isStatusSelected(status: ReadingStatus | ''): boolean {
+  if (status === '') {
+    return selectedStatuses.value.length === 0;
+  }
+  return selectedStatuses.value.includes(status);
+}
+
+function toggleStatus(status: ReadingStatus | '') {
+  if (status === '') {
+    selectedStatuses.value = [];
+    return;
+  }
+
+  const current = selectedStatuses.value;
+  if (current.includes(status)) {
+    selectedStatuses.value = current.filter(s => s !== status);
+  } else {
+    selectedStatuses.value = [...current, status];
+  }
+}
+
 function countManwhaOfType(status: ReadingStatus | ''): number {
   if (!props.userManwhas) return 0;
   if (status === '') return props.userManwhas.length;
@@ -159,7 +180,7 @@ function countManwhaOfType(status: ReadingStatus | ''): number {
 function clearFilters() {
   emit('update:modelValue', {
     name: '',
-    status: '',
+    statuses: [],
     favoritesOnly: false,
     unratedOnly: false,
     minRating: 0,
