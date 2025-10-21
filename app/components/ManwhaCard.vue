@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="w-full h-[190px] md:h-[210px] relative group"
-    @touchstart.capture="isTouchDevice ? handleTap($event) : null"
-  >
+  <div class="w-full h-[190px] md:h-[210px] relative group" @click="handleClick">
     <span
       v-if="
         userManwha.manwha.lastAvailableChapter &&
@@ -29,8 +26,7 @@
         >
           <button
             class="absolute size-6 flex items-center justify-center top-2 right-2 p-1 rounded-full bg-white/10 hover:bg-white/30 text-white z-20"
-            @click="showUpdateScreen = false"
-            @touchstart="showUpdateScreen = false"
+            @click.stop="showUpdateScreen = false"
           >
             <Icon name="lucide:x" size="18" />
           </button>
@@ -40,7 +36,7 @@
 
           <button
             class="size-8 flex items-center justify-center rounded-md bg-primary text-white"
-            @touchstart="updateChapter(currentChapter + 1)"
+            @click.stop="updateChapter(currentChapter + 1)"
           >
             <Icon name="lucide:plus" size="24" />
           </button>
@@ -49,7 +45,6 @@
         <div
           v-else
           class="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full bg-gradient-to-t from-black/90 to-black/5 text-white"
-          @click="handleNavigationClick"
         >
           <h2 class="m-0 mb-2 text-sm md:text-md font-semibold">{{ userManwha.manwha.title }}</h2>
           <div class="flex items-center justify-between gap-2">
@@ -90,7 +85,7 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const { userManwha } = defineProps<{ userManwha: UserManwha }>();
 
@@ -99,40 +94,34 @@ const showUpdateScreen = ref(false);
 
 const router = useRouter();
 
-const DOUBLE_TAP_DELAY = 150;
-let lastTouchTime = 0;
-let tapTimeout: ReturnType<typeof setTimeout>;
+const DOUBLE_CLICK_THRESHOLD = 175; // milliseconds
+let lastClickTime = 0;
+let clickTimeout: ReturnType<typeof setTimeout> | null = null;
 
-const isTouchDevice = ref(false);
+function handleClick(_event: MouseEvent) {
+  if (showUpdateScreen.value) return;
 
-onMounted(() => {
-  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-    isTouchDevice.value = true;
+  const now = Date.now();
+  const timeSinceLastClick = now - lastClickTime;
+
+  if (timeSinceLastClick < DOUBLE_CLICK_THRESHOLD) {
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      clickTimeout = null;
+    }
+    lastClickTime = 0;
+    showUpdateScreen.value = true;
+    return;
   }
-});
+
+  lastClickTime = now;
+  clickTimeout = setTimeout(() => {
+    handleNavigationClick();
+  }, DOUBLE_CLICK_THRESHOLD);
+}
 
 function handleNavigationClick() {
   router.push(`/user-manwha/${userManwha.manwha.id}`);
-}
-
-function handleTap(event: TouchEvent) {
-  event.preventDefault();
-  if (showUpdateScreen.value) return;
-
-  const now = new Date().getTime();
-  const timeSinceLastTouch = now - lastTouchTime;
-
-  if (timeSinceLastTouch < DOUBLE_TAP_DELAY && timeSinceLastTouch > 0) {
-    clearTimeout(tapTimeout);
-    showUpdateScreen.value = true;
-    lastTouchTime = 0;
-  } else {
-    lastTouchTime = now;
-    tapTimeout = setTimeout(() => {
-      handleNavigationClick();
-      lastTouchTime = 0;
-    }, DOUBLE_TAP_DELAY);
-  }
 }
 
 async function updateChapter(newChapter: number) {
