@@ -37,10 +37,8 @@ const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha', {
 
 const showMobileFilters = ref(false);
 
-// Load filters from localStorage on mount
 const filters = ref<Filters>(DEFAULT_FILTERS);
 
-// Load saved filters from localStorage
 onMounted(() => {
   if (import.meta.client) {
     try {
