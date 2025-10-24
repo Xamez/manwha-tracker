@@ -4,16 +4,16 @@ import type { Db } from 'mongodb';
 const headers = {
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-  Referer: 'https://demonicscans.org/',
   Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.5',
 };
 
-const BASE_URL = 'https://demonicscans.org';
+const DEMONIC_SCANS_URL = 'https://demonicscans.org';
+const MANHUA_US_URL = 'https://manhuaus.com';
 
 export async function scrapLastChapter(url: string): Promise<number | null> {
   try {
-    const response = await fetch(url, { headers });
+    const response = await fetch(url, { headers: { ...headers, Referer: DEMONIC_SCANS_URL } });
     const html = await response.text();
 
     const $ = cheerio.load(html);
@@ -31,9 +31,9 @@ export async function scrapLastChapter(url: string): Promise<number | null> {
   }
 }
 
-export async function suggestReadingUrl(manwhaTitle: string): Promise<string | null> {
+export async function suggestReadingUrlDemonicScans(manwhaTitle: string): Promise<string | null> {
   try {
-    const searchUrl = `${BASE_URL}/search.php?manga=${manwhaTitle}`;
+    const searchUrl = `${DEMONIC_SCANS_URL}/search.php?manga=${manwhaTitle}`;
     const response = await fetch(searchUrl, { headers });
     const html = await response.text();
 
@@ -42,14 +42,50 @@ export async function suggestReadingUrl(manwhaTitle: string): Promise<string | n
     const href = firstResult.attr('href');
 
     if (href) {
-      return `${BASE_URL}${href}`;
+      return `${DEMONIC_SCANS_URL}${href}`;
     }
 
     return null;
   } catch (error) {
-    console.error('Error suggesting reading URL:', error);
+    console.error('Error suggesting reading URL from DemonicScans:', error);
     return null;
   }
+}
+
+export async function suggestReadingUrlManhuaUS(manwhaTitle: string): Promise<string | null> {
+  try {
+    const formData = new FormData();
+    formData.append('action', 'wp-manga-search-manga');
+    formData.append('title', manwhaTitle);
+
+    const response = await fetch(`${MANHUA_US_URL}/wp-admin/admin-ajax.php`, {
+      method: 'POST',
+      headers: {
+        'User-Agent': headers['User-Agent'],
+        Referer: MANHUA_US_URL,
+      },
+      body: formData,
+    });
+
+    const json = await response.json();
+
+    if (json.success && json.data && json.data.length > 0) {
+      return json.data[0].url;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error suggesting reading URL from ManhuaUS:', error);
+    return null;
+  }
+}
+
+export async function suggestReadingUrl(manwhaTitle: string): Promise<string | null> {
+  let url = await suggestReadingUrlManhuaUS(manwhaTitle);
+  if (url) return url;
+
+  url = await suggestReadingUrlDemonicScans(manwhaTitle);
+  return url;
 }
 
 export async function scrapAndUpdateLastChapter(
