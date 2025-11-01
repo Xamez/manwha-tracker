@@ -11,7 +11,7 @@ const headers = {
 const DEMONIC_SCANS_URL = 'https://demonicscans.org';
 const MANHUA_US_URL = 'https://manhuaus.com';
 
-export async function scrapLastChapter(url: string): Promise<number | null> {
+async function scrapLastChapterDemonicScans(url: string): Promise<number | null> {
   try {
     const response = await fetch(url, { headers: { ...headers, Referer: DEMONIC_SCANS_URL } });
     const html = await response.text();
@@ -26,9 +26,37 @@ export async function scrapLastChapter(url: string): Promise<number | null> {
 
     return parseInt(chapterNumber, 10);
   } catch (error) {
-    console.error('Error scraping last chapter:', error);
+    console.error('Error scraping last chapter from DemonicScans:', error);
     return null;
   }
+}
+
+async function scrapLastChapterManhuaUS(url: string): Promise<number | null> {
+  try {
+    const response = await fetch(url, { headers: { ...headers, Referer: MANHUA_US_URL } });
+    const html = await response.text();
+
+    const $ = cheerio.load(html);
+    const firstLi = $('ul.main.version-chap li.wp-manga-chapter').first();
+    const link = firstLi.find('a');
+
+    const chapterText = link.text().trim();
+    const chapterNumber = chapterText.replace('Chapter ', '').trim();
+
+    return parseInt(chapterNumber, 10);
+  } catch (error) {
+    console.error('Error scraping last chapter from ManhuaUS:', error);
+    return null;
+  }
+}
+
+export async function scrapLastChapter(url: string): Promise<number | null> {
+  if (url.includes(MANHUA_US_URL)) {
+    return scrapLastChapterManhuaUS(url);
+  } else if (url.includes(DEMONIC_SCANS_URL)) {
+    return scrapLastChapterDemonicScans(url);
+  }
+  return null;
 }
 
 export async function suggestReadingUrlDemonicScans(manwhaTitle: string): Promise<string | null> {
@@ -80,12 +108,18 @@ export async function suggestReadingUrlManhuaUS(manwhaTitle: string): Promise<st
   }
 }
 
-export async function suggestReadingUrl(manwhaTitle: string): Promise<string | null> {
-  let url = await suggestReadingUrlManhuaUS(manwhaTitle);
-  if (url) return url;
+export async function suggestReadingUrl(manhwaTitle: string): Promise<string | null> {
+  const sources: Array<(title: string) => Promise<string | null>> = [
+    suggestReadingUrlManhuaUS,
+    suggestReadingUrlDemonicScans,
+  ];
 
-  url = await suggestReadingUrlDemonicScans(manwhaTitle);
-  return url;
+  for (const getUrl of sources) {
+    const url = await getUrl(manhwaTitle);
+    if (url) return url;
+  }
+
+  return null;
 }
 
 export async function scrapAndUpdateLastChapter(
