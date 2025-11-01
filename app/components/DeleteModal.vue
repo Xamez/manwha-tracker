@@ -1,5 +1,5 @@
 <template>
-  <Modal v-model="isOpen" title="Delete Manwha" size="medium">
+  <Modal v-model="isOpen" title="Delete Manhwa" size="medium">
     <div class="space-y-4">
       <p class="text-white/80">{{ message }}</p>
       <div class="flex gap-3">

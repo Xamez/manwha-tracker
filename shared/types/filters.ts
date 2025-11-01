@@ -11,7 +11,7 @@ export type Filters = {
   sortOrder: SortOrder;
 };
 
-export const FILTERS_STORAGE_KEY = 'manwha-filters';
+export const FILTERS_STORAGE_KEY = 'manhwa-filters';
 
 export const DEFAULT_FILTERS: Filters = {
   name: '',

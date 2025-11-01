@@ -1,10 +1,10 @@
 import type { ReadingStatus } from './reading-status';
-import type { Manwha } from './manwha';
+import type { Manhwa } from './manhwa';
 
-export type UserManwha = {
+export type UserManhwa = {
   id: string;
   userId: string;
-  manwha: Manwha;
+  manhwa: Manhwa;
   status: ReadingStatus;
   rating: number | null;
   lastReadChapter: number;

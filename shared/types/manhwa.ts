@@ -1,6 +1,6 @@
 import type { Tag } from './tag';
 
-export type Manwha = {
+export type Manhwa = {
   id: number;
   title: string;
   bannerImage: string | null;

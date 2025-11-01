@@ -4,7 +4,7 @@ services:
     container_name: mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_DATABASE: manwha-tracker
+      MONGO_INITDB_DATABASE: manhwa-tracker
     ports:
       - '27017:27017'
     volumes:

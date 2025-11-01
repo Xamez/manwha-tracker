@@ -16,13 +16,13 @@
     </div>
 
     <div class="flex flex-row gap-10 relative">
-      <FilterSidebar v-model="filters" class="hidden sm:block" :user-manwhas="userManwhas ?? []" />
+      <FilterSidebar v-model="filters" class="hidden sm:block" :user-manhwas="userManhwas ?? []" />
 
       <MobileDrawer v-model="showMobileFilters" title="Filters">
-        <FilterSidebar v-model="filters" :user-manwhas="userManwhas ?? []" hide-search />
+        <FilterSidebar v-model="filters" :user-manhwas="userManhwas ?? []" hide-search />
       </MobileDrawer>
 
-      <ManwhaGrid :user-manwhas="filteredManwhas" class="flex-1" />
+      <ManhwaGrid :user-manhwas="filteredManhwas" class="flex-1" />
     </div>
   </div>
 </template>
@@ -31,8 +31,8 @@
 import { DEFAULT_FILTERS, FILTERS_STORAGE_KEY, type Filters } from '~~/shared/types/filters';
 import { READING_STATUS_ORDER } from '~~/shared/types/reading-status';
 
-const { data: userManwhas } = await useFetch<UserManwha[]>('/api/user-manwha', {
-  key: 'user-manwha',
+const { data: userManhwas } = await useFetch<UserManhwa[]>('/api/user-manhwa', {
+  key: 'user-manhwa',
 });
 
 const showMobileFilters = ref(false);
@@ -66,17 +66,17 @@ watch(
   { deep: true },
 );
 
-const filteredManwhas = computed(() => {
-  if (!userManwhas.value) return [];
+const filteredManhwas = computed(() => {
+  if (!userManhwas.value) return [];
 
-  let result = [...userManwhas.value];
+  let result = [...userManhwas.value];
 
   if (filters.value.name) {
     const searchTerm = filters.value.name.toLowerCase();
     result = result.filter(
       um =>
-        um.manwha.title.toLowerCase().includes(searchTerm) ||
-        um.manwha.alternativeTitles.some(s => s.toLowerCase().includes(searchTerm)),
+        um.manhwa.title.toLowerCase().includes(searchTerm) ||
+        um.manhwa.alternativeTitles.some(s => s.toLowerCase().includes(searchTerm)),
     );
   }
 
@@ -110,17 +110,17 @@ const filteredManwhas = computed(() => {
         comparison = (a.rating ?? 0) - (b.rating ?? 0);
         break;
       case 'title':
-        comparison = a.manwha.title.localeCompare(b.manwha.title);
+        comparison = a.manhwa.title.localeCompare(b.manhwa.title);
         break;
       case 'meanScore':
-        comparison = (a.manwha.meanScore ?? 0) - (b.manwha.meanScore ?? 0);
+        comparison = (a.manhwa.meanScore ?? 0) - (b.manhwa.meanScore ?? 0);
         break;
       case 'status':
         comparison = READING_STATUS_ORDER[a.status] - READING_STATUS_ORDER[b.status];
         break;
       case 'unreadChapters': {
-        const lastAvailableChapterA = a.manwha.lastAvailableChapter ?? 0;
-        const lastAvailableChapterB = b.manwha.lastAvailableChapter ?? 0;
+        const lastAvailableChapterA = a.manhwa.lastAvailableChapter ?? 0;
+        const lastAvailableChapterB = b.manhwa.lastAvailableChapter ?? 0;
         comparison =
           lastAvailableChapterA - a.lastReadChapter - (lastAvailableChapterB - b.lastReadChapter);
         break;

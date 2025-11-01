@@ -13,37 +13,37 @@
       <NuxtLink to="/" class="mt-4 text-primary hover:underline">Go back to home</NuxtLink>
     </div>
 
-    <div v-else-if="manwha" class="pb-8">
+    <div v-else-if="manhwa" class="pb-8">
       <div
-        v-if="manwha.bannerImage"
+        v-if="manhwa.bannerImage"
         class="hidden md:block w-screen relative left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] h-[400px] bg-cover bg-center -mt-8"
-        :style="{ backgroundImage: `url(${manwha.bannerImage})` }"
+        :style="{ backgroundImage: `url(${manhwa.bannerImage})` }"
       >
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-dark/30 to-dark"></div>
       </div>
 
       <div
         class="flex flex-row gap-4 md:gap-6 relative z-10 max-w-6xl mx-auto"
-        :class="{ 'md:-mt-28': manwha.bannerImage }"
+        :class="{ 'md:-mt-28': manhwa.bannerImage }"
       >
         <div class="relative">
           <button
             class="absolute -top-3 -left-4 z-10 w-10 h-10 rounded-full bg-black/80 flex items-center justify-center"
             :class="{
-              'text-red-500': userManwhaData.isFavorite,
-              'text-white/60': !userManwhaData.isFavorite,
+              'text-red-500': userManhwaData.isFavorite,
+              'text-white/60': !userManhwaData.isFavorite,
             }"
             @click="toggleFavorite"
           >
-            <Icon v-if="userManwhaData.isFavorite" name="mdi:heart" size="20" />
+            <Icon v-if="userManhwaData.isFavorite" name="mdi:heart" size="20" />
             <Icon v-else name="mdi:heart-outline" size="20" />
           </button>
 
           <div class="w-[120px] md:w-[240px] aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
             <img
-              v-if="manwha.coverImage"
-              :src="manwha.coverImage"
-              :alt="manwha.title"
+              v-if="manhwa.coverImage"
+              :src="manhwa.coverImage"
+              :alt="manhwa.title"
               class="w-full h-full object-cover"
             />
             <div v-else class="w-full h-full bg-white/10 flex items-center justify-center">
@@ -54,16 +54,16 @@
 
         <div class="flex-1 space-y-6">
           <div>
-            <h1 class="text-3xl font-bold text-white mb-2">{{ manwha.title }}</h1>
+            <h1 class="text-3xl font-bold text-white mb-2">{{ manhwa.title }}</h1>
             <div
-              v-if="manwha.alternativeTitles.length > 0"
+              v-if="manhwa.alternativeTitles.length > 0"
               class="group relative inline-block mb-2"
             >
               <button class="text-sm text-white/60 hover:text-primary flex items-center gap-1">
                 <Icon name="lucide:info" size="16" />
                 <span>
-                  {{ manwha.alternativeTitles.length }} alternative title{{
-                    manwha.alternativeTitles.length > 1 ? 's' : ''
+                  {{ manhwa.alternativeTitles.length }} alternative title{{
+                    manhwa.alternativeTitles.length > 1 ? 's' : ''
                   }}
                 </span>
               </button>
@@ -73,7 +73,7 @@
                 <p class="text-xs text-white/60 mb-2 font-semibold">Alternative Titles:</p>
                 <ul class="space-y-1">
                   <li
-                    v-for="synonym in manwha.alternativeTitles"
+                    v-for="synonym in manhwa.alternativeTitles"
                     :key="synonym"
                     class="text-sm text-white/90"
                   >
@@ -82,15 +82,15 @@
                 </ul>
               </div>
             </div>
-            <div v-if="manwha.meanScore" class="flex items-center gap-2 text-white/80">
+            <div v-if="manhwa.meanScore" class="flex items-center gap-2 text-white/80">
               <Icon name="lucide:star" size="20" class="text-yellow-400" />
-              <span class="text-lg font-semibold">{{ manwha.meanScore / 10 }}/10</span>
+              <span class="text-lg font-semibold">{{ manhwa.meanScore / 10 }}/10</span>
             </div>
           </div>
 
-          <div v-if="manwha.genres.length > 0" class="flex-wrap gap-2 hidden md:flex">
+          <div v-if="manhwa.genres.length > 0" class="flex-wrap gap-2 hidden md:flex">
             <span
-              v-for="genre in manwha.genres"
+              v-for="genre in manhwa.genres"
               :key="genre"
               class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm"
             >
@@ -98,10 +98,10 @@
             </span>
           </div>
 
-          <div v-if="manwha.description" class="text-white/80 hidden md:block">
+          <div v-if="manhwa.description" class="text-white/80 hidden md:block">
             <h2 class="text-xl font-semibold text-white mb-2">Description</h2>
             <div
-              v-dompurify-html="manwha.description"
+              v-dompurify-html="manhwa.description"
               class="prose prose-invert max-h-[145px]"
             ></div>
           </div>
@@ -109,9 +109,9 @@
       </div>
 
       <!-- Description for mobile -->
-      <div v-if="manwha.genres.length > 0" class="flex flex-wrap gap-2 mt-6 md:hidden">
+      <div v-if="manhwa.genres.length > 0" class="flex flex-wrap gap-2 mt-6 md:hidden">
         <span
-          v-for="genre in manwha.genres"
+          v-for="genre in manhwa.genres"
           :key="genre"
           class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm"
         >
@@ -120,7 +120,7 @@
       </div>
 
       <div class="mt-4 md:hidden">
-        <div v-if="manwha.description" class="text-white/80">
+        <div v-if="manhwa.description" class="text-white/80">
           <h2 class="text-xl font-semibold text-white mb-2">Description</h2>
           <div
             class="relative cursor-pointer"
@@ -128,7 +128,7 @@
           >
             <div
               ref="descriptionContentRef"
-              v-dompurify-html="manwha.description"
+              v-dompurify-html="manhwa.description"
               class="prose-invert transition-all duration-300"
               :class="{
                 'max-h-[80px] overflow-hidden description-gradient': !descriptionExpanded,
@@ -152,15 +152,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="status" class="block text-sm font-medium mb-2">Status</label>
-            <Dropdown v-model="userManwhaData.status" :options="statusOptions" />
+            <Dropdown v-model="userManhwaData.status" :options="statusOptions" />
           </div>
 
           <div>
             <label for="lastReadChapter" class="flex items-center gap-2 text-sm font-medium mb-2">
               <span>Current Chapter</span>
               <a
-                v-if="userManwhaData.readingUrl && userManwhaData.lastReadChapter > 0"
-                :href="generateManwhaUrl(userManwhaData.readingUrl, userManwhaData.lastReadChapter)"
+                v-if="userManhwaData.readingUrl && userManhwaData.lastReadChapter > 0"
+                :href="generateManhwaUrl(userManhwaData.readingUrl, userManhwaData.lastReadChapter)"
                 target="_blank"
                 class="text-primary hover:text-primary-lighter"
                 title="Open chapter in new tab"
@@ -172,15 +172,15 @@
             <div class="relative">
               <input
                 id="lastReadChapter"
-                v-model.number="userManwhaData.lastReadChapter"
+                v-model.number="userManhwaData.lastReadChapter"
                 type="number"
                 min="0"
                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
-                :class="{ 'pr-10 md:pr-4': userManwhaData.status === 'reading' }"
+                :class="{ 'pr-10 md:pr-4': userManhwaData.status === 'reading' }"
                 placeholder="0"
               />
               <button
-                v-if="userManwhaData.status === 'reading'"
+                v-if="userManhwaData.status === 'reading'"
                 class="md:hidden absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-primary hover:text-primary-lighter"
                 title="Increment chapter"
                 @click="incrementChapter"
@@ -192,12 +192,12 @@
 
           <div class="md:col-span-2">
             <label for="rating" class="block text-sm font-medium mb-2">
-              <span v-if="userManwhaData.rating">Your Rating: {{ userManwhaData.rating }}/10</span>
+              <span v-if="userManhwaData.rating">Your Rating: {{ userManhwaData.rating }}/10</span>
               <span v-else>Your Rating: Not rated</span>
             </label>
             <input
               id="rating"
-              v-model.number="userManwhaData.rating"
+              v-model.number="userManhwaData.rating"
               type="range"
               min="0"
               max="10"
@@ -217,7 +217,7 @@
             </label>
             <input
               id="readingUrl"
-              v-model="userManwhaData.readingUrl"
+              v-model="userManhwaData.readingUrl"
               type="url"
               class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:ring-primary focus:border-white"
               placeholder="https://demonicscans.org/manga/Solo-Leveling"
@@ -229,7 +229,7 @@
             <div class="relative">
               <input
                 id="startedAt"
-                v-model="userManwhaData.startedAt"
+                v-model="userManhwaData.startedAt"
                 type="date"
                 class="w-full px-4 py-2 pl-10 bg-gray-700 border border-gray-600 rounded text-gray-400"
               />
@@ -248,7 +248,7 @@
               type="date"
               class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-gray-400 cursor-not-allowed"
             >
-              {{ formatDate(userManwhaData.updatedAt) }}
+              {{ formatDate(userManhwaData.updatedAt) }}
             </p>
           </div>
         </div>
@@ -261,9 +261,9 @@
           <button
             class="flex-1 px-6 py-2.5 bg-primary hover:bg-primary-lighter rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="saving"
-            @click="saveUserManwha()"
+            @click="saveUserManhwa()"
           >
-            <span>{{ userManwhaId ? 'Save Changes' : 'Add to My List' }}</span>
+            <span>{{ userManhwaId ? 'Save Changes' : 'Add to My List' }}</span>
           </button>
           <NuxtLink
             to="/"
@@ -272,10 +272,10 @@
             Cancel
           </NuxtLink>
           <button
-            v-if="userManwhaId"
+            v-if="userManhwaId"
             class="sm:w-auto px-6 py-2.5 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/50 rounded-lg text-red-400 hover:text-red-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="deleting"
-            @click="deleteUserManwha"
+            @click="deleteUserManhwa"
           >
             <span class="flex items-center justify-center gap-2">
               <Icon name="lucide:trash-2" size="16" />
@@ -288,7 +288,7 @@
 
     <DeleteModal
       v-model="showDeleteModal"
-      message="Are you sure you want to delete this manwha from your list?"
+      message="Are you sure you want to delete this manhwa from your list?"
       @confirm="confirmDelete"
     />
   </div>
@@ -304,8 +304,8 @@ const loading = ref(true);
 const saving = ref(false);
 const deleting = ref(false);
 const error = ref<string | null>(null);
-const manwha = ref<Manwha | null>(null);
-const userManwhaId = ref('');
+const manhwa = ref<Manhwa | null>(null);
+const userManhwaId = ref('');
 const errorMessage = ref<string | null>(null);
 const showDeleteModal = ref(false);
 
@@ -314,7 +314,7 @@ const statusOptions = Object.keys(READING_STATUS).map(key => ({
   label: READING_STATUS[key as ReadingStatus],
 }));
 
-const userManwhaData = ref({
+const userManhwaData = ref({
   status: 'reading' as ReadingStatus,
   lastReadChapter: 0,
   rating: null as number | null,
@@ -338,16 +338,16 @@ onMounted(async () => {
   try {
     loading.value = true;
 
-    const userData = await $fetch<UserManwha>(`/api/user-manwha/${id}`);
+    const userData = await $fetch<UserManhwa>(`/api/user-manhwa/${id}`);
 
-    if (!userData.manwha) {
-      error.value = 'Failed to load manwha details. Please try again later.';
+    if (!userData.manhwa) {
+      error.value = 'Failed to load manhwa details. Please try again later.';
       return;
     }
 
-    manwha.value = userData.manwha;
-    userManwhaId.value = userData.id;
-    userManwhaData.value = {
+    manhwa.value = userData.manhwa;
+    userManhwaId.value = userData.id;
+    userManhwaData.value = {
       status: userData.status,
       lastReadChapter: userData.lastReadChapter,
       rating: userData.rating,
@@ -361,17 +361,17 @@ onMounted(async () => {
       isFavorite: userData.isFavorite,
     };
   } catch (err) {
-    console.error('Failed to fetch user manwha:', err);
-    error.value = 'Failed to load manwha details. Please try again later.';
+    console.error('Failed to fetch user manhwa:', err);
+    error.value = 'Failed to load manhwa details. Please try again later.';
   } finally {
     loading.value = false;
   }
 });
 
-async function saveUserManwha(redirect = true) {
-  if (!manwha.value) return;
+async function saveUserManhwa(redirect = true) {
+  if (!manhwa.value) return;
 
-  if (!userManwhaData.value.startedAt) {
+  if (!userManhwaData.value.startedAt) {
     errorMessage.value = 'Please select a valid start date.';
     return;
   }
@@ -379,19 +379,19 @@ async function saveUserManwha(redirect = true) {
   const body = {
     id: '',
     userId: '',
-    manwha: manwha.value,
-    status: userManwhaData.value.status,
-    rating: userManwhaData.value.rating,
-    lastReadChapter: userManwhaData.value.lastReadChapter,
-    readingUrl: userManwhaData.value.readingUrl,
-    startedAt: new Date(userManwhaData.value.startedAt),
+    manhwa: manhwa.value,
+    status: userManhwaData.value.status,
+    rating: userManhwaData.value.rating,
+    lastReadChapter: userManhwaData.value.lastReadChapter,
+    readingUrl: userManhwaData.value.readingUrl,
+    startedAt: new Date(userManhwaData.value.startedAt),
     updatedAt: new Date(),
-    isFavorite: userManwhaData.value.isFavorite,
+    isFavorite: userManhwaData.value.isFavorite,
   };
 
   saving.value = true;
   try {
-    await $fetch('/api/user-manwha', {
+    await $fetch('/api/user-manhwa', {
       method: 'POST',
       body,
     });
@@ -399,63 +399,63 @@ async function saveUserManwha(redirect = true) {
       navigateTo('/');
     }
   } catch (err) {
-    console.error('Failed to save user manwha:', err);
+    console.error('Failed to save user manhwa:', err);
   } finally {
     saving.value = false;
   }
 }
 
-function deleteUserManwha() {
+function deleteUserManhwa() {
   showDeleteModal.value = true;
 }
 
 async function confirmDelete() {
-  if (!manwha.value) return;
+  if (!manhwa.value) return;
 
   showDeleteModal.value = false;
   deleting.value = true;
 
   try {
-    await $fetch(`/api/user-manwha/${id}`, {
+    await $fetch(`/api/user-manhwa/${id}`, {
       method: 'DELETE',
     });
     navigateTo('/');
   } catch (err) {
-    console.error('Failed to delete user manwha:', err);
+    console.error('Failed to delete user manhwa:', err);
   } finally {
     deleting.value = false;
   }
 }
 
 async function toggleFavorite() {
-  if (!manwha.value) return;
+  if (!manhwa.value) return;
 
-  const previousValue = userManwhaData.value.isFavorite;
-  userManwhaData.value.isFavorite = !previousValue;
+  const previousValue = userManhwaData.value.isFavorite;
+  userManhwaData.value.isFavorite = !previousValue;
 
-  if (!userManwhaId.value) {
+  if (!userManhwaId.value) {
     return;
   }
 
   const body = {
-    manwhaId: manwha.value.id,
-    isFavorite: userManwhaData.value.isFavorite,
+    manhwaId: manhwa.value.id,
+    isFavorite: userManhwaData.value.isFavorite,
   };
 
   try {
-    await $fetch('/api/user-manwha/favorite', {
+    await $fetch('/api/user-manhwa/favorite', {
       method: 'PATCH',
       body,
     });
   } catch (err) {
     console.error('Failed to update favorite status:', err);
-    userManwhaData.value.isFavorite = previousValue;
+    userManhwaData.value.isFavorite = previousValue;
   }
 }
 
 async function incrementChapter() {
-  userManwhaData.value.lastReadChapter++;
-  await saveUserManwha(false);
+  userManhwaData.value.lastReadChapter++;
+  await saveUserManhwa(false);
 }
 </script>
 

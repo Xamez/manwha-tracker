@@ -2,7 +2,7 @@ import { scrapAndUpdateLastChapter } from '~~/server/utils/scraper';
 
 export default defineTask({
   meta: {
-    name: 'manwha:retrieveLastChapters',
+    name: 'manhwa:retrieveLastChapters',
     description: 'Update CMS content',
   },
   async run({ payload: _payload, context: _context }) {
@@ -10,13 +10,13 @@ export default defineTask({
 
     const db = useDatabase();
     const response = await db
-      .collection('user_manwhas')
-      .find({ readingUrl: { $ne: null } }, { projection: { manwhaId: 1, readingUrl: 1 } })
+      .collection('user_manhwas')
+      .find({ readingUrl: { $ne: null } }, { projection: { manhwaId: 1, readingUrl: 1 } })
       .toArray();
 
     for (const doc of response) {
-      const { manwhaId, readingUrl } = doc;
-      await scrapAndUpdateLastChapter(db, manwhaId, readingUrl, 0);
+      const { manhwaId, readingUrl } = doc;
+      await scrapAndUpdateLastChapter(db, manhwaId, readingUrl, 0);
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 

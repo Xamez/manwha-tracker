@@ -14,7 +14,7 @@ export default defineNitroPlugin(async nitroApp => {
     const mongoClient = new MongoClient(mongoUri);
     await mongoClient.connect();
 
-    const db = mongoClient.db('manwha-tracker');
+    const db = mongoClient.db('manhwa-tracker');
     setDatabase(db);
 
     await createCollectionsIfNotExist(db);
@@ -39,12 +39,12 @@ async function createCollectionsIfNotExist(db: Db) {
     await db.createCollection('users');
     console.log('Created users collection');
   }
-  if (!collectionNames.includes('manwhas')) {
-    await db.createCollection('manwhas');
-    console.log('Created manwhas collection');
+  if (!collectionNames.includes('manhwas')) {
+    await db.createCollection('manhwas');
+    console.log('Created manhwas collection');
   }
-  if (!collectionNames.includes('user_manwhas')) {
-    await db.createCollection('user_manwhas');
-    console.log('Created user_manwhas collection');
+  if (!collectionNames.includes('user_manhwas')) {
+    await db.createCollection('user_manhwas');
+    console.log('Created user_manhwas collection');
   }
 }

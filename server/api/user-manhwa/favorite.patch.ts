@@ -3,12 +3,12 @@ import { ObjectId } from 'mongodb';
 export default defineEventHandler(async event => {
   const user = event.context.user;
   const body = await readBody(event);
-  const { manwhaId, isFavorite } = body;
+  const { manhwaId, isFavorite } = body;
 
-  if (!manwhaId) {
+  if (!manhwaId) {
     throw createError({
       statusCode: 400,
-      message: 'Manwha ID is required',
+      message: 'Manhwa ID is required',
     });
   }
 
@@ -21,12 +21,12 @@ export default defineEventHandler(async event => {
 
   try {
     const db = useDatabase();
-    const userManwhasCollection = db.collection('user_manwhas');
+    const userManhwasCollection = db.collection('user_manhwas');
 
-    const result = await userManwhasCollection.updateOne(
+    const result = await userManhwasCollection.updateOne(
       {
         userId: ObjectId.createFromHexString(user.id),
-        manwhaId: Number(manwhaId),
+        manhwaId: Number(manhwaId),
       },
       {
         $set: {
@@ -38,7 +38,7 @@ export default defineEventHandler(async event => {
     if (result.matchedCount === 0) {
       throw createError({
         statusCode: 404,
-        message: 'User manwha not found',
+        message: 'User manhwa not found',
       });
     }
 

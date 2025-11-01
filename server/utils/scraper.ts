@@ -59,9 +59,9 @@ export async function scrapLastChapter(url: string): Promise<number | null> {
   return null;
 }
 
-export async function suggestReadingUrlDemonicScans(manwhaTitle: string): Promise<string | null> {
+export async function suggestReadingUrlDemonicScans(manhwaTitle: string): Promise<string | null> {
   try {
-    const searchUrl = `${DEMONIC_SCANS_URL}/search.php?manga=${manwhaTitle}`;
+    const searchUrl = `${DEMONIC_SCANS_URL}/search.php?manga=${manhwaTitle}`;
     const response = await fetch(searchUrl, { headers });
     const html = await response.text();
 
@@ -80,11 +80,11 @@ export async function suggestReadingUrlDemonicScans(manwhaTitle: string): Promis
   }
 }
 
-export async function suggestReadingUrlManhuaUS(manwhaTitle: string): Promise<string | null> {
+export async function suggestReadingUrlManhuaUS(manhwaTitle: string): Promise<string | null> {
   try {
     const formData = new FormData();
     formData.append('action', 'wp-manga-search-manga');
-    formData.append('title', manwhaTitle);
+    formData.append('title', manhwaTitle);
 
     const response = await fetch(`${MANHUA_US_URL}/wp-admin/admin-ajax.php`, {
       method: 'POST',
@@ -124,18 +124,18 @@ export async function suggestReadingUrl(manhwaTitle: string): Promise<string | n
 
 export async function scrapAndUpdateLastChapter(
   db: Db,
-  manwhaId: number,
+  manhwaId: number,
   readingUrl: string,
   lastAvailableChapter: number,
 ): Promise<void> {
-  console.log(`Processing manwhaId: ${manwhaId}`);
+  console.log(`Processing manhwaId: ${manhwaId}`);
   const lastChapter = await scrapLastChapter(readingUrl);
   if (lastChapter && lastChapter > lastAvailableChapter) {
     await db
-      .collection('manwhas')
-      .updateOne({ id: manwhaId }, { $set: { lastAvailableChapter: lastChapter } });
-    console.log(`Updated manwhaId ${manwhaId} to chapter ${lastChapter}`);
+      .collection('manhwas')
+      .updateOne({ id: manhwaId }, { $set: { lastAvailableChapter: lastChapter } });
+    console.log(`Updated manhwaId ${manhwaId} to chapter ${lastChapter}`);
   } else {
-    console.log(`No update needed for manwhaId ${manwhaId}`);
+    console.log(`No update needed for manhwaId ${manhwaId}`);
   }
 }

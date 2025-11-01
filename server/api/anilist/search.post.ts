@@ -69,9 +69,9 @@ export default defineEventHandler(async event => {
             id: item.id,
             title: item.title?.english || '',
             coverImage: item.coverImage?.medium || null,
-          }) as ManwhaSearchResult,
+          }) as ManhwaSearchResult,
       )
-      .filter((item: ManwhaSearchResult) => item.title);
+      .filter((item: ManhwaSearchResult) => item.title);
   } catch {
     throw createError({
       statusCode: 500,

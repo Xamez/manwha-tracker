@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineNuxtConfig({
   app: {
     head: {
-      title: 'Manwha Tracker',
+      title: 'Manhwa Tracker',
       htmlAttrs: { lang: 'en' },
       meta: [
         { charset: 'utf-8' },
@@ -14,7 +14,7 @@ export default defineNuxtConfig({
           content:
             'Track your favorite manhwa, manhua and get notified when new chapters are released.',
         },
-        { name: 'keywords', content: 'manwha, manga, tracker, notifications, reading list' },
+        { name: 'keywords', content: 'manhwa, manga, tracker, notifications, reading list' },
       ],
     },
   },
@@ -23,7 +23,7 @@ export default defineNuxtConfig({
       tasks: true,
     },
     scheduledTasks: {
-      '0 */4 * * *': ['manwha:retrieveLastChapters'],
+      '0 */4 * * *': ['manhwa:retrieveLastChapters'],
     },
   },
   modules: ['@nuxt/icon', '@nuxt/eslint'],

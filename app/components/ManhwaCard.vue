@@ -2,8 +2,8 @@
   <div class="w-full h-[190px] md:h-[210px] relative group" @click="handleClick">
     <span
       v-if="
-        userManwha.manwha.lastAvailableChapter &&
-        userManwha.manwha.lastAvailableChapter > currentChapter
+        userManhwa.manhwa.lastAvailableChapter &&
+        userManhwa.manhwa.lastAvailableChapter > currentChapter
       "
       class="absolute -top-1 -right-1 z-20 flex size-3"
       title="New chapters available"
@@ -17,7 +17,7 @@
       <div class="block h-full">
         <div
           class="absolute inset-0 bg-cover bg-center transition-transform group-hover:scale-110"
-          :style="{ backgroundImage: `url(${userManwha.manwha.coverImage})` }"
+          :style="{ backgroundImage: `url(${userManhwa.manhwa.coverImage})` }"
         ></div>
 
         <div
@@ -46,13 +46,13 @@
           v-else
           class="absolute bottom-0 left-0 right-0 p-4 flex flex-col justify-end h-full bg-gradient-to-t from-black/90 to-black/5 text-white"
         >
-          <h2 class="m-0 mb-2 text-sm md:text-md font-semibold">{{ userManwha.manwha.title }}</h2>
+          <h2 class="m-0 mb-2 text-sm md:text-md font-semibold">{{ userManhwa.manhwa.title }}</h2>
           <div class="flex items-center justify-between gap-2">
             <p class="my-1 text-xs">
               Chapter:
               <a
-                v-if="userManwha.readingUrl"
-                :href="generateManwhaUrl(userManwha.readingUrl, currentChapter)"
+                v-if="userManhwa.readingUrl"
+                :href="generateManhwaUrl(userManhwa.readingUrl, currentChapter)"
                 target="_blank"
                 class="text-primary font-bold underline cursor-pointer group/link inline-block relative"
                 @click.stop
@@ -70,7 +70,7 @@
               </span>
             </p>
             <button
-              v-if="userManwha.status === 'reading'"
+              v-if="userManhwa.status === 'reading'"
               class="w-6 h-6 flex items-center justify-center rounded bg-black/40 hover:bg-primary text-white opacity-0 group-hover:opacity-100"
               @click.stop="() => updateChapter(currentChapter + 1)"
             >
@@ -87,9 +87,9 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-const { userManwha } = defineProps<{ userManwha: UserManwha }>();
+const { userManhwa } = defineProps<{ userManhwa: UserManhwa }>();
 
-const currentChapter = ref(userManwha.lastReadChapter);
+const currentChapter = ref(userManhwa.lastReadChapter);
 const showUpdateScreen = ref(false);
 
 const router = useRouter();
@@ -121,7 +121,7 @@ function handleClick(_event: MouseEvent) {
 }
 
 function handleNavigationClick() {
-  router.push(`/user-manwha/${userManwha.manwha.id}`);
+  router.push(`/user-manhwa/${userManhwa.manhwa.id}`);
 }
 
 async function updateChapter(newChapter: number) {
@@ -129,24 +129,24 @@ async function updateChapter(newChapter: number) {
   currentChapter.value = newChapter;
 
   const body = {
-    id: userManwha.id,
-    userId: userManwha.userId,
-    manwha: userManwha.manwha,
-    status: userManwha.status,
-    rating: userManwha.rating,
+    id: userManhwa.id,
+    userId: userManhwa.userId,
+    manhwa: userManhwa.manhwa,
+    status: userManhwa.status,
+    rating: userManhwa.rating,
     lastReadChapter: newChapter,
-    readingUrl: userManwha.readingUrl,
-    startedAt: userManwha.startedAt,
+    readingUrl: userManhwa.readingUrl,
+    startedAt: userManhwa.startedAt,
     updatedAt: new Date(),
-    isFavorite: userManwha.isFavorite,
+    isFavorite: userManhwa.isFavorite,
   };
 
   try {
-    await $fetch('/api/user-manwha', {
+    await $fetch('/api/user-manhwa', {
       method: 'POST',
       body,
     });
-    await refreshNuxtData('user-manwha');
+    await refreshNuxtData('user-manhwa');
   } catch (error) {
     console.error('Failed to update chapter:', error);
     currentChapter.value = previousChapter;

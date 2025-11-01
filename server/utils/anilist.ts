@@ -1,6 +1,6 @@
-import type { Manwha } from '~~/shared/types/manwha';
+import type { Manhwa } from '~~/shared/types/manhwa';
 
-export async function fetchAniListDetails(id: number): Promise<Manwha | null> {
+export async function fetchAniListDetails(id: number): Promise<Manhwa | null> {
   const graphqlQuery = `
     query($id: Int)  {
       Media(id: $id)  {

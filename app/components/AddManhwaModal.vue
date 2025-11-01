@@ -1,10 +1,10 @@
 <template>
-  <Modal v-model="isOpen" title="Add Manwha">
+  <Modal v-model="isOpen" title="Add Manhwa">
     <div class="space-y-4">
       <IconInput
         v-model="searchQuery"
         icon="lucide:search"
-        placeholder="Search for manwha..."
+        placeholder="Search for manhwa..."
         autofocus
         @update:model-value="handleSearch"
       />
@@ -19,7 +19,7 @@
           v-for="result in searchResults"
           :key="result.id"
           class="w-full text-left p-3 rounded bg-white/5 hover:bg-primary flex items-center gap-3"
-          @click="selectManwha(result.id)"
+          @click="selectManhwa(result.id)"
         >
           <img
             v-if="result.coverImage"
@@ -41,7 +41,7 @@
 
       <div v-else class="text-center py-8 text-white/60">
         <Icon name="lucide:search" size="36" class="mx-auto mb-2" />
-        <p>Search for a manwha to add to your list</p>
+        <p>Search for a manhwa to add to your list</p>
       </div>
     </div>
   </Modal>
@@ -51,7 +51,7 @@
 const isOpen = defineModel<boolean>({ required: true });
 
 const searchQuery = ref('');
-const searchResults = ref<ManwhaSearchResult[]>([]);
+const searchResults = ref<ManhwaSearchResult[]>([]);
 const isSearching = ref(false);
 
 let searchTimeout: number | null = null;
@@ -77,7 +77,7 @@ async function handleSearch() {
         method: 'POST',
         body: { search: searchQuery.value },
       });
-      searchResults.value = data as ManwhaSearchResult[];
+      searchResults.value = data as ManhwaSearchResult[];
     } catch (error) {
       console.error('Search failed:', error);
       searchResults.value = [];
@@ -87,8 +87,8 @@ async function handleSearch() {
   }, 500);
 }
 
-async function selectManwha(id: number) {
-  navigateTo(`/user-manwha/${id}`);
+async function selectManhwa(id: number) {
+  navigateTo(`/user-manhwa/${id}`);
   isOpen.value = false;
 }
 </script>

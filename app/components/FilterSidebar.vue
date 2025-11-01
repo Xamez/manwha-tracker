@@ -18,7 +18,7 @@
         >
           <div class="flex justify-between">
             {{ option.label }}
-            <span class="text-gray-400">{{ countManwhaOfType(option.value) }}</span>
+            <span class="text-gray-400">{{ countManhwaOfType(option.value) }}</span>
           </div>
         </button>
       </div>
@@ -91,7 +91,7 @@ import { READING_STATUS } from '~~/shared/types/reading-status';
 import { SORT_OPTIONS, SORT_ORDERS } from '~~/shared/types/sort';
 
 const props = defineProps<{
-  userManwhas?: UserManwha[];
+  userManhwas?: UserManhwa[];
   hideSearch?: boolean;
   modelValue: Filters;
 }>();
@@ -171,10 +171,10 @@ function toggleStatus(status: ReadingStatus | '') {
   }
 }
 
-function countManwhaOfType(status: ReadingStatus | ''): number {
-  if (!props.userManwhas) return 0;
-  if (status === '') return props.userManwhas.length;
-  return props.userManwhas.filter(um => um.status === status).length;
+function countManhwaOfType(status: ReadingStatus | ''): number {
+  if (!props.userManhwas) return 0;
+  if (status === '') return props.userManhwas.length;
+  return props.userManhwas.filter(um => um.status === status).length;
 }
 
 function clearFilters() {

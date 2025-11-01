@@ -12,13 +12,13 @@
       >
         <div class="flex flex-col items-center gap-3 group-hover:scale-110">
           <Icon name="lucide:plus" size="64" class="group-hover:rotate-90" />
-          <h2 class="m-0 text-md md:text-lg font-bold">Add Manwha</h2>
+          <h2 class="m-0 text-md md:text-lg font-bold">Add Manhwa</h2>
         </div>
       </div>
     </div>
   </button>
 
-  <AddManwhaModal v-model="isModalOpen" />
+  <AddManhwaModal v-model="isModalOpen" />
 </template>
 
 <script lang="ts" setup>
